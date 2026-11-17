@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test / coverage
+coverage/
+.nyc_output/
+.turbo/
+
+# Corpus (large source PDFs — fetched via scripts, not committed)
+corpus/raw/
+corpus/cache/
+
+# Python (for any ingestion / eval scripts)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Supabase local
+.supabase/
+supabase/.temp/
+
+# DeepSeek Cost Tracker local cache
+.deepseek-cost.json
+
+.env.local.*
+apps/web/e2e/screenshots/

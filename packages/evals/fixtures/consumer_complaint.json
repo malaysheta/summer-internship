@@ -1,0 +1,96 @@
+{
+  "dataset_id": "consumer_complaint",
+  "fixtures": [
+    {
+      "fixture_id": "cc-001-valid",
+      "doc_type": "consumer_complaint",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 200, "duration_ms": 830 },
+        { "agent": "drafter", "step": "draft", "tokens": 920, "duration_ms": 2250 },
+        { "agent": "citator", "step": "cite", "tokens": 480, "duration_ms": 1300 }
+      ],
+      "draft_output": {
+        "text": "Before the Hon'ble District Consumer Disputes Redressal Forum, Pune.\n\nComplainant: Mrs. Anita Sharma, 34 Shivaji Nagar, Pune – 411005.\n\nRespondent / Opposite Party (O.P.): Reliance Digital, FC Road, Pune – 411004.\n\nComplaint under Section 35 of the Consumer Protection Act, 2019 [CITE:CPA-2019/CH-IV/S-35].\n\nFacts: The complainant purchased a washing machine on 10-02-2026 for Rs. 32,000. The appliance stopped working within 15 days. Despite repeated complaints, O.P. has not repaired or replaced it. This constitutes a deficiency of service under Section 2(1)(g) of the Act.\n\nRelief Sought: It is prayed that O.P. be directed to (a) replace the washing machine, (b) pay compensation of Rs. 5,000 for harassment.\n\nDeclaration: The above facts are true to the best of my knowledge.\n\nSignature: Mrs. Anita Sharma\nDate: 10-06-2026",
+        "cite_markers": [
+          { "node_id": "CPA-2019/CH-IV/S-35", "span": [218, 241] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": ["CPA-2019/CH-IV/S-35"],
+        "required_sections": ["forum_address", "complainant_details", "respondent_details", "relief_sought", "declaration", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cc-002-missing-relief",
+      "doc_type": "consumer_complaint",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 185, "duration_ms": 800 },
+        { "agent": "drafter", "step": "draft", "tokens": 820, "duration_ms": 2050 }
+      ],
+      "draft_output": {
+        "text": "Before the Hon'ble District Consumer Forum, Ahmedabad.\n\nComplainant: Mr. Rajesh Patel, 12 Satellite Road, Ahmedabad – 380015.\n\nRespondent (O.P.): Jet Airways (Resolved), CIAL, Kochi.\n\nFacts: The complainant booked flight tickets for Rs. 18,000. The flight was cancelled without prior notice and refund has not been processed for 90 days. This constitutes a deficiency of service.\n\nDeclaration: The above facts are true to the best of my knowledge.\n\nSignature: Rajesh Patel\nDate: 11-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["forum_address", "complainant_details", "respondent_details", "relief_sought", "declaration", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cc-003-uncited-cpa-claim",
+      "doc_type": "consumer_complaint",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 192, "duration_ms": 815 },
+        { "agent": "drafter", "step": "draft", "tokens": 870, "duration_ms": 2150 }
+      ],
+      "draft_output": {
+        "text": "Before the Hon'ble State Commission, Mumbai.\n\nComplainant: Ms. Deepika Rao, 55 Linking Road, Mumbai – 400050.\n\nRespondent: Zomato Ltd., Koramangala, Bengaluru.\n\nFacts: The complainant ordered food on 01-06-2026 for Rs. 800. The order was not delivered despite payment. Under the Consumer Protection Act, deficiency of service entitles the consumer to compensation of Rs. 5,000. The forum may direct the respondent to pay damages without proof of actual loss.\n\nRelief Sought: It is prayed that compensation be awarded.\n\nDeclaration: The above facts are true.\n\nSignature: Deepika Rao\nDate: 12-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["forum_address", "complainant_details", "respondent_details", "relief_sought", "declaration", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cc-004-invalid-cite",
+      "doc_type": "consumer_complaint",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 195, "duration_ms": 820 },
+        { "agent": "drafter", "step": "draft", "tokens": 900, "duration_ms": 2200 },
+        { "agent": "citator", "step": "cite", "tokens": 450, "duration_ms": 1250 }
+      ],
+      "draft_output": {
+        "text": "Before the Hon'ble District Consumer Forum, Delhi.\n\nComplainant: Mr. Vikash Kumar, 23 Lajpat Nagar, Delhi – 110024.\n\nRespondent: Snapdeal Pvt. Ltd., Okhla, Delhi.\n\nFacts: The complainant ordered a mobile phone for Rs. 15,000. The product delivered was defective. Under Section 100 of the Consumer Protection Act [CITE:CPA-FAKE/S-100], the consumer is entitled to replacement.\n\nRelief Sought: Direction to replace the defective phone and compensation of Rs. 3,000.\n\nDeclaration: The above facts are true.\n\nSignature: Vikash Kumar\nDate: 12-06-2026",
+        "cite_markers": [
+          { "node_id": "CPA-FAKE/S-100", "span": [340, 357] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["forum_address", "complainant_details", "respondent_details", "relief_sought", "declaration", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cc-005-missing-respondent",
+      "doc_type": "consumer_complaint",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 172, "duration_ms": 755 },
+        { "agent": "drafter", "step": "draft", "tokens": 780, "duration_ms": 1960 }
+      ],
+      "draft_output": {
+        "text": "Before the Hon'ble National Commission, New Delhi.\n\nComplainant: Mrs. Sudha Iyer, 7 Anna Nagar, Chennai – 600040.\n\nFacts: The complainant booked a holiday package for Rs. 1,20,000 for a trip to Maldives. The tour operator cancelled the trip one day before departure without offering a refund.\n\nRelief Sought: Refund of Rs. 1,20,000 and compensation of Rs. 25,000 for mental agony. It is prayed that the Opposite Party be directed to pay the same.\n\nDeclaration: The above facts are true to the best of my knowledge.\n\nSignature: Mrs. Sudha Iyer\nDate: 13-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["forum_address", "complainant_details", "respondent_details", "relief_sought", "declaration", "date_signature"]
+      }
+    }
+  ]
+}

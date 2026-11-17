@@ -1,0 +1,94 @@
+{
+  "language": "ta",
+  "snapshot_id": "2026-06-12",
+  "pairs": [
+    {
+      "id": "ta-001",
+      "source_en": "The applicant seeks information under Section 6 of the Right to Information Act, 2005 [CITE:RTI-2005/S-6].",
+      "reference": "மனுதாரர் தகவல் அறியும் உரிமைச் சட்டம், 2005 இன் பிரிவு 6 [CITE:RTI-2005/S-6] கீழ் தகவலைக் கோருகிறார்.",
+      "glossary_terms": [
+        "applicant",
+        "information",
+        "right to information"
+      ]
+    },
+    {
+      "id": "ta-002",
+      "source_en": "The public information officer shall respond within thirty days [CITE:RTI-2005/S-7].",
+      "reference": "பொது தகவல் அலுவலர் முப்பது நாட்களுக்குள் [CITE:RTI-2005/S-7] பதிலளிக்க வேண்டும்.",
+      "glossary_terms": [
+        "public information officer"
+      ]
+    },
+    {
+      "id": "ta-003",
+      "source_en": "This agreement is supported by valid consideration [CITE:ICA-1872/S-2].",
+      "reference": "இந்த உடன்படிக்கை செல்லுபடியாகும் பரிசீலனையால் [CITE:ICA-1872/S-2] ஆதரிக்கப்படுகிறது.",
+      "glossary_terms": [
+        "agreement",
+        "consideration"
+      ]
+    },
+    {
+      "id": "ta-004",
+      "source_en": "The receiving party shall not disclose confidential information to any third party.",
+      "reference": "பெறும் தரப்பினர் இரகசியத் தகவல் எதையும் எந்த மூன்றாம் தரப்பினருக்கும் வெளியிடக் கூடாது.",
+      "glossary_terms": [
+        "confidential information",
+        "third party"
+      ]
+    },
+    {
+      "id": "ta-005",
+      "source_en": "A contract without free consent is voidable at the option of the party whose consent was so caused [CITE:ICA-1872/S-19].",
+      "reference": "சுதந்திர சம்மதம் இல்லாத ஒப்பந்தம், அவ்வாறு சம்மதம் பெறப்பட்ட தரப்பினரின் விருப்பத்தின் பேரில் ரத்து செய்யத்தக்கது [CITE:ICA-1872/S-19].",
+      "glossary_terms": [
+        "free consent",
+        "voidable"
+      ]
+    },
+    {
+      "id": "ta-006",
+      "source_en": "The cheque was returned unpaid for insufficiency of funds [CITE:NI-1881/S-138].",
+      "reference": "நிதி பற்றாக்குறை காரணமாக காசோலை செலுத்தப்படாமல் திருப்பப்பட்டது [CITE:NI-1881/S-138].",
+      "glossary_terms": [
+        "cheque",
+        "insufficiency of funds"
+      ]
+    },
+    {
+      "id": "ta-007",
+      "source_en": "You are called upon to pay the said amount within fifteen days of receipt of this notice.",
+      "reference": "இந்த அறிவிப்பு கிடைத்த பதினைந்து நாட்களுக்குள் குறிப்பிட்ட தொகையைச் செலுத்துமாறு கோரப்படுகிறீர்கள்.",
+      "glossary_terms": [
+        "notice"
+      ]
+    },
+    {
+      "id": "ta-008",
+      "source_en": "The complainant is a consumer within the meaning of the Consumer Protection Act, 2019 [CITE:CPA-2019/S-2].",
+      "reference": "புகாரளிப்போர் நுகர்வோர் பாதுகாப்புச் சட்டம், 2019 [CITE:CPA-2019/S-2] இன் பொருளின்படி ஒரு நுகர்வோர் ஆவார்.",
+      "glossary_terms": [
+        "complainant",
+        "consumer"
+      ]
+    },
+    {
+      "id": "ta-009",
+      "source_en": "The opposite party is liable for deficiency in service.",
+      "reference": "எதிர் தரப்பினர் சேவைக் குறைபாட்டிற்குப் பொறுப்பாவார்.",
+      "glossary_terms": [
+        "opposite party",
+        "deficiency in service"
+      ]
+    },
+    {
+      "id": "ta-010",
+      "source_en": "Failing which, legal proceedings shall be initiated at your risk and cost.",
+      "reference": "தவறினால், உங்கள் ஆபத்து மற்றும் செலவில் சட்ட நடவடிக்கைகள் தொடங்கப்படும்.",
+      "glossary_terms": [
+        "legal proceedings"
+      ]
+    }
+  ]
+}

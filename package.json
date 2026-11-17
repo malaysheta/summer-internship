@@ -1,0 +1,36 @@
+{
+  "name": "trionic-ai-adalat",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Multilingual agentic AI assistant for Indian legal drafting and research",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter web dev",
+    "lint": "pnpm -r --parallel lint",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "test": "pnpm -r --parallel test",
+    "ingest:crpc": "pnpm --filter @trionic/pageindex ingest:crpc",
+    "validate:crpc": "pnpm --filter @trionic/pageindex validate:crpc",
+    "ingest:cpc": "pnpm --filter @trionic/pageindex ingest:cpc",
+    "validate:cpc": "pnpm --filter @trionic/pageindex validate:cpc",
+    "db:start": "supabase start --workdir packages/db",
+    "db:stop": "supabase stop --workdir packages/db",
+    "db:reset": "supabase db reset --workdir packages/db",
+    "db:status": "supabase status --workdir packages/db",
+    "db:seed:pageindex": "node packages/db/scripts/seed-pageindex.mjs",
+    "db:test": "psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -q -v ON_ERROR_STOP=1 -f packages/db/tests/rls.sql"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.1",
+    "dotenv": "^17.4.2",
+    "openai": "^6.42.0"
+  }
+}

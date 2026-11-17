@@ -1,0 +1,100 @@
+{
+  "dataset_id": "cheque_bounce_notice",
+  "fixtures": [
+    {
+      "fixture_id": "cb-001-valid",
+      "doc_type": "cheque_bounce_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 188, "duration_ms": 795 },
+        { "agent": "drafter", "step": "draft", "tokens": 890, "duration_ms": 2200 },
+        { "agent": "citator", "step": "cite", "tokens": 465, "duration_ms": 1290 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Hemant Joshi, On behalf of M/s Sunrise Traders, 14 GIDC, Anand, Gujarat.\n\nTo,\nMr. Dhruv Patel, 9 Station Road, Anand, Gujarat.\n\nSubject: Legal Notice under Section 138 of the Negotiable Instruments Act, 1881.\n\nWhereas my client, M/s Sunrise Traders, received cheque no. 001234 dated 01-05-2026 drawn on SBI Anand Branch for an amount of Rs. 3,50,000. The said cheque was presented for encashment and was returned unpaid / dishonoured due to insufficient funds.\n\nYou are hereby demanded to pay the amount of Rs. 3,50,000 to my client within 15 days of receipt of this notice, failing which my client will be constrained to initiate criminal proceedings against you under Section 138 of the Negotiable Instruments Act [CITE:NI-ACT/CH-XVII/S-138].\n\nYours faithfully,\nAdv. Hemant Joshi\nDate: 10-06-2026",
+        "cite_markers": [
+          { "node_id": "NI-ACT/CH-XVII/S-138", "span": [618, 641] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": ["NI-ACT/CH-XVII/S-138"],
+        "required_sections": ["sender_address", "recipient_address", "cheque_details", "demand_amount", "15_day_notice", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cb-002-missing-15day-notice",
+      "doc_type": "cheque_bounce_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 170, "duration_ms": 755 },
+        { "agent": "drafter", "step": "draft", "tokens": 790, "duration_ms": 2000 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Rashmi Shah, On behalf of M/s Omega Suppliers, MG Road, Surat.\n\nTo,\nMr. Firoz Khan, Ring Road, Surat.\n\nSubject: Notice for Dishonoured Cheque.\n\nWhereas my client received cheque no. 887654 dated 15-04-2026 for Rs. 1,80,000 drawn on Bank of Baroda. The cheque was returned unpaid due to account closed. You are demanded to pay Rs. 1,80,000 to my client immediately.\n\nYours faithfully,\nAdv. Rashmi Shah\nDate: 11-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["sender_address", "recipient_address", "cheque_details", "demand_amount", "15_day_notice", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cb-003-uncited-s138",
+      "doc_type": "cheque_bounce_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 180, "duration_ms": 775 },
+        { "agent": "drafter", "step": "draft", "tokens": 830, "duration_ms": 2070 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Vinod Nair, On behalf of Kerala Cement Works, Thrissur, Kerala.\n\nTo,\nMr. Joseph Thomas, Ernakulam, Kerala.\n\nSubject: Statutory Notice under NI Act.\n\nWhereas my client received cheque no. 556677 dated 20-04-2026 for Rs. 4,20,000 drawn on Federal Bank. The said cheque was dishonoured for insufficient funds. Under Section 138 of the Negotiable Instruments Act, the drawer is liable to pay the cheque amount together with a penalty, and failure to pay within 30 days of demand makes the drawer liable for prosecution and imprisonment.\n\nYou are demanded to pay the amount of Rs. 4,20,000 within 15 days of this notice.\n\nYours faithfully,\nAdv. Vinod Nair\nDate: 12-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["sender_address", "recipient_address", "cheque_details", "demand_amount", "15_day_notice", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cb-004-invalid-cite",
+      "doc_type": "cheque_bounce_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 182, "duration_ms": 785 },
+        { "agent": "drafter", "step": "draft", "tokens": 850, "duration_ms": 2120 },
+        { "agent": "citator", "step": "cite", "tokens": 430, "duration_ms": 1210 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Swati Mishra, On behalf of Mishra & Sons, Indore, MP.\n\nTo,\nM/s Gupta Electronics, Bhopal, MP.\n\nSubject: Legal Notice for Dishonoured Cheque.\n\nWhereas cheque bearing no. 334455 dated 10-04-2026 for Rs. 2,10,000 drawn on PNB was returned unpaid. Under Section 138A of the NI Act [CITE:NI-ACT/FAKE/S-138A], the drawer is liable for enhanced penalty.\n\nYou are demanded to pay Rs. 2,10,000 within 15 days of this notice.\n\nYours faithfully,\nAdv. Swati Mishra\nDate: 12-06-2026",
+        "cite_markers": [
+          { "node_id": "NI-ACT/FAKE/S-138A", "span": [355, 376] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["sender_address", "recipient_address", "cheque_details", "demand_amount", "15_day_notice", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "cb-005-mixed",
+      "doc_type": "cheque_bounce_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 192, "duration_ms": 815 },
+        { "agent": "drafter", "step": "draft", "tokens": 890, "duration_ms": 2180 },
+        { "agent": "citator", "step": "cite", "tokens": 460, "duration_ms": 1280 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Arun Verma, On behalf of Verma & Co., Agra, UP.\n\nTo,\nMr. Suresh Agarwal, Mathura, UP.\n\nSubject: Demand Notice under Section 138 of the Negotiable Instruments Act.\n\nWhereas cheque no. 778899 dated 25-04-2026 for Rs. 6,00,000 drawn on Axis Bank Agra was returned unpaid bearing the endorsement 'insufficient funds'. As per Section 138 of the NI Act [CITE:NI-ACT/CH-XVII/S-138], the drawer is criminally liable. Under Section 142 of the NI Act [CITE:NI-ACT/FAKE/S-142], cognizance is taken by a first-class magistrate.\n\nYou are demanded to pay Rs. 6,00,000 within fifteen days of receipt of this notice.\n\nYours faithfully,\nAdv. Arun Verma\nDate: 13-06-2026",
+        "cite_markers": [
+          { "node_id": "NI-ACT/CH-XVII/S-138", "span": [408, 431] },
+          { "node_id": "NI-ACT/FAKE/S-142", "span": [494, 514] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": ["NI-ACT/CH-XVII/S-138"],
+        "required_sections": ["sender_address", "recipient_address", "cheque_details", "demand_amount", "15_day_notice", "date_signature"]
+      }
+    }
+  ]
+}

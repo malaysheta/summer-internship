@@ -1,0 +1,964 @@
+[
+  {
+    "id": "ta-ica-1872-consideration",
+    "term_en": "consideration",
+    "term_indic": "பரிசீலனை",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved",
+    "notes": "Legal contract sense: பரிசீலனை"
+  },
+  {
+    "id": "ta-ica-1872-contract",
+    "term_en": "contract",
+    "term_indic": "ஒப்பந்தம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-agreement",
+    "term_en": "agreement",
+    "term_indic": "உடன்படிக்கை",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-proposal",
+    "term_en": "proposal",
+    "term_indic": "முன்மொழிவு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-acceptance",
+    "term_en": "acceptance",
+    "term_indic": "ஏற்புடைமை",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-promise",
+    "term_en": "promise",
+    "term_indic": "வாக்குறுதி",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-promisor",
+    "term_en": "promisor",
+    "term_indic": "வாக்குறுதியாளர்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-promisee",
+    "term_en": "promisee",
+    "term_indic": "வாக்குறுதி பெறுநர்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-breach",
+    "term_en": "breach",
+    "term_indic": "மீறல்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-39",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-damages",
+    "term_en": "damages",
+    "term_indic": "இழப்பீடு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-73",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-indemnity",
+    "term_en": "indemnity",
+    "term_indic": "சேதஈட்டு ஒப்பந்தம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-124",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-guarantee",
+    "term_en": "guarantee",
+    "term_indic": "உத்தரவாதம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-126",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-surety",
+    "term_en": "surety",
+    "term_indic": "ஜாமீன்தார்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-126",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-principal-debtor",
+    "term_en": "principal debtor",
+    "term_indic": "முதன்மைக் கடனாளி",
+    "language": "ta",
+    "node_id": "ICA-1872/S-126",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-creditor",
+    "term_en": "creditor",
+    "term_indic": "கடனீயோர்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-126",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-agency",
+    "term_en": "agency",
+    "term_indic": "முகவர் உறவு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-182",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-agent",
+    "term_en": "agent",
+    "term_indic": "முகவர்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-182",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-principal",
+    "term_en": "principal",
+    "term_indic": "அதிகார அளிப்போர்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-182",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-void-agreement",
+    "term_en": "void agreement",
+    "term_indic": "செல்லாத உடன்படிக்கை",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-voidable",
+    "term_en": "voidable contract",
+    "term_indic": "ரத்துசெய்யக்கூடிய ஒப்பந்தம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-coercion",
+    "term_en": "coercion",
+    "term_indic": "வற்புறுத்தல்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-15",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-undue-influence",
+    "term_en": "undue influence",
+    "term_indic": "தகாத செல்வாக்கு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-16",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-fraud",
+    "term_en": "fraud",
+    "term_indic": "மோசடி",
+    "language": "ta",
+    "node_id": "ICA-1872/S-17",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-misrepresentation",
+    "term_en": "misrepresentation",
+    "term_indic": "தவறான சித்தரிப்பு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-18",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-performance",
+    "term_en": "performance",
+    "term_indic": "நிறைவேற்றம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-37",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-frustration",
+    "term_en": "frustration of contract",
+    "term_indic": "ஒப்பந்த முறிவு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-56",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-novation",
+    "term_en": "novation",
+    "term_indic": "புதுப்பித்தல்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-62",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-penalty",
+    "term_en": "penalty",
+    "term_indic": "அபராதம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-74",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-liquidated-damages",
+    "term_en": "liquidated damages",
+    "term_indic": "நிர்ணயிக்கப்பட்ட இழப்பீடு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-74",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-lien",
+    "term_en": "lien",
+    "term_indic": "தடுத்து வைக்கும் உரிமை",
+    "language": "ta",
+    "node_id": "ICA-1872/S-170",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-pledge",
+    "term_en": "pledge",
+    "term_indic": "அடைமானம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-172",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-bailment",
+    "term_en": "bailment",
+    "term_indic": "பொருள் ஒப்படைப்பு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-148",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-free-consent",
+    "term_en": "free consent",
+    "term_indic": "சுதந்திர சம்மதம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-14",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-lawful-object",
+    "term_en": "lawful object",
+    "term_indic": "சட்டப்பூர்வ நோக்கம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-23",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-offer",
+    "term_en": "offer",
+    "term_indic": "முன்னிலை முன்மொழிவு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-contingent",
+    "term_en": "contingent contract",
+    "term_indic": "நிபந்தனை ஒப்பந்தம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-31",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-ratification",
+    "term_en": "ratification",
+    "term_indic": "அங்கீகாரம்",
+    "language": "ta",
+    "node_id": "ICA-1872/S-196",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-quasi-contract",
+    "term_en": "quasi-contract",
+    "term_indic": "அரை ஒப்பந்தம்",
+    "language": "ta",
+    "node_id": "ICA-1872/CH-V",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-public-policy",
+    "term_en": "public policy",
+    "term_indic": "பொது நலன் கொள்கை",
+    "language": "ta",
+    "node_id": "ICA-1872/S-23",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-restraint-of-trade",
+    "term_en": "restraint of trade",
+    "term_indic": "வணிகத் தடை",
+    "language": "ta",
+    "node_id": "ICA-1872/S-27",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-mistake",
+    "term_en": "mistake",
+    "term_indic": "தவறு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-20",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-confidentiality",
+    "term_en": "confidentiality",
+    "term_indic": "இரகசியத்தன்மை",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-confidential-information",
+    "term_en": "confidential information",
+    "term_indic": "இரகசியத் தகவல்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-disclosure",
+    "term_en": "disclosure",
+    "term_indic": "வெளிப்படுத்தல்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-nda",
+    "term_en": "non-disclosure agreement",
+    "term_indic": "இரகசியக் காப்பு ஒப்பந்தம்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-employer",
+    "term_en": "employer",
+    "term_indic": "முதலாளி",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-employee",
+    "term_en": "employee",
+    "term_indic": "ஊழியர்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-termination",
+    "term_en": "termination",
+    "term_indic": "முடிவுறுத்தல்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-salary",
+    "term_en": "salary",
+    "term_indic": "சம்பளம்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-probation",
+    "term_en": "probation",
+    "term_indic": "சோதனைக்காலம்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-employment-resignation",
+    "term_en": "resignation",
+    "term_indic": "பதவி விலகல்",
+    "language": "ta",
+    "domain": "employment",
+    "status": "approved"
+  },
+  {
+    "id": "ta-rti-public-authority",
+    "term_en": "public authority",
+    "term_indic": "பொது அதிகாரம்",
+    "language": "ta",
+    "node_id": "RTI-2005/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "RTI-2005",
+    "domain": "rti",
+    "status": "approved"
+  },
+  {
+    "id": "ta-rti-information",
+    "term_en": "information",
+    "term_indic": "தகவல்",
+    "language": "ta",
+    "node_id": "RTI-2005/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "RTI-2005",
+    "domain": "rti",
+    "status": "approved"
+  },
+  {
+    "id": "ta-rti-applicant",
+    "term_en": "applicant",
+    "term_indic": "மனுதாரர்",
+    "language": "ta",
+    "node_id": "RTI-2005/S-6",
+    "snapshot_id": "2026-06-12",
+    "act_code": "RTI-2005",
+    "domain": "rti",
+    "status": "approved"
+  },
+  {
+    "id": "ta-rti-appeal",
+    "term_en": "appeal",
+    "term_indic": "மேல்முறையீடு",
+    "language": "ta",
+    "node_id": "RTI-2005/S-19",
+    "snapshot_id": "2026-06-12",
+    "act_code": "RTI-2005",
+    "domain": "rti",
+    "status": "approved"
+  },
+  {
+    "id": "ta-rti-information-officer",
+    "term_en": "public information officer",
+    "term_indic": "பொது தகவல் அலுவலர்",
+    "language": "ta",
+    "node_id": "RTI-2005/S-5",
+    "snapshot_id": "2026-06-12",
+    "act_code": "RTI-2005",
+    "domain": "rti",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-consumer",
+    "term_en": "consumer",
+    "term_indic": "நுகர்வோர்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-complainant",
+    "term_en": "complainant",
+    "term_indic": "புகாரளிப்போர்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-complaint",
+    "term_en": "complaint",
+    "term_indic": "புகார்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-deficiency",
+    "term_en": "deficiency",
+    "term_indic": "சேவைக் குறைபாடு",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-goods",
+    "term_en": "goods",
+    "term_indic": "பொருட்கள்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-service",
+    "term_en": "service",
+    "term_indic": "சேவை",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-unfair-trade",
+    "term_en": "unfair trade practice",
+    "term_indic": "நேர்மையற்ற வணிக நடைமுறை",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-product-liability",
+    "term_en": "product liability",
+    "term_indic": "பொருள் பொறுப்பு",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-opposite-party",
+    "term_en": "opposite party",
+    "term_indic": "எதிர் தரப்பினர்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-I/S-2",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-district-commission",
+    "term_en": "district commission",
+    "term_indic": "மாவட்ட ஆணையம்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-IV/S-34",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-state-commission",
+    "term_en": "state commission",
+    "term_indic": "மாநில ஆணையம்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-IV/S-47",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-cpa-2019-national-commission",
+    "term_en": "national commission",
+    "term_indic": "தேசிய ஆணையம்",
+    "language": "ta",
+    "node_id": "CPA-2019/CH-IV/S-58",
+    "snapshot_id": "2026-06-12",
+    "act_code": "CPA-2019",
+    "domain": "consumer",
+    "status": "approved"
+  },
+  {
+    "id": "ta-general-notice",
+    "term_en": "notice",
+    "term_indic": "அறிவிப்பு",
+    "language": "ta",
+    "domain": "general",
+    "status": "approved"
+  },
+  {
+    "id": "ta-general-legal-notice",
+    "term_en": "legal notice",
+    "term_indic": "சட்ட அறிவிப்பு",
+    "language": "ta",
+    "domain": "general",
+    "status": "approved"
+  },
+  {
+    "id": "ta-general-declaration",
+    "term_en": "declaration",
+    "term_indic": "அறிவிப்பு உறுதிமொழி",
+    "language": "ta",
+    "domain": "general",
+    "status": "approved"
+  },
+  {
+    "id": "ta-general-compensation",
+    "term_en": "compensation",
+    "term_indic": "இழப்பீடு",
+    "language": "ta",
+    "domain": "general",
+    "status": "approved"
+  },
+  {
+    "id": "ta-general-undertaking",
+    "term_en": "undertaking",
+    "term_indic": "உறுதிமொழி",
+    "language": "ta",
+    "domain": "general",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-plaintiff",
+    "term_en": "plaintiff",
+    "term_indic": "வாதி",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-defendant",
+    "term_en": "defendant",
+    "term_indic": "பிரதிவாதி",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-jurisdiction",
+    "term_en": "jurisdiction",
+    "term_indic": "அதிகார வரம்பு",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-affidavit",
+    "term_en": "affidavit",
+    "term_indic": "சத்தியப் பிரமாணம்",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-evidence",
+    "term_en": "evidence",
+    "term_indic": "சாட்சியம்",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-relief",
+    "term_en": "relief",
+    "term_indic": "நிவாரணம்",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-remedy",
+    "term_en": "remedy",
+    "term_indic": "தீர்வு",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-cause-of-action",
+    "term_en": "cause of action",
+    "term_indic": "வழக்குக் காரணம்",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-summons",
+    "term_en": "summons",
+    "term_indic": "சம்மன்",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-injunction",
+    "term_en": "injunction",
+    "term_indic": "தடை உத்தரவு",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-procedure-specific-performance",
+    "term_en": "specific performance",
+    "term_indic": "குறிப்பிட்ட நிறைவேற்றம்",
+    "language": "ta",
+    "domain": "procedure",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-cheque",
+    "term_en": "cheque",
+    "term_indic": "காசோலை",
+    "language": "ta",
+    "node_id": "NI-1881/S-6",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-dishonour",
+    "term_en": "dishonour of cheque",
+    "term_indic": "காசோலை நிராகரிப்பு",
+    "language": "ta",
+    "node_id": "NI-1881/S-138",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-drawer",
+    "term_en": "drawer",
+    "term_indic": "வரைவோர்",
+    "language": "ta",
+    "node_id": "NI-1881/S-6",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-drawee",
+    "term_en": "drawee",
+    "term_indic": "வரைவு பெறுநர்",
+    "language": "ta",
+    "node_id": "NI-1881/S-6",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-payee",
+    "term_en": "payee",
+    "term_indic": "செலுத்தல் பெறுநர்",
+    "language": "ta",
+    "node_id": "NI-1881/S-6",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-negotiable-instrument",
+    "term_en": "negotiable instrument",
+    "term_indic": "பரிவர்த்தனை ஆவணம்",
+    "language": "ta",
+    "node_id": "NI-1881/S-13",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-promissory-note",
+    "term_en": "promissory note",
+    "term_indic": "வாக்குறுதி பத்திரம்",
+    "language": "ta",
+    "node_id": "NI-1881/S-4",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ni-1881-bill-of-exchange",
+    "term_en": "bill of exchange",
+    "term_indic": "மாற்றுப் பத்திரம்",
+    "language": "ta",
+    "node_id": "NI-1881/S-5",
+    "snapshot_id": "2026-06-12",
+    "act_code": "NI-1881",
+    "domain": "contract",
+    "status": "approved"
+  },
+  {
+    "id": "ta-general-arbitration",
+    "term_en": "arbitration",
+    "term_indic": "நடுவர் மன்றம்",
+    "language": "ta",
+    "domain": "general",
+    "status": "approved"
+  },
+  {
+    "id": "ta-general-power-of-attorney",
+    "term_en": "power of attorney",
+    "term_indic": "வக்கீல் அதிகாரம்",
+    "language": "ta",
+    "domain": "general",
+    "status": "approved"
+  },
+  {
+    "id": "ta-ica-1872-appropriation",
+    "term_en": "appropriation",
+    "term_indic": "ஒதுக்கீடு",
+    "language": "ta",
+    "node_id": "ICA-1872/S-59",
+    "snapshot_id": "2026-06-12",
+    "act_code": "ICA-1872",
+    "domain": "contract",
+    "status": "approved"
+  }
+]

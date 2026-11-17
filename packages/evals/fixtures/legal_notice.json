@@ -1,0 +1,100 @@
+{
+  "dataset_id": "legal_notice",
+  "fixtures": [
+    {
+      "fixture_id": "ln-001-valid",
+      "doc_type": "legal_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 180, "duration_ms": 780 },
+        { "agent": "drafter", "step": "draft", "tokens": 820, "duration_ms": 2050 },
+        { "agent": "citator", "step": "cite", "tokens": 460, "duration_ms": 1280 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Priya Shah, On behalf of Mr. Ramesh Gupta, 45 MG Road, Bengaluru.\n\nTo,\nThe Managing Director, Apex Constructions Pvt. Ltd., Brigade Road, Bengaluru.\n\nSubject: Legal Notice for Recovery of Dues.\n\nWhereas my client, Mr. Ramesh Gupta, entered into an agreement with your company on 15-Jan-2025 for supply of materials worth Rs. 5,00,000. The facts are that your company has failed to make payment despite repeated reminders. As per Section 138 of the Negotiable Instruments Act [CITE:NI-ACT/CH-XVII/S-138], dishonoured cheques attract criminal liability.\n\nYou are hereby called upon and demanded to pay Rs. 5,00,000 to my client within 15 days of receipt of this notice, failing which legal proceedings shall be initiated without further notice.\n\nYours faithfully,\nAdv. Priya Shah\nDate: 10-06-2026",
+        "cite_markers": [
+          { "node_id": "NI-ACT/CH-XVII/S-138", "span": [420, 443] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": ["NI-ACT/CH-XVII/S-138"],
+        "required_sections": ["sender_address", "recipient_address", "subject", "facts", "demand", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "ln-002-missing-demand",
+      "doc_type": "legal_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 165, "duration_ms": 740 },
+        { "agent": "drafter", "step": "draft", "tokens": 710, "duration_ms": 1900 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Kavita Rao, On behalf of Ms. Sunita Mehta, 22 Linking Road, Mumbai.\n\nTo,\nThe Proprietor, Krishna Textiles, Dharavi, Mumbai.\n\nSubject: Legal Notice for Defective Goods.\n\nWhereas my client purchased 200 metres of fabric from your store on 01-05-2026 for Rs. 40,000. The facts are that the fabric supplied was of substandard quality, contrary to the agreed specifications.\n\nYours faithfully,\nAdv. Kavita Rao\nDate: 11-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["sender_address", "recipient_address", "subject", "facts", "demand", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "ln-003-uncited-ni-act",
+      "doc_type": "legal_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 175, "duration_ms": 760 },
+        { "agent": "drafter", "step": "draft", "tokens": 760, "duration_ms": 1980 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Amit Desai, On behalf of Mr. Vijay Joshi, 5 Patel Nagar, Delhi.\n\nTo,\nThe Director, Prime Exports Ltd., Connaught Place, Delhi.\n\nSubject: Notice for Dishonoured Cheque.\n\nWhereas my client deposited cheque no. 009231 dated 15-04-2026 for Rs. 2,00,000 drawn on HDFC Bank. The said cheque was returned unpaid due to insufficient funds. Under Section 138 of the Negotiable Instruments Act, dishonoured cheques attract criminal liability and the payee is entitled to initiate prosecution.\n\nYou are demanded to pay Rs. 2,00,000 within fifteen days of receipt of this notice, failing which legal action shall follow.\n\nYours faithfully,\nAdv. Amit Desai\nDate: 12-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["sender_address", "recipient_address", "subject", "facts", "demand", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "ln-004-invalid-cite",
+      "doc_type": "legal_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 170, "duration_ms": 750 },
+        { "agent": "drafter", "step": "draft", "tokens": 790, "duration_ms": 2010 },
+        { "agent": "citator", "step": "cite", "tokens": 410, "duration_ms": 1190 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Neha Kapoor, On behalf of Mrs. Leela Verma, 12 Civil Lines, Jaipur.\n\nTo,\nThe Manager, Skyline Builders, MI Road, Jaipur.\n\nSubject: Notice for Breach of Construction Agreement.\n\nWhereas my client entered into a construction agreement with your firm. The facts are that your firm has abandoned construction midway. Under Section 73 of the Indian Contract Act [CITE:CONTRACT-FAKE/S-73], damages are payable for breach.\n\nYou are called upon to comply and restore the project within 15 days, failing which suit shall be filed.\n\nYours faithfully,\nAdv. Neha Kapoor\nDate: 12-06-2026",
+        "cite_markers": [
+          { "node_id": "CONTRACT-FAKE/S-73", "span": [375, 395] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["sender_address", "recipient_address", "subject", "facts", "demand", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "ln-005-mixed",
+      "doc_type": "legal_notice",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 190, "duration_ms": 810 },
+        { "agent": "drafter", "step": "draft", "tokens": 850, "duration_ms": 2100 },
+        { "agent": "citator", "step": "cite", "tokens": 470, "duration_ms": 1310 }
+      ],
+      "draft_output": {
+        "text": "From:\nAdv. Sanjay Patil, On behalf of M/s Patil Enterprises, 88 FC Road, Pune.\n\nTo,\nThe CEO, TechSoft Solutions, Hinjewadi, Pune.\n\nSubject: Legal Notice for Non-Payment of Software Services.\n\nWhereas my client rendered IT services to your company totalling Rs. 8,00,000 as per the services agreement. The facts are that cheque no. 442211 dated 01-05-2026 was returned unpaid. As per Section 138 of the NI Act [CITE:NI-ACT/CH-XVII/S-138], the drawer is liable. Additionally, under Clause 12 of the agreement [CITE:AGREEMENT/FAKE/CL-12], penalty interest accrues.\n\nYou are demanded to pay Rs. 8,00,000 plus 18% interest within 15 days of this notice.\n\nYours faithfully,\nAdv. Sanjay Patil\nDate: 13-06-2026",
+        "cite_markers": [
+          { "node_id": "NI-ACT/CH-XVII/S-138", "span": [392, 415] },
+          { "node_id": "AGREEMENT/FAKE/CL-12", "span": [468, 491] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": ["NI-ACT/CH-XVII/S-138"],
+        "required_sections": ["sender_address", "recipient_address", "subject", "facts", "demand", "date_signature"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "dataset_id": "nda",
+  "fixtures": [
+    {
+      "fixture_id": "nda-001-valid",
+      "doc_type": "nda",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 195, "duration_ms": 800 },
+        { "agent": "drafter", "step": "draft", "tokens": 950, "duration_ms": 2300 }
+      ],
+      "draft_output": {
+        "text": "NON-DISCLOSURE AGREEMENT\n\nThis Non-Disclosure Agreement (\"Agreement\") is entered into as of 10-06-2026 between:\n\nParty A (Disclosing Party): TechVision Pvt. Ltd., 101 Cyber Hub, Gurugram, Haryana (\"Company\" / \"Employer\").\n\nParty B (Receiving Party): Mr. Arjun Mehta, Contractor, 22 Sector 14, Gurugram (\"Recipient\").\n\nConfidential Information means all technical, business, financial, and product data disclosed by Party A to Party B in connection with the project.\n\nObligations: Party B shall not disclose, copy, or use Confidential Information for any purpose other than the project. Party B agrees not to disclose any proprietary information to third parties. Party B undertakes to maintain strict confidentiality.\n\nTerm: This Agreement shall remain valid for a period of 3 years from the date of execution.\n\nSignature:\nArjun Mehta (Party B)\nDate: 10-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["party_a", "party_b", "confidential_info_definition", "obligations", "term", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "nda-002-missing-term",
+      "doc_type": "nda",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 178, "duration_ms": 770 },
+        { "agent": "drafter", "step": "draft", "tokens": 810, "duration_ms": 2050 }
+      ],
+      "draft_output": {
+        "text": "NON-DISCLOSURE AGREEMENT\n\nThis Agreement is entered into between:\n\nParty A (Disclosing Party): Nexus Software Ltd., Whitefield, Bengaluru.\n\nParty B (Receiving Party): Ms. Priya Bhat, Employee, Koramangala, Bengaluru.\n\nConfidential Information means any and all proprietary information, trade secrets, and business data.\n\nObligations: Party B shall not disclose any Confidential Information to third parties. Party B must not use the information for personal gain or competing purposes.\n\nSignature:\nPriya Bhat\nDate: 11-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["party_a", "party_b", "confidential_info_definition", "obligations", "term", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "nda-003-uncited-obligation",
+      "doc_type": "nda",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 182, "duration_ms": 780 },
+        { "agent": "drafter", "step": "draft", "tokens": 840, "duration_ms": 2100 }
+      ],
+      "draft_output": {
+        "text": "NON-DISCLOSURE AGREEMENT\n\nThis Agreement is made between:\n\nParty A (Disclosing Party): InnovateTech India Pvt. Ltd., Andheri East, Mumbai.\n\nParty B (Receiving Party): Mr. Rohan Shah, Contractor, Bandra West, Mumbai.\n\nConfidential Information includes but is not limited to all source code, product roadmaps, and client databases.\n\nObligations: Party B shall not disclose any Confidential Information. Under Indian law, breach of this agreement will entitle Party A to seek injunctive relief and damages without proof of actual damage. The receiving party agrees not to use proprietary information for competing ventures.\n\nTerm: This Agreement is valid for 2 years from the date of execution.\n\nSignature:\nRohan Shah\nDate: 12-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["party_a", "party_b", "confidential_info_definition", "obligations", "term", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "nda-004-invalid-cite",
+      "doc_type": "nda",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 188, "duration_ms": 790 },
+        { "agent": "drafter", "step": "draft", "tokens": 870, "duration_ms": 2150 },
+        { "agent": "citator", "step": "cite", "tokens": 430, "duration_ms": 1200 }
+      ],
+      "draft_output": {
+        "text": "NON-DISCLOSURE AGREEMENT\n\nThis Agreement is entered into between:\n\nParty A: GlobalTech Services, Hitech City, Hyderabad.\n\nParty B: Mr. Kiran Reddy, Second Party, Kondapur, Hyderabad.\n\nConfidential Information means all proprietary information disclosed during the engagement.\n\nObligations: Party B shall not disclose any information. Under Section 72A of the IT Act [CITE:IT-ACT-FAKE/S-72A], unauthorized disclosure is punishable. Party B undertakes to maintain confidentiality.\n\nTerm: Valid for 3 years from execution.\n\nSignature: Kiran Reddy\nDate: 12-06-2026",
+        "cite_markers": [
+          { "node_id": "IT-ACT-FAKE/S-72A", "span": [345, 365] }
+        ]
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["party_a", "party_b", "confidential_info_definition", "obligations", "term", "date_signature"]
+      }
+    },
+    {
+      "fixture_id": "nda-005-missing-parties",
+      "doc_type": "nda",
+      "language": "en",
+      "agent_traces": [
+        { "agent": "classifier", "step": "classify", "tokens": 160, "duration_ms": 730 },
+        { "agent": "drafter", "step": "draft", "tokens": 700, "duration_ms": 1880 }
+      ],
+      "draft_output": {
+        "text": "NON-DISCLOSURE AGREEMENT\n\nConfidential Information includes but is not limited to source code, algorithms, and customer data.\n\nObligations: The recipient agrees not to disclose any proprietary information to unauthorized persons. The recipient shall not use Confidential Information for any competing business purpose.\n\nTerm: This Agreement expires 2 years from date of signing.\n\nSignature: [Recipient]\nDate: 13-06-2026",
+        "cite_markers": []
+      },
+      "ground_truth": {
+        "valid_node_ids": [],
+        "required_sections": ["party_a", "party_b", "confidential_info_definition", "obligations", "term", "date_signature"]
+      }
+    }
+  ]
+}
