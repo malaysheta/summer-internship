@@ -20,7 +20,6 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/documents/[id]/export": [
       "./public/fonts/**",
-      "./node_modules/@sparticuz/chromium/bin/**",
       "../../node_modules/.pnpm/@sparticuz+chromium@*/node_modules/@sparticuz/chromium/bin/**",
     ],
   },
