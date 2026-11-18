@@ -1,7 +1,7 @@
 # Trionic Adalat
 
 A multilingual, agentic AI assistant for **Indian legal drafting and research** — grounded in authoritative legal texts via PageIndex, with mandatory citations on every output.
-
+ 
 > **Status:** Internal — Trionic Summer Internship 2026 cohort. Not yet public.
 
 ## Quick links
