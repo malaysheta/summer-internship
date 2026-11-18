@@ -1,42 +1,67 @@
 "use client";
 
-import { AdminLayout } from "@/components/admin/admin-layout";
+import { Link } from "@/i18n/routing";
+import { AdminPageHeader } from "@/components/admin/admin-layout";
 import { MetricsCards } from "@/components/admin/metrics-cards";
 import { useAdminMetrics } from "@/hooks/use-admin-metrics";
-import { Loader2, AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowUpRight } from "lucide-react";
+
+const SHORTCUTS = [
+  { href: "/admin/analytics", title: "Analytics", body: "Usage trends, conversion and top users." },
+  { href: "/admin/audit", title: "Audit logs", body: "Every LLM call with cost, latency and status." },
+  { href: "/admin/evals", title: "Model performance", body: "Daily cost and latency per model." },
+];
 
 export default function AdminDashboardPage() {
   const { metrics, loading, error } = useAdminMetrics();
 
   return (
-    <AdminLayout
-      title="Admin Dashboard"
-      description="View cohort metrics, drafts breakdown, and total LLM budget details."
-    >
-      <div className="space-y-6 mt-2">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center min-h-[30vh] gap-3">
-            <Loader2 className="size-6 animate-spin text-indigo-500" />
-            <p className="text-xs text-slate-500 font-medium">Loading metrics...</p>
+    <>
+      <AdminPageHeader title="Overview" description="Drafts, languages and LLM spend across the platform." />
+
+      {loading ? (
+        <div className="space-y-6" aria-busy="true" aria-label="Loading metrics">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="h-[118px] animate-pulse rounded-xl border border-zinc-200 bg-white" />
+            ))}
           </div>
-        ) : error ? (
-          <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl text-sm">
-            <AlertCircle className="size-5 shrink-0" />
-            <span>Failed to load admin metrics: {error}</span>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {[0, 1].map((i) => (
+              <div key={i} className="h-56 animate-pulse rounded-xl border border-zinc-200 bg-white" />
+            ))}
           </div>
-        ) : metrics ? (
-          <MetricsCards
-            totalDrafts={metrics.totalDrafts}
-            draftsByType={metrics.draftsByType}
-            draftsByLanguage={metrics.draftsByLanguage}
-            totalLlmCostThisMonth={metrics.totalLlmCostThisMonth}
-          />
-        ) : (
-          <div className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl text-center text-xs text-slate-500">
-            No metrics data available.
-          </div>
-        )}
+        </div>
+      ) : error ? (
+        <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <AlertCircle className="size-4 shrink-0" />
+          Failed to load metrics: {error}
+        </div>
+      ) : metrics ? (
+        <MetricsCards
+          totalDrafts={metrics.totalDrafts}
+          draftsByType={metrics.draftsByType}
+          draftsByLanguage={metrics.draftsByLanguage}
+          totalLlmCostThisMonth={metrics.totalLlmCostThisMonth}
+        />
+      ) : null}
+
+      <h2 className="mt-10 mb-3 text-sm font-medium text-zinc-900">Jump to</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {SHORTCUTS.map((s) => (
+          <Link
+            key={s.href}
+            href={s.href}
+            className="group rounded-xl border border-zinc-200 bg-white p-5 shadow-xs transition-colors hover:border-zinc-300"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-zinc-900">{s.title}</span>
+              <ArrowUpRight className="size-4 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </div>
+            <p className="mt-1 text-sm text-zinc-500">{s.body}</p>
+          </Link>
+        ))}
       </div>
-    </AdminLayout>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, FileSpreadsheet, Globe, DollarSign } from "lucide-react";
+import { FileText, Globe, Layers, Wallet } from "lucide-react";
 
 interface MetricsCardsProps {
   totalDrafts: number;
@@ -9,7 +9,7 @@ interface MetricsCardsProps {
   totalLlmCostThisMonth: number;
 }
 
-const LANGUAGE_LABELS: Record<string, string> = {
+export const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",
   hi: "Hindi",
   gu: "Gujarati",
@@ -49,90 +49,100 @@ export function MetricsCards({
   draftsByLanguage,
   totalLlmCostThisMonth,
 }: MetricsCardsProps) {
-  // Sort types by count descending
-  const sortedTypes = Object.entries(draftsByType).sort((a, b) => b[1] - a[1]);
-  // Sort languages by count descending
-  const sortedLanguages = Object.entries(draftsByLanguage).sort((a, b) => b[1] - a[1]);
+  const types = Object.entries(draftsByType).sort((a, b) => b[1] - a[1]);
+  const languages = Object.entries(draftsByLanguage).sort((a, b) => b[1] - a[1]);
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {/* Total Drafts */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm transition-all duration-200 hover:border-slate-700/80 flex flex-col justify-between min-h-[160px]">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Drafts</span>
-          <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl">
-            <FileText className="size-5" />
-          </div>
-        </div>
-        <div className="mt-4">
-          <div className="text-3xl font-extrabold text-slate-100">{totalDrafts}</div>
-          <p className="text-xs text-slate-400 mt-1">Created drafts across all users</p>
-        </div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatTile label="Total drafts" value={totalDrafts.toLocaleString()} hint="Across all users" icon={FileText} />
+        <StatTile
+          label="LLM spend"
+          value={CURRENCY_FORMATTER.format(totalLlmCostThisMonth)}
+          hint="This month"
+          icon={Wallet}
+        />
+        <StatTile label="Document types" value={String(types.length)} hint="In use" icon={Layers} />
+        <StatTile label="Languages" value={String(languages.length)} hint="In use" icon={Globe} />
       </div>
 
-      {/* Drafts by Document Type */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm transition-all duration-200 hover:border-slate-700/80 flex flex-col justify-between min-h-[160px]">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">By Doc Type</span>
-          <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl">
-            <FileSpreadsheet className="size-5" />
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto max-h-[90px] pr-1 space-y-1.5 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
-          {sortedTypes.length === 0 ? (
-            <span className="text-xs text-slate-500 italic">No document types</span>
-          ) : (
-            sortedTypes.map(([type, count]) => (
-              <div key={type} className="flex justify-between items-center text-xs">
-                <span className="text-slate-300 truncate mr-2">{mapDbDocTypeToLabel(type)}</span>
-                <span className="font-mono font-bold text-slate-100 bg-slate-800 px-2 py-0.5 rounded-full">
-                  {count}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Drafts by Language */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm transition-all duration-200 hover:border-slate-700/80 flex flex-col justify-between min-h-[160px]">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">By Language</span>
-          <div className="p-2 bg-amber-500/10 text-amber-400 rounded-xl">
-            <Globe className="size-5" />
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto max-h-[90px] pr-1 space-y-1.5 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
-          {sortedLanguages.length === 0 ? (
-            <span className="text-xs text-slate-500 italic">No languages logged</span>
-          ) : (
-            sortedLanguages.map(([lang, count]) => (
-              <div key={lang} className="flex justify-between items-center text-xs">
-                <span className="text-slate-300 truncate mr-2">{LANGUAGE_LABELS[lang] || lang}</span>
-                <span className="font-mono font-bold text-slate-100 bg-slate-800 px-2 py-0.5 rounded-full">
-                  {count}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Total LLM Cost */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm transition-all duration-200 hover:border-slate-700/80 flex flex-col justify-between min-h-[160px]">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Cost (This Month)</span>
-          <div className="p-2 bg-rose-500/10 text-rose-400 rounded-xl">
-            <DollarSign className="size-5" />
-          </div>
-        </div>
-        <div className="mt-4">
-          <div className="text-3xl font-extrabold text-slate-100">
-            {CURRENCY_FORMATTER.format(totalLlmCostThisMonth)}
-          </div>
-          <p className="text-xs text-slate-400 mt-1">Aggregated LLM API spend</p>
-        </div>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Breakdown
+          title="Drafts by document type"
+          rows={types.map(([k, v]) => [mapDbDocTypeToLabel(k), v])}
+          total={totalDrafts}
+          empty="No drafts created yet."
+        />
+        <Breakdown
+          title="Drafts by language"
+          rows={languages.map(([k, v]) => [LANGUAGE_LABELS[k] || k, v])}
+          total={totalDrafts}
+          empty="No drafts created yet."
+        />
       </div>
     </div>
+  );
+}
+
+function StatTile({
+  label,
+  value,
+  hint,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  hint: string;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-xs">
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-zinc-500">{label}</span>
+        <Icon className="size-4 text-zinc-400" />
+      </div>
+      <p className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 tabular-nums">{value}</p>
+      <p className="mt-1 text-xs text-zinc-400">{hint}</p>
+    </div>
+  );
+}
+
+function Breakdown({
+  title,
+  rows,
+  total,
+  empty,
+}: {
+  title: string;
+  rows: [string, number][];
+  total: number;
+  empty: string;
+}) {
+  return (
+    <section className="rounded-xl border border-zinc-200 bg-white shadow-xs">
+      <h2 className="border-b border-zinc-100 px-5 py-3.5 text-sm font-medium text-zinc-900">{title}</h2>
+      {rows.length === 0 ? (
+        <p className="px-5 py-10 text-center text-sm text-zinc-400">{empty}</p>
+      ) : (
+        <ul className="space-y-3.5 px-5 py-4">
+          {rows.map(([label, count]) => {
+            const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+            return (
+              <li key={label}>
+                <div className="flex items-baseline justify-between text-sm">
+                  <span className="text-zinc-700">{label}</span>
+                  <span className="tabular-nums text-zinc-500">
+                    {count.toLocaleString()} <span className="text-zinc-400">· {pct}%</span>
+                  </span>
+                </div>
+                <div className="mt-1.5 h-1.5 rounded-full bg-zinc-100">
+                  <div className="h-full rounded-full bg-zinc-800" style={{ width: `${pct}%` }} />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
   );
 }

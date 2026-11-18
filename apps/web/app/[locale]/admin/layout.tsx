@@ -11,6 +11,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { AdminShell } from "@/components/admin/admin-layout";
 
 export const dynamic = "force-dynamic";
 
@@ -39,5 +40,5 @@ export default async function AdminGateLayout({
     redirect(`/${locale}/dashboard`);
   }
 
-  return <>{children}</>;
+  return <AdminShell email={user.email ?? ""}>{children}</AdminShell>;
 }

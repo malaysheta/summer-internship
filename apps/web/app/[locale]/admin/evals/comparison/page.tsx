@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 type ComparisonEvalRun = {
   id: string;
@@ -105,35 +104,10 @@ export default function ComparisonPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
-      <nav className="mx-auto mb-6 flex w-full max-w-7xl items-center justify-between">
-        <div className="text-2xl sm:text-3xl font-bold text-slate-900">
-          Trionic Adalat
-        </div>
-        <div className="flex gap-3">
-          <Link
-            href="/admin/evals/citation-validity"
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
-          >
-            Citation Validity
-          </Link>
-          <Link
-            href="/admin/evals"
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700"
-          >
-            Per-LLM Dashboard
-          </Link>
-          <Link
-            href="/auth/sign-in"
-            className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white"
-          >
-            Admin login
-          </Link>
-        </div>
-      </nav>
+    <div className="text-slate-950">
 
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-        <header className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
+      <section className="mx-auto flex w-full max-w-none flex-col gap-6">
+        <header className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
           <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
             Team F · Evals & Telemetry
           </p>
@@ -149,25 +123,25 @@ export default function ComparisonPage() {
           </div>
         </header>
 
-        <div className="rounded-3xl border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-800 shadow-sm">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-6 py-4 text-sm text-amber-800 shadow-sm">
           Cost/run and p95 latency columns pending — waiting on Om&apos;s GET
           route fix. Multi-model runs pending — waiting on Vercel API keys +
           DeepSeek wiring (@YugGandhi).
         </div>
 
         {loading ? (
-          <div className="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500 shadow-sm">
+          <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500 shadow-sm">
             Loading comparison runs...
           </div>
         ) : error ? (
-          <div className="rounded-3xl border border-rose-200 bg-rose-50 px-6 py-5 text-sm text-rose-800 shadow-sm">
+          <div className="rounded-xl border border-rose-200 bg-rose-50 px-6 py-5 text-sm text-rose-800 shadow-sm">
             {error}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="min-w-[960px] w-full border-collapse text-left">
-                <thead className="bg-slate-950 text-xs uppercase tracking-[0.22em] text-slate-200">
+                <thead className="border-b border-slate-100 bg-slate-50/60 text-xs text-slate-500">
                   <tr>
                     <th className="px-5 py-4 font-medium">Date</th>
                     <th className="px-5 py-4 font-medium">Dataset</th>
@@ -243,6 +217,6 @@ export default function ComparisonPage() {
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }

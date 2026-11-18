@@ -320,11 +320,11 @@ export default function AnalyticsDashboard() {
       : "0.0";
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
+    <div className="text-slate-950">
 
       {/* Header */}
-      <section className="mx-auto mb-6 w-full max-w-7xl">
-        <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
+      <section className="mx-auto mb-6 w-full max-w-none">
+        <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
           <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
             Team F · Evals & Telemetry
           </p>
@@ -362,21 +362,21 @@ export default function AnalyticsDashboard() {
       </section>
 
       {loading ? (
-        <div className="mx-auto w-full max-w-7xl rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500">
+        <div className="mx-auto w-full max-w-none rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500">
           Loading analytics…
         </div>
       ) : error ? (
-        <div className="mx-auto w-full max-w-7xl rounded-3xl border border-rose-200 bg-rose-50 px-6 py-5 text-sm text-rose-800">
+        <div className="mx-auto w-full max-w-none rounded-xl border border-rose-200 bg-rose-50 px-6 py-5 text-sm text-rose-800">
           {error}
         </div>
       ) : (
-        <section className="mx-auto w-full max-w-7xl space-y-6">
+        <section className="mx-auto w-full max-w-none space-y-6">
 
           {/* Row 1 — Doc type + Language */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {/* Cell 1 — Doc-type popularity with % */}
-            <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
                 Document Type Popularity
               </h2>
@@ -407,7 +407,7 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Cell 2 — Language distribution */}
-            <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
                 Language Distribution
               </h2>
@@ -440,7 +440,7 @@ export default function AnalyticsDashboard() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {/* Conversion Funnel */}
-            <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
                 Conversion Funnel
               </h2>
@@ -475,7 +475,7 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Language per doc-type */}
-            <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
                 Language per Doc Type (top 3)
               </h2>
@@ -502,7 +502,7 @@ export default function AnalyticsDashboard() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {/* Cell 3 — Exports per day */}
-            <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
                 Exports Per Day (last 7 days)
               </h2>
@@ -527,7 +527,7 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Cell 6 — Daily draft creation count */}
-            <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
                 Daily Draft Creation Count (last 7 days)
               </h2>
@@ -553,7 +553,7 @@ export default function AnalyticsDashboard() {
           </div>
 
           {/* Cell 5 — Per-act citation frequency */}
-          <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+          <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-500">
                 Per-Act Citation Frequency
@@ -586,6 +586,6 @@ export default function AnalyticsDashboard() {
 
         </section>
       )}
-    </main>
+    </div>
   );
 }

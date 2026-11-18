@@ -89,12 +89,12 @@ export function ExportButton({ startDate, endDate }: ExportButtonProps) {
     <button
       onClick={handleExport}
       disabled={exporting}
-      className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 text-white rounded-xl text-xs font-semibold shadow-lg hover:shadow-indigo-500/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed active:scale-95"
+      className="inline-flex h-9 items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-900 shadow-xs transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {exporting ? (
         <>
           <Loader2 className="size-4 animate-spin" />
-          <span>Exporting...</span>
+          <span>Exporting…</span>
         </>
       ) : (
         <>

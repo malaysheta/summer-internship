@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import type { Document, DocumentType } from "@trionic/shared";
 import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@/i18n/routing";
-import { Plus, LogOut } from "lucide-react";
+import { Plus, LogOut, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { FilterBar, type FilterState } from "./_components/filter-bar";
 import { DocumentTable } from "./_components/document-table";
@@ -25,6 +25,15 @@ export default function DashboardPage() {
 
   const router   = useRouter();
   const supabase = createClient();
+
+  // Admin entry point is UI-only; /admin itself re-checks the role server-side.
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    fetch("/api/users/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((me: { role?: string } | null) => setIsAdmin(me?.role === "admin"))
+      .catch(() => setIsAdmin(false));
+  }, []);
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -128,6 +137,14 @@ export default function DashboardPage() {
         </div>
         <div className="flex gap-2 items-center">
           <LanguageSwitcher />
+          {isAdmin && (
+            <Button asChild variant="outline" className="gap-2 cursor-pointer">
+              <Link href="/admin">
+                <ShieldCheck className="h-4 w-4" />
+                Admin
+              </Link>
+            </Button>
+          )}
           <Button asChild className="gap-2 cursor-pointer">
             <Link href="/new">
               <Plus className="h-4 w-4" />

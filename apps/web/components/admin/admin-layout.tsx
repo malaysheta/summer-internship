@@ -1,186 +1,149 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Link, useRouter, usePathname } from "@/i18n/routing";
-import { LayoutDashboard, ClipboardList, Settings, Loader2 } from "lucide-react";
+import { Link, usePathname } from "@/i18n/routing";
+import {
+  ArrowLeft,
+  BadgeCheck,
+  BarChart3,
+  Gauge,
+  GitCompareArrows,
+  LayoutDashboard,
+  ScrollText,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface AdminLayoutProps {
-  children: React.ReactNode;
-  title?: string;
-  description?: string;
-}
-
-interface SidebarItem {
+type NavItem = {
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  description: string;
-}
+};
 
-const navigationItems: SidebarItem[] = [
+const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
   {
-    name: "Admin Dashboard",
-    href: "/admin",
-    icon: LayoutDashboard,
-    description: "High-level metrics and usage statistics",
+    label: "Monitor",
+    items: [
+      { name: "Overview", href: "/admin", icon: LayoutDashboard },
+      { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+      { name: "Audit logs", href: "/admin/audit", icon: ScrollText },
+    ],
   },
   {
-    name: "Audit Logs",
-    href: "/admin/audit",
-    icon: ClipboardList,
-    description: "Trace chronological LLM usage logs",
-  },
-  {
-    name: "Settings",
-    href: "/settings",
-    icon: Settings,
-    description: "Configure profile details and credentials",
+    label: "Evals",
+    items: [
+      { name: "Model performance", href: "/admin/evals", icon: Gauge },
+      { name: "Citation validity", href: "/admin/evals/citation-validity", icon: BadgeCheck },
+      { name: "Model comparison", href: "/admin/evals/comparison", icon: GitCompareArrows },
+    ],
   },
 ];
 
-export function AdminLayout({
-  children,
-  title = "Admin Portal",
-  description = "View audit logs, cohort metrics, and system activity.",
-}: AdminLayoutProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(true);
+const ALL_ITEMS = NAV_SECTIONS.flatMap((s) => s.items);
 
-  useEffect(() => {
-    let active = true;
+// Longest matching href wins, so /admin/evals/comparison doesn't also light up /admin/evals.
+function activeHref(pathname: string) {
+  return ALL_ITEMS.map((i) => i.href)
+    .filter((href) => pathname === href || pathname.startsWith(`${href}/`))
+    .sort((a, b) => b.length - a.length)[0];
+}
 
-    async function checkRole() {
-      try {
-        const res = await fetch("/api/users/me");
-        if (res.status === 401) {
-          if (active) {
-            router.push("/auth/sign-in");
-          }
-          return;
-        }
-
-        const user = await res.json();
-        if (user.role === "admin") {
-          if (active) {
-            setIsAdmin(true);
-            setLoading(false);
-          }
-        } else {
-          if (active) {
-            setIsAdmin(false);
-            router.push("/dashboard");
-          }
-        }
-      } catch (err) {
-        console.error("Auth check error in AdminLayout:", err);
-        if (active) {
-          setIsAdmin(false);
-          router.push("/dashboard");
-        }
-      }
-    }
-
-    checkRole();
-
-    return () => {
-      active = false;
-    };
-  }, [router]);
-
-  if (loading || isAdmin === false) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[50vh] gap-3">
-        <Loader2 className="size-8 animate-spin text-indigo-500" />
-        <p className="text-sm text-slate-500 font-medium">Verifying administrator credentials...</p>
-      </div>
-    );
-  }
+/** Sidebar + content frame for every /admin page. Access is enforced by app/[locale]/admin/layout.tsx. */
+export function AdminShell({ email, children }: { email: string; children: React.ReactNode }) {
+  const current = activeHref(usePathname());
 
   return (
-    <div className="flex-1 w-full max-w-6xl mx-auto px-4 py-6 md:py-10">
-      {/* Admin header */}
-      <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
-          {title}
-        </h1>
-        <p className="text-xs md:text-sm text-muted-foreground mt-0.5">
-          {description}
-        </p>
-      </div>
-
-      {/* Admin navigation and content layout */}
-      <div className="flex flex-col md:flex-row gap-6 md:gap-10 pt-4 border-t border-border">
-        {/* Navigation Sidebar */}
-        <nav aria-label="Admin navigation" className="w-full md:w-64 shrink-0">
-          {/* Mobile Navigation Tabs */}
-          <div className="flex md:hidden border-b border-border overflow-x-auto scrollbar-none -mx-4 px-4 gap-2 mb-6">
-            {navigationItems.map((item) => {
-              const isActive = pathname === item.href;
-              const Icon = item.icon;
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-2 py-3 px-4 text-sm font-medium border-b-2 whitespace-nowrap transition-colors outline-none focus-visible:bg-muted",
-                    isActive
-                      ? "border-primary text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Icon className="size-4" />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
+    <div className="flex min-h-screen bg-zinc-50/60 text-zinc-900">
+      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-zinc-200 bg-white md:flex">
+        <div className="flex h-14 items-center gap-2.5 border-b border-zinc-200 px-5">
+          <div className="flex size-7 items-center justify-center rounded-md bg-zinc-900 text-white">
+            <ShieldCheck className="size-4" />
           </div>
-
-          {/* Desktop Navigation Sidebar */}
-          <div className="hidden md:flex flex-col gap-1 w-full">
-            {navigationItems.map((item) => {
-              const isActive = pathname === item.href;
-              const Icon = item.icon;
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    isActive
-                      ? "bg-secondary text-secondary-foreground shadow-sm"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                  )}
-                >
-                  <Icon
-                    className={cn(
-                      "size-5 transition-transform duration-200 group-hover:scale-105",
-                      isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                    )}
-                  />
-                  <div className="flex flex-col text-left">
-                    <span className="font-semibold text-foreground">{item.name}</span>
-                    <span className="text-[11px] font-normal text-muted-foreground group-hover:text-foreground/80 line-clamp-1">
-                      {item.description}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
+          <div className="leading-tight">
+            <p className="text-sm font-semibold">Trionic</p>
+            <p className="text-[11px] text-zinc-500">Admin console</p>
           </div>
+        </div>
+
+        <nav aria-label="Admin" className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+          {NAV_SECTIONS.map((section) => (
+            <div key={section.label}>
+              <p className="mb-1.5 px-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+                {section.label}
+              </p>
+              <ul className="space-y-0.5">
+                {section.items.map((item) => (
+                  <li key={item.href}>
+                    <NavLink item={item} active={item.href === current} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </nav>
 
-        {/* Content Pane */}
-        <main className="flex-1 min-w-0">
-          <div className="animate-in fade-in slide-in-from-bottom-1 duration-200">
-            {children}
-          </div>
-        </main>
+        <div className="space-y-0.5 border-t border-zinc-200 px-3 py-3">
+          <NavLink item={{ name: "Settings", href: "/settings", icon: Settings }} active={false} />
+          <NavLink item={{ name: "Back to app", href: "/dashboard", icon: ArrowLeft }} active={false} />
+          <p className="truncate px-2 pt-2 text-xs text-zinc-500" title={email}>
+            {email}
+          </p>
+        </div>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Mobile: horizontal tab strip replaces the sidebar */}
+        <nav
+          aria-label="Admin"
+          className="flex gap-1 overflow-x-auto border-b border-zinc-200 bg-white px-4 py-2 md:hidden"
+        >
+          {[...ALL_ITEMS, { name: "Back to app", href: "/dashboard", icon: ArrowLeft }].map((item) => (
+            <NavLink key={item.href} item={item} active={item.href === current} compact />
+          ))}
+        </nav>
+
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-10">{children}</main>
       </div>
     </div>
+  );
+}
+
+function NavLink({ item, active, compact }: { item: NavItem; active: boolean; compact?: boolean }) {
+  const Icon = item.icon;
+  return (
+    <Link
+      href={item.href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "flex items-center gap-2.5 rounded-md px-2 text-sm whitespace-nowrap transition-colors outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
+        compact ? "h-8" : "h-9",
+        active
+          ? "bg-zinc-100 font-medium text-zinc-900"
+          : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900",
+      )}
+    >
+      <Icon className={cn("size-4", active ? "text-zinc-900" : "text-zinc-400")} />
+      {item.name}
+    </Link>
+  );
+}
+
+export function AdminPageHeader({
+  title,
+  description,
+  actions,
+}: {
+  title: string;
+  description?: string;
+  actions?: React.ReactNode;
+}) {
+  return (
+    <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{title}</h1>
+        {description && <p className="mt-1 text-sm text-zinc-500">{description}</p>}
+      </div>
+      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+    </header>
   );
 }

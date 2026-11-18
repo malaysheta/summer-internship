@@ -1,30 +1,24 @@
 "use client";
 
-import { AdminLayout } from "@/components/admin/admin-layout";
+import { AdminPageHeader } from "@/components/admin/admin-layout";
 import { AuditFilters } from "@/components/admin/audit-filters";
 import { AuditTable } from "@/components/admin/audit-table";
 import { ExportButton } from "@/components/admin/export-button";
 import { useAuditTrails } from "@/hooks/use-audit-trails";
-import { Loader2, AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 export default function AdminAuditPage() {
-  const {
-    filteredTraces,
-    uniqueUsers,
-    uniqueModels,
-    filters,
-    setFilters,
-    loading,
-    error,
-  } = useAuditTrails();
+  const { filteredTraces, uniqueUsers, uniqueModels, filters, setFilters, loading, error } = useAuditTrails();
 
   return (
-    <AdminLayout
-      title="Audit Logs"
-      description="Chronological log of all LLM traces and generation history across the system."
-    >
-      <div className="space-y-6 mt-2">
-        {/* Filters */}
+    <>
+      <AdminPageHeader
+        title="Audit logs"
+        description="Every LLM call across the platform, newest first."
+        actions={<ExportButton startDate={filters.startDate} endDate={filters.endDate} />}
+      />
+
+      <section className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xs">
         <AuditFilters
           filters={filters}
           onChange={setFilters}
@@ -32,29 +26,26 @@ export default function AdminAuditPage() {
           uniqueModels={uniqueModels}
         />
 
-        {/* Header with count and Export button */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            System Traces ({filteredTraces.length} found)
-          </h2>
-          <ExportButton startDate={filters.startDate} endDate={filters.endDate} />
+        <div className="flex items-center justify-between border-y border-zinc-100 bg-zinc-50/60 px-4 py-2.5 text-xs text-zinc-500">
+          <span>
+            {loading ? "Loading…" : `${filteredTraces.length.toLocaleString()} ${filteredTraces.length === 1 ? "trace" : "traces"}`}
+          </span>
         </div>
 
-        {/* Content Section */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center min-h-[30vh] gap-3">
-            <Loader2 className="size-6 animate-spin text-indigo-500" />
-            <p className="text-xs text-slate-500 font-medium">Loading audit logs...</p>
+          <div className="flex items-center justify-center gap-2 py-20 text-sm text-zinc-500">
+            <Loader2 className="size-4 animate-spin" />
+            Loading audit logs…
           </div>
         ) : error ? (
-          <div className="flex items-center gap-3 p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl text-sm">
-            <AlertCircle className="size-5 shrink-0" />
-            <span>Failed to load audit trails: {error}</span>
+          <div className="m-4 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <AlertCircle className="size-4 shrink-0" />
+            Failed to load audit logs: {error}
           </div>
         ) : (
           <AuditTable traces={filteredTraces} />
         )}
-      </div>
-    </AdminLayout>
+      </section>
+    </>
   );
 }
