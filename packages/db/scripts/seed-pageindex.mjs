@@ -14,7 +14,7 @@ const require = createRequire(import.meta.url);
 const { allNodes } = require("../../pageindex/dist/index.js");
 
 const DB = process.env.DATABASE_URL ?? "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
-if (!/127\.0\.0\.1|localhost/.test(DB)) {
+if (!/127\.0\.0\.1|localhost/.test(DB) && process.env.ALLOW_REMOTE_SEED !== "1") {
   console.error(`Refusing to seed non-local database: ${DB}`);
   process.exit(1);
 }
