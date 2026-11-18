@@ -14,6 +14,16 @@ const nextConfig: NextConfig = {
   // serverExternalPackages alone is not enough: Next only externalizes paths
   // inside node_modules, and pnpm workspace links resolve to packages/*.
   outputFileTracingRoot: path.join(__dirname, "../../"),
+  // PDF export on Vercel: keep the serverless Chromium unbundled, and ship its
+  // compressed binary plus the Indic fonts the export templates read from disk.
+  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+  outputFileTracingIncludes: {
+    "/api/documents/[id]/export": [
+      "./public/fonts/**",
+      "./node_modules/@sparticuz/chromium/bin/**",
+      "../../node_modules/.pnpm/@sparticuz+chromium@*/node_modules/@sparticuz/chromium/bin/**",
+    ],
+  },
   typescript: {
     // KNOWN DEBT — DO NOT TRUST THIS FLAG. apps/web currently has ~48 pre-existing
     // TS errors (mostly missing Supabase Database generic + a few stray any).

@@ -37,7 +37,7 @@ export default function DashboardPage() {
 
   async function handleSignOut() {
     await supabase.auth.signOut();
-    router.push("/auth/sign-in");
+    router.push("/");
     router.refresh();
   }
 

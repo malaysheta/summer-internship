@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from '@/i18n/routing'
 import { createClient } from '@/lib/supabase/client'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 
 export default function SignInPage() {
   const router = useRouter()
   const supabase = createClient()
   const t = useTranslations('auth')
+  const locale = useLocale()
   const tCommon = useTranslations('common')
 
   const [email, setEmail] = useState('')
@@ -22,7 +23,13 @@ export default function SignInPage() {
     setError(null)
 
     if (isSignUp) {
-      const { data, error } = await supabase.auth.signUp({ email, password })
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        // Confirmation link returns to whichever deployment the user signed up on
+        // (must also be allowed under Supabase → Auth → URL Configuration).
+        options: { emailRedirectTo: `${window.location.origin}/${locale}/auth/sign-in` },
+      })
       if (error) {
         setError(error.message)
         setLoading(false)
@@ -123,4 +130,4 @@ export default function SignInPage() {
       </div>
     </div>
   )
-}
+}

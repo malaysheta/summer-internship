@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import puppeteer from "puppeteer";
 import { Document, Packer } from "docx";
 import type { DocumentType, ExportFormat, ExportResult, SupportedLanguage } from "@trionic/shared";
 
 import { getTemplate } from "@/lib/export/templates";
 import { pdfFooter } from "@/lib/export/templates/rti.tpl";
 import { get_text } from "@trionic/pageindex";
+
+// PDF rendering launches Chromium; give it room on cold starts.
+export const maxDuration = 60;
 
 type Citation = {
   id: string;
@@ -188,25 +190,42 @@ function normalizeLanguage(language?: string): SupportedLanguage {
   return "en";
 }
 
-async function buildPdf(doc: { templateHtml: string; language: SupportedLanguage }): Promise<Buffer> {
-  const browser = await puppeteer.launch({
+// Vercel functions have no system Chrome: use the serverless Chromium build there,
+// and the full puppeteer download locally.
+async function launchBrowser() {
+  if (process.env.VERCEL) {
+    const chromium = (await import("@sparticuz/chromium")).default;
+    const puppeteerCore = (await import("puppeteer-core")).default;
+    return puppeteerCore.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+    });
+  }
+  const puppeteer = (await import("puppeteer")).default;
+  return puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
-  const page = await browser.newPage();
+}
 
-  await page.setContent(doc.templateHtml, { waitUntil: "load" });
-  const pdfBytes = await page.pdf({
-    format: "A4",
-    printBackground: true,
-    preferCSSPageSize: true,
-    displayHeaderFooter: true,
-    headerTemplate: "<span></span>",
-    footerTemplate: pdfFooter(doc.language),
-  });
-  await browser.close();
-
-  return Buffer.from(pdfBytes);
+async function buildPdf(doc: { templateHtml: string; language: SupportedLanguage }): Promise<Buffer> {
+  const browser = await launchBrowser();
+  try {
+    const page = await browser.newPage();
+    await page.setContent(doc.templateHtml, { waitUntil: "load" });
+    const pdfBytes = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      preferCSSPageSize: true,
+      displayHeaderFooter: true,
+      headerTemplate: "<span></span>",
+      footerTemplate: pdfFooter(doc.language),
+    });
+    return Buffer.from(pdfBytes);
+  } finally {
+    await browser.close();
+  }
 }
 
 async function buildDocx(doc: { templateDocx: Document }): Promise<Buffer> {
