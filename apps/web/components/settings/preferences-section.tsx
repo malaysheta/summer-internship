@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import type { User, SupportedLanguage } from "@trionic/shared";
 import { toast } from "@/hooks/use-toast";
-import { Settings, Globe, Bell, Loader2, Save } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SectionFrame, fieldLabel, fieldHint } from "./section-frame";
 
 interface PreferencesSectionProps {
   initialUser: User;
@@ -70,153 +72,88 @@ export function PreferencesSection({ initialUser, onUpdateUser }: PreferencesSec
     }));
   };
 
-  return (
-    <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm transition-all duration-200 hover:border-slate-700/80">
-      <div className="flex items-center gap-3 border-b border-slate-800 pb-4 mb-6">
-        <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl">
-          <Settings className="size-5" />
-        </div>
-        <div>
-          <h2 className="text-lg font-bold text-slate-100">Application Preferences</h2>
-          <p className="text-xs text-slate-400">Manage localization options and system notifications.</p>
-        </div>
-      </div>
+  const NOTIFICATIONS = [
+    { key: "emailNotifications", title: "Email notifications", hint: "Receive critical account alerts via email." },
+    { key: "productUpdates", title: "Product updates", hint: "Get notified when new features or draft templates launch." },
+    { key: "securityAlerts", title: "Security alerts", hint: "Immediate warnings about login events and password changes." },
+  ] as const;
 
-      <form onSubmit={handleSave} className="space-y-6">
-        {/* Language Selection */}
-        <div className="space-y-2">
-          <label htmlFor="languageSelect" className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-            <Globe className="size-4 text-slate-400" />
-            Default Language
-          </label>
-          <div className="relative">
-            <select
-              id="languageSelect"
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
-              disabled={isSaving}
-              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-3 pl-4 pr-10 text-sm text-slate-100 placeholder-slate-500 outline-none transition duration-200 focus:border-slate-700 focus:ring-4 focus:ring-slate-700/20 select-none appearance-none cursor-pointer"
-            >
-              {LANGUAGES.map((lang) => (
-                <option key={lang.value} value={lang.value} className="bg-slate-950 text-slate-100 py-2">
-                  {lang.label} ({lang.nativeLabel})
-                </option>
-              ))}
-            </select>
-            {/* Custom arrow icon */}
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-400">
-              <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
+  return (
+    <SectionFrame index="02" title="Preferences" description="Manage localization options and system notifications.">
+      <form onSubmit={handleSave} className="space-y-10">
+        <fieldset className="space-y-3">
+          <legend className={`${fieldLabel} mb-3`}>Default language</legend>
+          <div className="grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-5">
+            {LANGUAGES.map((lang) => {
+              const selected = language === lang.value;
+              return (
+                <label
+                  key={lang.value}
+                  className={`flex cursor-pointer flex-col gap-1 border-l-[3px] bg-background px-4 py-3.5 transition-colors duration-[180ms] has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:-outline-offset-1 has-[:focus-visible]:outline-ring ${
+                    selected ? "border-brand bg-accent" : "border-transparent hover:bg-muted"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="defaultLanguage"
+                    value={lang.value}
+                    checked={selected}
+                    onChange={() => setLanguage(lang.value as SupportedLanguage)}
+                    disabled={isSaving}
+                    className="sr-only"
+                  />
+                  <span className="font-serif text-[19px] leading-tight">{lang.nativeLabel}</span>
+                  <span className="label-caps text-[9px] text-subtle-foreground">{lang.label}</span>
+                </label>
+              );
+            })}
           </div>
-          <p className="text-[11px] text-slate-500 leading-relaxed">
+          <p className={fieldHint}>
             Changing this updates the default language for generated documents. Supported Indic scripts are styled for maximum readability.
           </p>
+        </fieldset>
+
+        <div>
+          <p className={`${fieldLabel} mb-3`}>Notifications</p>
+          <ul className="border-t border-border">
+            {NOTIFICATIONS.map(({ key, title, hint }) => {
+              const on = notifications[key];
+              return (
+                <li key={key} className="flex items-center justify-between gap-6 border-b border-hairline-soft py-4">
+                  <div>
+                    <p className="font-serif text-[18px] leading-tight">{title}</p>
+                    <p className={fieldHint}>{hint}</p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={on}
+                    aria-label={title}
+                    onClick={() => toggleNotification(key)}
+                    disabled={isSaving}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer border transition-colors duration-[180ms] ${
+                      on ? "border-brand bg-brand" : "border-border bg-transparent hover:border-foreground/40"
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-[3px] size-4 transition-[left,background-color] duration-200 ease-editorial ${
+                        on ? "left-[22px] bg-white" : "left-[3px] bg-subtle-foreground"
+                      }`}
+                    />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
         </div>
 
-        {/* Notifications Section */}
-        <div className="space-y-4 pt-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-300">
-            <Bell className="size-4 text-slate-400" />
-            Notification Settings
-          </div>
-
-          <div className="space-y-3.5">
-            {/* Toggle 1: Email Notifications */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-900 bg-slate-950/30">
-              <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-slate-200">Email Notifications</span>
-                <p className="text-[10px] text-slate-500">Receive critical account alerts via email.</p>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={notifications.emailNotifications}
-                onClick={() => toggleNotification("emailNotifications")}
-                disabled={isSaving}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${
-                  notifications.emailNotifications ? "bg-indigo-600" : "bg-slate-800"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block size-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    notifications.emailNotifications ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
-            </div>
-
-            {/* Toggle 2: Product Updates */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-900 bg-slate-950/30">
-              <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-slate-200">Product Updates</span>
-                <p className="text-[10px] text-slate-500">Get notified when new features or draft templates launch.</p>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={notifications.productUpdates}
-                onClick={() => toggleNotification("productUpdates")}
-                disabled={isSaving}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${
-                  notifications.productUpdates ? "bg-indigo-600" : "bg-slate-800"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block size-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    notifications.productUpdates ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
-            </div>
-
-            {/* Toggle 3: Security Alerts */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-900 bg-slate-950/30">
-              <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-slate-200">Security Alerts</span>
-                <p className="text-[10px] text-slate-500">Immediate warnings about login events and password changes.</p>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={notifications.securityAlerts}
-                onClick={() => toggleNotification("securityAlerts")}
-                disabled={isSaving}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900 ${
-                  notifications.securityAlerts ? "bg-indigo-600" : "bg-slate-800"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block size-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    notifications.securityAlerts ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-end pt-2">
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 text-white rounded-xl text-sm font-medium shadow-lg hover:shadow-indigo-500/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed active:scale-95"
-          >
-            {isSaving ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                <span>Saving...</span>
-              </>
-            ) : (
-              <>
-                <Save className="size-4" />
-                <span>Save Preferences</span>
-              </>
-            )}
-          </button>
+        <div className="flex justify-end">
+          <Button type="submit" disabled={isSaving}>
+            {isSaving ? <Loader2 className="animate-spin" /> : <Save strokeWidth={1.25} />}
+            {isSaving ? "Saving…" : "Save preferences"}
+          </Button>
         </div>
       </form>
-    </section>
+    </SectionFrame>
   );
 }

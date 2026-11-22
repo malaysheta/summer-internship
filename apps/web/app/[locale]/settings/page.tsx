@@ -6,7 +6,9 @@ import { ProfileSection } from "@/components/settings/profile-section";
 import { PreferencesSection } from "@/components/settings/preferences-section";
 import { SessionsSection } from "@/components/settings/sessions-section";
 import { DangerZoneSection } from "@/components/settings/danger-zone-section";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
+import { BracketLabel } from "@/components/brand";
+import { Button } from "@/components/ui/button";
 
 export default function SettingsPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -56,73 +58,40 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="w-full max-w-4xl mx-auto px-0 md:px-4 py-2 space-y-8 animate-in fade-in duration-300">
-        {/* Loading Skeletons */}
-        <div className="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-6 space-y-6">
-          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-            <div className="size-9 bg-slate-800 rounded-xl animate-pulse" />
-            <div className="space-y-2 flex-1">
-              <div className="h-5 bg-slate-800 rounded-lg w-1/4 animate-pulse" />
-              <div className="h-3 bg-slate-800/60 rounded w-1/3 animate-pulse" />
+      <div className="w-full max-w-4xl animate-in space-y-10 duration-300 fade-in">
+        {/* Loading skeletons */}
+        {[0, 1].map((i) => (
+          <div key={i} className="space-y-6 border-t border-border pt-6" aria-busy>
+            <div className="h-3 w-24 animate-pulse bg-muted" />
+            <div className="h-8 w-1/3 animate-pulse bg-muted" />
+            <div className="space-y-3">
+              <div className="h-10 animate-pulse bg-muted" />
+              <div className="h-10 animate-pulse bg-muted" />
             </div>
           </div>
-          <div className="space-y-4 pt-2">
-            <div className="space-y-2">
-              <div className="h-4 bg-slate-800 rounded w-20 animate-pulse" />
-              <div className="h-11 bg-slate-950/80 border border-slate-850 rounded-xl animate-pulse" />
-            </div>
-            <div className="space-y-2">
-              <div className="h-4 bg-slate-800 rounded w-28 animate-pulse" />
-              <div className="h-11 bg-slate-950/80 border border-slate-850 rounded-xl animate-pulse" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-6 space-y-6">
-          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
-            <div className="size-9 bg-slate-800 rounded-xl animate-pulse" />
-            <div className="space-y-2 flex-1">
-              <div className="h-5 bg-slate-800 rounded-lg w-1/4 animate-pulse" />
-              <div className="h-3 bg-slate-800/60 rounded w-1/3 animate-pulse" />
-            </div>
-          </div>
-          <div className="space-y-2 pt-2">
-            <div className="h-4 bg-slate-800 rounded w-24 animate-pulse" />
-            <div className="h-11 bg-slate-950/80 border border-slate-850 rounded-xl animate-pulse" />
-          </div>
-        </div>
+        ))}
       </div>
     );
   }
 
   if (error || !user) {
     return (
-      <div className="w-full max-w-4xl mx-auto px-0 md:px-4 py-2 animate-in fade-in duration-300">
-        <div className="bg-rose-950/10 border border-rose-500/20 rounded-2xl p-8 shadow-xl backdrop-blur-sm text-center flex flex-col items-center justify-center space-y-4">
-          <div className="p-3 bg-rose-500/10 text-rose-400 rounded-2xl">
-            <AlertCircle className="size-6" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-base font-bold text-slate-200">Failed to Load Settings</h3>
-            <p className="text-xs text-slate-400 max-w-md leading-relaxed">
-              {error || "An error occurred while loading your profile data."}
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={fetchUser}
-            className="flex items-center gap-2 px-5 py-2.5 bg-rose-950/60 hover:bg-rose-900/60 border border-rose-500/30 text-rose-300 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-95"
-          >
-            <RefreshCw className="size-4" />
-            <span>Retry Loading</span>
-          </button>
-        </div>
+      <div className="flex animate-in flex-col items-start gap-4 border-t border-border border-l-[3px] border-l-destructive py-8 pl-6 duration-300 fade-in">
+        <BracketLabel>Error</BracketLabel>
+        <h3 className="text-[28px] leading-tight">Failed to load settings</h3>
+        <p className="max-w-md text-[14px] leading-relaxed text-muted-foreground">
+          {error || "An error occurred while loading your profile data."}
+        </p>
+        <Button variant="outline" onClick={fetchUser}>
+          <RefreshCw strokeWidth={1.25} />
+          Retry loading
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-0 md:px-4 py-2 space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="w-full max-w-4xl animate-in space-y-14 duration-300 fade-in slide-in-from-bottom-2">
       {/* Profile Section */}
       <div id="profile">
         <ProfileSection initialUser={user} onUpdateUser={handleUpdateUser} />

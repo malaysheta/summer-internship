@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { toast } from "@/hooks/use-toast";
-import { Shield, Laptop, Monitor, LogOut, Loader2 } from "lucide-react";
+import { LogOut, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SectionFrame, fieldLabel, fieldHint } from "./section-frame";
 import { createClient } from "@/lib/supabase/client";
 
 export function SessionsSection() {
@@ -39,88 +41,42 @@ export function SessionsSection() {
   };
 
   return (
-    <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm transition-all duration-200 hover:border-slate-700/80">
-      <div className="flex items-center gap-3 border-b border-slate-800 pb-4 mb-6">
-        <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl">
-          <Shield className="size-5" />
-        </div>
+    <SectionFrame index="03" title="Security" description="Track and manage your current signed-in devices.">
+      <div className="space-y-8">
         <div>
-          <h2 className="text-lg font-bold text-slate-100">Active Sessions</h2>
-          <p className="text-xs text-slate-400">Track and manage your current signed-in devices.</p>
-        </div>
-      </div>
-
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Current Session</span>
-
-          {/* Current Session details */}
-          <div className="flex items-start gap-4 p-4 rounded-xl border border-slate-800 bg-slate-950/40">
-            <div className="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-lg shrink-0">
-              <Laptop className="size-5" />
+          <p className={`${fieldLabel} mb-3`}>Current session</p>
+          <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-y border-l-[3px] border-y-border border-l-success py-4 pl-4">
+            <div className="space-y-1">
+              <p className="font-serif text-[19px] leading-tight">Chrome on macOS</p>
+              <p className={fieldHint}>IP 103.88.22.41 · Mumbai, Maharashtra, India</p>
             </div>
-            <div className="flex-1 min-w-0 space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-slate-200">Chrome on macOS</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  Active now
-                </span>
-              </div>
-              <div className="text-xs text-slate-400 space-y-0.5">
-                <p>IP Address: 103.88.22.41</p>
-                <p>Location: Mumbai, Maharashtra, India</p>
-              </div>
-            </div>
+            <span className="label-caps border border-success/50 px-2 py-0.5 text-[9px] text-success">Active now</span>
           </div>
         </div>
 
-        {/* Other Sessions details */}
         {!otherDevicesCleared && (
-          <div className="space-y-3">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Other Active Devices</span>
-            
-            <div className="flex items-start gap-4 p-4 rounded-xl border border-slate-900 bg-slate-950/20 opacity-70">
-              <div className="p-2.5 bg-slate-800 text-slate-400 rounded-lg shrink-0">
-                <Monitor className="size-5" />
+          <div>
+            <p className={`${fieldLabel} mb-3`}>Other active devices</p>
+            <div className="grid grid-cols-[1fr_auto] items-start gap-4 border-y border-l-[3px] border-y-border border-l-transparent py-4 pl-4 opacity-75">
+              <div className="space-y-1">
+                <p className="font-serif text-[19px] leading-tight">Safari on iPhone 15</p>
+                <p className={fieldHint}>IP 192.168.1.104 · New Delhi, India</p>
               </div>
-              <div className="flex-1 min-w-0 space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-slate-300">Safari on iPhone 15</span>
-                  <span className="text-[10px] text-slate-500">2 hours ago</span>
-                </div>
-                <div className="text-xs text-slate-400 space-y-0.5">
-                  <p>IP Address: 192.168.1.104</p>
-                  <p>Location: New Delhi, India</p>
-                </div>
-              </div>
+              <span className="text-[12px] text-subtle-foreground">2 hours ago</span>
             </div>
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 gap-4 border-t border-slate-900">
-          <p className="text-[11px] text-slate-500 leading-relaxed max-w-md">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className={`${fieldHint} max-w-md`}>
             If you notice any unfamiliar activity, revoke all other active sessions immediately to keep your account secure.
           </p>
-          <button
-            type="button"
-            onClick={handleSignOutOtherDevices}
-            disabled={isRevoking || otherDevicesCleared}
-            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:bg-slate-850/40 text-slate-200 disabled:text-slate-500 rounded-xl text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-700 disabled:cursor-not-allowed shrink-0"
-          >
-            {isRevoking ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                <span>Revoking...</span>
-              </>
-            ) : (
-              <>
-                <LogOut className="size-4" />
-                <span>Sign Out Of All Other Devices</span>
-              </>
-            )}
-          </button>
+          <Button variant="outline" onClick={handleSignOutOtherDevices} disabled={isRevoking || otherDevicesCleared}>
+            {isRevoking ? <Loader2 className="animate-spin" /> : <LogOut strokeWidth={1.25} />}
+            {isRevoking ? "Revoking…" : "Sign out other devices"}
+          </Button>
         </div>
       </div>
-    </section>
+    </SectionFrame>
   );
 }

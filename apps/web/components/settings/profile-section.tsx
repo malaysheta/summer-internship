@@ -3,7 +3,10 @@
 import React, { useState } from "react";
 import type { User } from "@trionic/shared";
 import { toast } from "@/hooks/use-toast";
-import { User as UserIcon, Mail, Loader2, Save } from "lucide-react";
+import { Mail, Loader2, Save } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { SectionFrame, fieldLabel, fieldHint } from "./section-frame";
 
 interface ProfileSectionProps {
   initialUser: User;
@@ -63,93 +66,60 @@ export function ProfileSection({ initialUser, onUpdateUser }: ProfileSectionProp
     }
   };
 
+  const initial = (initialUser.display_name || initialUser.email || "?").trim().charAt(0).toUpperCase();
+
   return (
-    <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm transition-all duration-200 hover:border-slate-700/80">
-      <div className="flex items-center gap-3 border-b border-slate-800 pb-4 mb-6">
-        <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-xl">
-          <UserIcon className="size-5" />
-        </div>
-        <div>
-          <h2 className="text-lg font-bold text-slate-100">Profile Details</h2>
-          <p className="text-xs text-slate-400">Update your public identity and profile credentials.</p>
+    <SectionFrame index="01" title="Profile" description="Update your public identity and profile credentials.">
+      {/* Identity */}
+      <div className="mb-8 flex items-center gap-5 border-b border-hairline-soft pb-8">
+        <span className="flex size-14 shrink-0 items-center justify-center rounded-full border border-border bg-[radial-gradient(circle_at_30%_30%,rgba(5,95,89,0.6),transparent_70%)] font-serif text-[26px]">
+          {initial}
+        </span>
+        <div className="min-w-0">
+          <p className="truncate font-serif text-[30px] leading-tight">{initialUser.display_name || "—"}</p>
+          <p className="truncate text-[13px] text-muted-foreground">{initialUser.email}</p>
         </div>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6">
+      <form onSubmit={handleSave} className="space-y-7">
         <div className="space-y-2">
-          <label htmlFor="displayName" className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            Display Name
-          </label>
-          <div className="relative">
-            <input
-              id="displayName"
-              type="text"
-              className={`w-full bg-slate-950/80 border ${
-                error ? "border-rose-500 focus:ring-rose-500/20" : "border-slate-800 focus:border-slate-700 focus:ring-slate-700/20"
-              } rounded-xl py-3 pl-4 pr-10 text-sm text-slate-100 placeholder-slate-500 outline-none transition duration-200 focus:ring-4`}
-              placeholder="Enter your display name"
-              value={displayName}
-              onChange={(e) => {
-                setDisplayName(e.target.value);
-                if (error) setError(null);
-              }}
-              disabled={isSaving}
-              aria-invalid={!!error}
-              aria-describedby={error ? "displayName-error" : undefined}
-            />
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-500">
-              <UserIcon className="size-4" />
-            </div>
-          </div>
+          <label htmlFor="displayName" className={fieldLabel}>Display name</label>
+          <Input
+            id="displayName"
+            type="text"
+            placeholder="Enter your display name"
+            value={displayName}
+            onChange={(e) => {
+              setDisplayName(e.target.value);
+              if (error) setError(null);
+            }}
+            disabled={isSaving}
+            aria-invalid={!!error}
+            aria-describedby={error ? "displayName-error" : undefined}
+          />
           {error && (
-            <p id="displayName-error" className="text-xs text-rose-400 mt-1 flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-150">
+            <p id="displayName-error" className="animate-in text-[12px] text-destructive duration-150 fade-in slide-in-from-top-1">
               {error}
             </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-semibold text-slate-300">
-            Email Address
-          </label>
+          <label htmlFor="email" className={fieldLabel}>Email address</label>
           <div className="relative">
-            <input
-              id="email"
-              type="email"
-              className="w-full bg-slate-950/40 border border-slate-900 rounded-xl py-3 pl-4 pr-10 text-sm text-slate-500 select-none cursor-not-allowed outline-none"
-              value={initialUser.email}
-              readOnly
-              disabled
-            />
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-slate-600">
-              <Mail className="size-4" />
-            </div>
+            <Input id="email" type="email" value={initialUser.email} readOnly disabled className="pr-10" />
+            <Mail strokeWidth={1.25} className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-subtle-foreground" />
           </div>
-          <p className="text-[11px] text-slate-500 leading-relaxed">
-            Your email is managed by account security settings and cannot be changed here.
-          </p>
+          <p className={fieldHint}>Your email is managed by account security settings and cannot be changed here.</p>
         </div>
 
-        <div className="flex justify-end pt-2">
-          <button
-            type="submit"
-            disabled={isSaving}
-            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 text-white rounded-xl text-sm font-medium shadow-lg hover:shadow-indigo-500/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed active:scale-95"
-          >
-            {isSaving ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                <span>Saving...</span>
-              </>
-            ) : (
-              <>
-                <Save className="size-4" />
-                <span>Save Changes</span>
-              </>
-            )}
-          </button>
+        <div className="flex justify-end">
+          <Button type="submit" disabled={isSaving}>
+            {isSaving ? <Loader2 className="animate-spin" /> : <Save strokeWidth={1.25} />}
+            {isSaving ? "Saving…" : "Save changes"}
+          </Button>
         </div>
       </form>
-    </section>
+    </SectionFrame>
   );
 }

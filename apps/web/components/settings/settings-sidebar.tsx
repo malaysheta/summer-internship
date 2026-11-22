@@ -2,14 +2,12 @@
 
 import { Link } from "@/i18n/routing";
 import { useEffect, useState } from "react";
-import { User, Settings, ShieldAlert, LayoutDashboard, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarItem {
   name: string;
   href: string;
   hash?: string;
-  icon: React.ComponentType<{ className?: string }>;
   description: string;
 }
 
@@ -18,21 +16,18 @@ const navigationItems: SidebarItem[] = [
     name: "Profile",
     href: "/settings",
     hash: "#profile",
-    icon: User,
     description: "Manage your personal details and email",
   },
   {
     name: "Preferences",
     href: "/settings",
     hash: "#preferences",
-    icon: Settings,
     description: "Change language settings and notifications",
   },
   {
     name: "Security",
     href: "/settings",
     hash: "#sessions",
-    icon: ShieldAlert,
     description: "Track active sessions and manage danger zone",
   },
 ];
@@ -41,13 +36,11 @@ const adminNavigationItems = [
   {
     name: "Admin Dashboard",
     href: "/admin",
-    icon: LayoutDashboard,
     description: "High-level metrics and usage statistics",
   },
   {
     name: "Audit Logs",
     href: "/admin/audit",
-    icon: ClipboardList,
     description: "Trace chronological LLM usage logs",
   },
 ];
@@ -84,111 +77,70 @@ export function SettingsSidebar() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
-  return (
-    <nav
-      aria-label="Settings navigation"
-      className="w-full md:w-64 shrink-0"
-    >
-      {/* Mobile Horizontal Tabs Navigation */}
-      <div className="flex md:hidden border-b border-border overflow-x-auto scrollbar-none -mx-4 px-4 gap-2 mb-6">
-        {navigationItems.map((item) => {
-          const isActive = activeHash === item.hash;
-          const Icon = item.icon;
+  const itemClass = (active: boolean) =>
+    cn(
+      "group grid grid-cols-[32px_1fr] gap-x-2 border-l-[3px] py-3.5 pr-3 pl-4 transition-colors duration-[180ms] outline-none focus-visible:bg-muted",
+      active ? "border-brand bg-accent" : "border-transparent hover:bg-muted"
+    );
 
+  return (
+    <nav aria-label="Settings navigation" className="w-full shrink-0 md:w-72">
+      {/* Mobile: tab strip */}
+      <div className="-mx-5 mb-2 flex gap-6 overflow-x-auto border-b border-border px-5 md:hidden">
+        {[...navigationItems, ...(isAdmin ? adminNavigationItems : [])].map((item) => {
+          const hash = (item as { hash?: string }).hash;
+          const isActive = !!hash && activeHash === hash;
           return (
             <Link
-              key={item.hash}
-              href={`${item.href}${item.hash}`}
-              onClick={() => setActiveHash(item.hash || "")}
+              key={item.name}
+              href={`${item.href}${hash ?? ""}`}
+              onClick={() => hash && setActiveHash(hash)}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex items-center gap-2 py-3 px-4 text-sm font-medium border-b-2 whitespace-nowrap transition-colors outline-none focus-visible:bg-muted",
-                isActive
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
+                "label-caps shrink-0 border-b-2 py-3",
+                isActive ? "border-brand text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
               )}
             >
-              <Icon className="size-4" />
-              <span>{item.name}</span>
+              {item.name}
             </Link>
           );
         })}
-        {isAdmin &&
-          adminNavigationItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center gap-2 py-3 px-4 text-sm font-medium border-b-2 whitespace-nowrap border-transparent text-muted-foreground hover:text-foreground transition-colors outline-none focus-visible:bg-muted"
-              >
-                <Icon className="size-4" />
-                <span>{item.name}</span>
-              </Link>
-            );
-          })}
       </div>
 
-      {/* Desktop Vertical Sidebar Navigation */}
-      <div className="hidden md:flex flex-col gap-1 w-full">
-        {navigationItems.map((item) => {
+      {/* Desktop: numbered list */}
+      <div className="hidden border-t border-border md:block">
+        {navigationItems.map((item, i) => {
           const isActive = activeHash === item.hash;
-          const Icon = item.icon;
-
           return (
             <Link
               key={item.hash}
               href={`${item.href}${item.hash}`}
               onClick={() => setActiveHash(item.hash || "")}
               aria-current={isActive ? "page" : undefined}
-              className={cn(
-                "group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                isActive
-                  ? "bg-secondary text-secondary-foreground shadow-sm"
-                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-              )}
+              className={cn(itemClass(isActive), "border-b border-b-hairline-soft")}
             >
-              <Icon
-                className={cn(
-                  "size-5 transition-transform duration-200 group-hover:scale-105",
-                  isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                )}
-              />
-              <div className="flex flex-col text-left">
-                <span className="font-semibold text-foreground">{item.name}</span>
-                <span className="text-[11px] font-normal text-muted-foreground group-hover:text-foreground/80 line-clamp-1">
-                  {item.description}
-                </span>
-              </div>
+              <span className="label-caps row-span-2 pt-1.5 text-[10px] text-brand-soft">{String(i + 1).padStart(2, "0")}</span>
+              <span className={cn("font-serif text-[19px] leading-tight", isActive ? "text-foreground" : "text-foreground/80 group-hover:text-foreground")}>
+                {item.name}
+              </span>
+              <span className="mt-0.5 line-clamp-1 text-[12px] text-subtle-foreground">{item.description}</span>
             </Link>
           );
         })}
 
         {isAdmin && (
-          <>
-            <div className="h-px bg-border my-2" />
-            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-4 py-1 mb-1 text-left select-none">
-              Administration
-            </div>
-            {adminNavigationItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="group flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Icon className="size-5 transition-transform duration-200 group-hover:scale-105 text-muted-foreground group-hover:text-foreground" />
-                  <div className="flex flex-col text-left">
-                    <span className="font-semibold text-foreground">{item.name}</span>
-                    <span className="text-[11px] font-normal text-muted-foreground group-hover:text-foreground/80 line-clamp-1">
-                      {item.description}
-                    </span>
-                  </div>
+          <div className="mt-8">
+            <p className="bracket-label mb-2 px-4">Administration</p>
+            <div className="border-t border-border">
+              {adminNavigationItems.map((item) => (
+                <Link key={item.href} href={item.href} className={cn(itemClass(false), "border-b border-b-hairline-soft")}>
+                  <span className="row-span-2 pt-1 text-brand-soft">→</span>
+                  <span className="font-serif text-[19px] leading-tight text-foreground/80 group-hover:text-foreground">{item.name}</span>
+                  <span className="mt-0.5 line-clamp-1 text-[12px] text-subtle-foreground">{item.description}</span>
                 </Link>
-              );
-            })}
-          </>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </nav>
