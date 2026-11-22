@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Link } from '@/i18n/routing'
 import type { DocumentType, SupportedLanguage } from '@trionic/shared'
 import { LanguagePicker } from '@/components/intake/LanguagePicker'
 import { StreamingIndicator } from '@/components/intake/StreamingIndicator'
-import { ArrowLeft, Sparkles, Scale, FileText } from 'lucide-react'
+import { AppHeader } from '@/components/brand/app-header'
+import { ArrowIcon, BracketLabel, SectionHeading, splitAccent } from '@/components/brand'
+import { Button } from '@/components/ui/button'
 import { useTranslations } from 'next-intl'
 
 export default function NewDraftPage() {
@@ -27,37 +28,31 @@ export default function NewDraftPage() {
       value: 'ai_decide',
       label: t('docTypeOptionAi'),
       description: t('docTypeOptionAiDesc'),
-      icon: <Sparkles className="size-5 text-indigo-500" />,
     },
     {
       value: 'rti_application',
       label: t('docTypeOptionRti'),
       description: t('docTypeOptionRtiDesc'),
-      icon: <FileText className="size-5 text-emerald-500" />,
     },
     {
       value: 'legal_notice',
       label: t('docTypeOptionNotice'),
       description: t('docTypeOptionNoticeDesc'),
-      icon: <Scale className="size-5 text-blue-500" />,
     },
     {
       value: 'nda',
       label: t('docTypeOptionNda'),
       description: t('docTypeOptionNdaDesc'),
-      icon: <FileText className="size-5 text-purple-500" />,
     },
     {
       value: 'consumer_complaint',
       label: t('docTypeOptionConsumer'),
       description: t('docTypeOptionConsumerDesc'),
-      icon: <Scale className="size-5 text-orange-500" />,
     },
     {
       value: 'cheque_bounce_notice',
       label: t('docTypeOptionCheque'),
       description: t('docTypeOptionChequeDesc'),
-      icon: <FileText className="size-5 text-rose-500" />,
     },
   ] as const
 
@@ -109,7 +104,11 @@ export default function NewDraftPage() {
 
   if (isStreaming && documentId) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50 px-4">
+      <div className="relative isolate flex min-h-screen items-center justify-center px-4 py-16">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[radial-gradient(50%_45%_at_50%_40%,rgba(5,95,89,0.35),transparent_70%)]"
+        />
         <StreamingIndicator
           documentId={documentId}
           intakeText={intakeText}
@@ -121,123 +120,100 @@ export default function NewDraftPage() {
     )
   }
 
+  const [titleLead, titleAccent] = splitAccent(t('title'))
+
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-950 font-sans pb-16">
-      {/* Top Navbar */}
-      <header className="border-b border-zinc-200 bg-white sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center gap-4">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-1.5 text-zinc-500 hover:text-zinc-900 transition-colors text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-zinc-400 rounded-lg p-1"
-          >
-            <ArrowLeft className="size-4" />
-            {t('backButton')}
-          </Link>
-          <div className="h-4 w-px bg-zinc-200" />
-          <h1 className="text-base font-bold text-zinc-900">{t('title')}</h1>
-        </div>
-      </header>
+    <>
+      <AppHeader />
+      <main className="mx-auto w-full max-w-[1440px] px-5 py-12 md:px-10 md:py-16">
+        <SectionHeading label={tCommon('brandName')} title={titleLead} accent={titleAccent} subtitle={t('situationPlaceholder')} />
 
-      <main className="max-w-4xl mx-auto px-4 mt-8">
-        <div className="bg-white rounded-3xl border border-zinc-200 p-8 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Header Info */}
-            <div>
-              <h2 className="text-xl font-bold tracking-tight text-zinc-900">{t('title')}</h2>
-              <p className="text-sm text-zinc-500 mt-1">
-                {t('situationPlaceholder')}
-              </p>
-            </div>
-
-            {/* Document Type Selection */}
-            <div className="space-y-3">
-              <label className="block text-sm font-semibold text-zinc-800">
-                {t('docTypeQuestion')}
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {DOC_TYPES.map((type) => {
-                  const isSelected = docType === type.value
-                  return (
-                    <label
-                      key={type.value}
-                      className={`flex items-start gap-4 p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
-                        isSelected
-                          ? 'border-zinc-900 bg-zinc-950 text-white shadow-sm ring-1 ring-zinc-900'
-                          : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="docType"
-                        value={type.value}
-                        checked={isSelected}
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        onChange={() => setDocType(type.value as any as DocumentType)}
-                        className="sr-only"
-                      />
-                      <div className={`p-2 rounded-xl shrink-0 ${isSelected ? 'bg-zinc-850' : 'bg-zinc-100'}`}>
-                        {type.icon}
-                      </div>
-                      <div>
-                        <span className="font-semibold text-sm block">{type.label}</span>
-                        <span className={`text-xs block mt-0.5 leading-relaxed ${isSelected ? 'text-zinc-300' : 'text-zinc-500'}`}>
-                          {type.description}
-                        </span>
-                      </div>
-                    </label>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Situation Textarea */}
+        <form onSubmit={handleSubmit} className="mt-12 border-t border-border">
+          {/* 01 — Document type */}
+          <section className="grid gap-6 border-b border-border py-10 lg:grid-cols-[300px_1fr] lg:gap-12">
             <div className="space-y-2">
-              <label htmlFor="intake-text" className="block text-sm font-semibold text-zinc-850">
-                {t('situationQuestion')}
-              </label>
+              <span className="label-caps text-brand-soft">01</span>
+              <h2 className="text-[26px] leading-tight">{t('docTypeQuestion')}</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
+              {DOC_TYPES.map((type) => {
+                const isSelected = docType === type.value
+                return (
+                  <label
+                    key={type.value}
+                    className={`flex cursor-pointer flex-col gap-1.5 border-l-[3px] px-5 py-4 transition-colors duration-[180ms] has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:-outline-offset-1 has-[:focus-visible]:outline-ring ${
+                      isSelected ? 'border-brand bg-accent' : 'border-transparent bg-background hover:bg-muted'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="docType"
+                      value={type.value}
+                      checked={isSelected}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      onChange={() => setDocType(type.value as any as DocumentType)}
+                      className="sr-only"
+                    />
+                    <span className={`font-serif text-[19px] leading-tight ${isSelected ? 'text-foreground' : 'text-foreground/90'}`}>
+                      {type.label}
+                    </span>
+                    <span className="text-[13px] leading-relaxed text-muted-foreground">{type.description}</span>
+                  </label>
+                )
+              })}
+            </div>
+          </section>
+
+          {/* 02 — Situation, written on paper */}
+          <section className="grid gap-6 border-b border-border py-10 lg:grid-cols-[300px_1fr] lg:gap-12">
+            <div className="space-y-2">
+              <span className="label-caps text-brand-soft">02</span>
+              <h2 className="text-[26px] leading-tight">
+                <label htmlFor="intake-text">{t('situationQuestion')}</label>
+              </h2>
+            </div>
+            <div className="paper border border-border bg-background p-1">
               <textarea
                 id="intake-text"
-                rows={6}
+                rows={8}
                 value={intakeText}
                 onChange={(e) => setIntakeText(e.target.value)}
-                className="w-full border border-zinc-200 rounded-2xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:border-transparent leading-relaxed placeholder:text-zinc-400 bg-white shadow-inner"
+                className="block w-full resize-y bg-transparent px-6 py-5 font-serif text-[19px] leading-[1.6] text-foreground outline-none placeholder:text-subtle-foreground focus-visible:outline-none"
                 placeholder={t('situationPlaceholder')}
               />
             </div>
+          </section>
 
-            {/* Language Selector */}
-            <LanguagePicker value={language} onChange={setLanguage} />
-
-            {/* Error Message */}
-            {error && (
-              <div className="p-4 bg-red-50 border border-red-100 text-red-700 rounded-2xl text-sm font-medium flex gap-2 items-center">
-                <span className="inline-block size-1.5 rounded-full bg-red-500 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            {/* Submit Action */}
-            <div className="flex justify-end border-t border-zinc-100 pt-6">
-              <button
-                type="submit"
-                disabled={loading || !intakeText.trim()}
-                className="px-8 py-3 bg-zinc-900 hover:bg-zinc-850 text-white font-semibold rounded-2xl text-sm transition-all focus:outline-none focus:ring-2 focus:ring-zinc-950 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:scale-[1.01]"
-                id="btn-generate-draft"
-              >
-                {loading ? t('loading') : t('submitButton')}
-              </button>
+          {/* 03 — Language */}
+          <section className="grid gap-6 border-b border-border py-10 lg:grid-cols-[300px_1fr] lg:gap-12">
+            <div className="space-y-2">
+              <span className="label-caps text-brand-soft">03</span>
+              <h2 className="text-[26px] leading-tight">{t('languageQuestion')}</h2>
             </div>
-          </form>
-        </div>
-      </main>
+            <LanguagePicker value={language} onChange={setLanguage} />
+          </section>
 
-      {/* Persistent Disclaimer */}
-      <footer className="max-w-4xl mx-auto px-4 mt-8 text-center">
-        <p className="text-xs text-zinc-400">
-          ⚠ {tCommon('disclaimer')}
-        </p>
-      </footer>
-    </div>
+          {error && (
+            <p role="alert" className="mt-8 border-l-2 border-destructive pl-3 text-[13px] text-destructive">
+              {error}
+            </p>
+          )}
+
+          <div className="flex flex-col-reverse items-start gap-6 py-10 md:flex-row md:items-center md:justify-between">
+            <BracketLabel className="normal-case tracking-[0.04em]">{tCommon('disclaimer')}</BracketLabel>
+            <Button
+              type="submit"
+              size="lg"
+              disabled={loading || !intakeText.trim()}
+              className="w-full justify-between md:w-[320px]"
+              id="btn-generate-draft"
+            >
+              {loading ? t('loading') : t('submitButton').replace(/\s*→$/, '')}
+              <ArrowIcon />
+            </Button>
+          </div>
+        </form>
+      </main>
+    </>
   )
 }
-

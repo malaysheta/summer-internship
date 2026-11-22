@@ -3,12 +3,12 @@
 import React from 'react'
 import type { SupportedLanguage } from '@trionic/shared'
 
-const LANGUAGES: { value: SupportedLanguage; label: string; nativeLabel: string; flag: string }[] = [
-  { value: 'en', label: 'English', nativeLabel: 'English', flag: '🇬🇧' },
-  { value: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी', flag: '🇮🇳' },
-  { value: 'gu', label: 'Gujarati', nativeLabel: 'ગુજરાતી', flag: '🇮🇳' },
-  { value: 'mr', label: 'Marathi', nativeLabel: 'मराठी', flag: '🇮🇳' },
-  { value: 'ta', label: 'Tamil', nativeLabel: 'தமிழ்', flag: '🇮🇳' },
+const LANGUAGES: { value: SupportedLanguage; label: string; nativeLabel: string }[] = [
+  { value: 'en', label: 'English', nativeLabel: 'English' },
+  { value: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी' },
+  { value: 'gu', label: 'Gujarati', nativeLabel: 'ગુજરાતી' },
+  { value: 'mr', label: 'Marathi', nativeLabel: 'मराठी' },
+  { value: 'ta', label: 'Tamil', nativeLabel: 'தமிழ்' },
 ]
 
 interface LanguagePickerProps {
@@ -16,17 +16,12 @@ interface LanguagePickerProps {
   onChange: (value: SupportedLanguage) => void
 }
 
-import { useTranslations } from 'next-intl'
 
 export function LanguagePicker({ value, onChange }: LanguagePickerProps) {
-  const t = useTranslations('intake')
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-semibold text-zinc-800">
-        {t('languageQuestion')}
-      </label>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+    <div>
+      <div className="grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-5">
         {LANGUAGES.map((lang) => {
           const isSelected = value === lang.value
           return (
@@ -34,19 +29,14 @@ export function LanguagePicker({ value, onChange }: LanguagePickerProps) {
               key={lang.value}
               type="button"
               onClick={() => onChange(lang.value)}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-950 ${
-                isSelected
-                  ? 'border-zinc-900 bg-zinc-900 text-white shadow-sm scale-[1.02]'
-                  : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50'
+              className={`flex flex-col items-start gap-1 border-l-[3px] px-4 py-4 text-left transition-colors duration-[180ms] focus-visible:-outline-offset-1 ${
+                isSelected ? 'border-brand bg-accent text-foreground' : 'border-transparent bg-background text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
               id={`lang-picker-${lang.value}`}
               aria-pressed={isSelected}
             >
-              <span className="text-xl mb-1">{lang.flag}</span>
-              <span className="font-medium text-xs sm:text-sm">{lang.nativeLabel}</span>
-              <span className={`text-[10px] sm:text-xs opacity-75 mt-0.5 ${isSelected ? 'text-zinc-300' : 'text-zinc-500'}`}>
-                {lang.label}
-              </span>
+              <span className="font-serif text-[20px] leading-tight">{lang.nativeLabel}</span>
+              <span className="label-caps text-[10px] text-subtle-foreground">{lang.label}</span>
             </button>
           )
         })}

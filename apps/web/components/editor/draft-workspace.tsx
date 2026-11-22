@@ -8,6 +8,7 @@ import { DraftEditor } from "./draft-editor";
 import { CitationDrawer } from "./citation-drawer";
 import type { Document, Citation } from "@trionic/shared";
 import { cn } from "@/lib/utils";
+import { Spark } from "@/components/brand";
 
 import { useTranslations } from "next-intl";
 
@@ -53,9 +54,9 @@ export function DraftWorkspace({
     <div className="flex h-screen flex-col bg-background">
       <DraftHeader saveStatus={saveStatus} />
       
-      {/* Global Warning Banner */}
-      <div className="flex items-center justify-center bg-amber-500/10 px-4 py-2 text-sm font-medium text-amber-800 dark:text-amber-400 border-b border-amber-500/20">
-        <span className="mr-2">⚠</span>
+      {/* Disclaimer strip */}
+      <div className="flex items-center justify-center gap-2.5 border-b border-hairline-soft px-4 py-2 text-center text-[11px] tracking-[0.04em] text-muted-foreground">
+        <Spark className="size-2.5" />
         {tCommon("disclaimer")}
       </div>
 
@@ -64,7 +65,7 @@ export function DraftWorkspace({
         {/* Left Pane: Editor */}
         <div 
           className={cn(
-            "flex-1 overflow-hidden transition-all duration-300",
+            "flex-1 overflow-hidden transition-[width] duration-300 ease-editorial",
             isCitationDrawerOpen ? "w-2/3" : "w-full"
           )}
         >
@@ -80,7 +81,7 @@ export function DraftWorkspace({
 
         {/* Right Pane: Citation Drawer */}
         {isCitationDrawerOpen && (
-          <div className="w-1/3 min-w-[300px] max-w-[500px] border-l bg-muted/20 overflow-hidden">
+          <div className="w-1/3 min-w-[320px] max-w-[520px] overflow-hidden border-l border-border bg-card">
             <CitationDrawer />
           </div>
         )}

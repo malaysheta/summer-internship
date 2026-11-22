@@ -59,37 +59,37 @@ export function DocumentTable({ documents }: DocumentTableProps) {
   const tTable = useTranslations("dashboard.table");
 
   return (
-    <div className="rounded-lg border border-zinc-200 overflow-hidden">
+    <div className="border-t border-border">
       <Table>
         <TableHeader>
-          <TableRow className="bg-zinc-50 hover:bg-zinc-50">
-            <TableHead className="font-semibold text-zinc-700 w-[35%]">{tTable("title")}</TableHead>
-            <TableHead className="font-semibold text-zinc-700">{tTable("type")}</TableHead>
-            <TableHead className="font-semibold text-zinc-700">{tTable("language")}</TableHead>
-            <TableHead className="font-semibold text-zinc-700">{tTable("status")}</TableHead>
-            <TableHead className="font-semibold text-zinc-700 text-right">{tTable("lastModified")}</TableHead>
+          <TableRow>
+            <TableHead className="w-[38%] pl-0">{tTable("title")}</TableHead>
+            <TableHead>{tTable("type")}</TableHead>
+            <TableHead>{tTable("language")}</TableHead>
+            <TableHead>{tTable("status")}</TableHead>
+            <TableHead className="pr-0 text-right">{tTable("lastModified")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {documents.map((doc) => (
             <TableRow
               key={doc.id}
-              className="cursor-pointer hover:bg-zinc-50 transition-colors"
+              className="group cursor-pointer"
               onClick={() => router.push(`/draft/${doc.id}`)}
             >
-              <TableCell className="font-medium text-zinc-900 max-w-xs truncate">
+              <TableCell className="max-w-xs truncate py-5 pl-0 font-serif text-[19px] leading-tight transition-colors duration-[180ms] group-hover:text-peach">
                 {MOCK_TITLE_KEYS[doc.title] ? t(MOCK_TITLE_KEYS[doc.title]) : (doc.title || "Untitled")}
               </TableCell>
-              <TableCell className="text-zinc-600 text-sm">
+              <TableCell className="text-[13px] text-muted-foreground">
                 {tIntake(DOC_TYPE_KEYS[doc.doc_type]) ?? doc.doc_type}
               </TableCell>
-              <TableCell className="text-zinc-600 text-sm">
+              <TableCell className="text-[13px] text-muted-foreground">
                 {tLang(doc.language) ?? doc.language}
               </TableCell>
               <TableCell>
                 <StatusBadge status={doc.status} />
               </TableCell>
-              <TableCell className="text-zinc-500 text-sm text-right">
+              <TableCell className="pr-0 text-right text-[13px] text-subtle-foreground">
                 {formatDate(doc.updated_at, tTable)}
               </TableCell>
             </TableRow>

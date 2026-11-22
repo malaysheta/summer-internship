@@ -89,7 +89,7 @@ export function ExportButton({ startDate, endDate }: ExportButtonProps) {
     <button
       onClick={handleExport}
       disabled={exporting}
-      className="inline-flex h-9 items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-900 shadow-xs transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 disabled:cursor-not-allowed disabled:opacity-50"
+      className="label-caps inline-flex h-10 items-center gap-2 border border-border px-4 text-[11px] text-foreground transition-colors duration-[180ms] hover:border-foreground/40 hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
     >
       {exporting ? (
         <>
@@ -98,7 +98,7 @@ export function ExportButton({ startDate, endDate }: ExportButtonProps) {
         </>
       ) : (
         <>
-          <Download className="size-4" />
+          <Download strokeWidth={1.25} className="size-4" />
           <span>Export CSV</span>
         </>
       )}

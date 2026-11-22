@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { X, BookOpenText, Info, Bookmark } from "lucide-react";
+import { X, Info, Bookmark } from "lucide-react";
+import { Spark } from "@/components/brand";
 import { useDraftStore } from "../../hooks/use-draft-store";
 import { parseNodeId, formatNodeIdToBreadcrumb, getHumanBreadcrumb } from "@/lib/citation-utils";
 import type { Citation } from "@trionic/shared";
@@ -196,10 +197,10 @@ export function CitationDrawer() {
 
   const densityInfo = React.useMemo(() => {
     const density = wordCount > 0 ? citations.length / wordCount : 0;
-    if (density === 0) return { text: "No Citations", color: "bg-zinc-100 dark:bg-zinc-800 text-zinc-650 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700" };
-    if (density < 0.01) return { text: "Low Density", color: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-755 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50" };
-    if (density <= 0.03) return { text: "Medium Density", color: "bg-amber-50 dark:bg-amber-950/40 text-amber-755 dark:text-amber-400 border-amber-200 dark:border-amber-900/50" };
-    return { text: "High Density", color: "bg-rose-50 dark:bg-rose-950/40 text-rose-755 dark:text-rose-450 border-rose-200 dark:border-rose-900/50" };
+    if (density === 0) return { text: "No Citations", color: "border-border text-subtle-foreground" };
+    if (density < 0.01) return { text: "Low Density", color: "border-success/50 text-success" };
+    if (density <= 0.03) return { text: "Medium Density", color: "border-warning/50 text-warning" };
+    return { text: "High Density", color: "border-destructive/50 text-destructive" };
   }, [citations.length, wordCount]);
 
   // Automatically unfold the parent branch chain when activeCitationNodeId changes
@@ -233,9 +234,9 @@ export function CitationDrawer() {
         const element = document.getElementById(elementId);
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "nearest" });
-          element.classList.add("ring-2", "ring-indigo-500/50", "bg-indigo-50/50", "dark:bg-indigo-950/20");
+          element.classList.add("outline", "outline-1", "outline-brand", "bg-accent");
           setTimeout(() => {
-            element.classList.remove("ring-2", "ring-indigo-500/50", "bg-indigo-50/50", "dark:bg-indigo-950/20");
+            element.classList.remove("outline", "outline-1", "outline-brand", "bg-accent");
           }, 1500);
         }
       }, 150);
@@ -262,9 +263,9 @@ export function CitationDrawer() {
       const markerElement = document.getElementById(markerId);
       if (markerElement) {
         markerElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        markerElement.classList.add("ring-4", "ring-indigo-500/50", "bg-indigo-100", "dark:bg-indigo-900/40");
+        markerElement.classList.add("bg-teal", "text-white");
         setTimeout(() => {
-          markerElement.classList.remove("ring-4", "ring-indigo-500/50", "bg-indigo-100", "dark:bg-indigo-900/40");
+          markerElement.classList.remove("bg-teal", "text-white");
         }, 2000);
       }
     }
@@ -277,9 +278,9 @@ export function CitationDrawer() {
 
     // Nested indentation based on hierarchy level
     let indentClass = "pl-0";
-    if (node.level === 1) indentClass = "pl-4 border-l border-zinc-200/55 dark:border-zinc-800/40 ml-2";
-    if (node.level === 2) indentClass = "pl-6 border-l border-zinc-200/55 dark:border-zinc-800/40 ml-2";
-    if (node.level === 3) indentClass = "pl-8 border-l border-indigo-200/30 dark:border-indigo-950/20 ml-2";
+    if (node.level === 1) indentClass = "ml-2 border-l border-hairline-soft pl-4";
+    if (node.level === 2) indentClass = "ml-2 border-l border-hairline-soft pl-6";
+    if (node.level === 3) indentClass = "ml-2 border-l border-hairline-soft pl-8";
 
     // Level 3 details block (Explanation) or leaf explanation
     if (node.id.endsWith('/DETAIL')) {
@@ -289,26 +290,26 @@ export function CitationDrawer() {
 
       return (
         <div key={node.id} className={`${indentClass} py-1.5 pr-1`}>
-          <div className="bg-background border rounded-xl p-3 shadow-sm select-text text-left space-y-2 animate-in slide-in-from-top-1 duration-150">
-            <div className="flex items-center justify-between border-b pb-1.5 text-[9.5px] text-muted-foreground font-mono font-bold">
+          <div className="paper animate-in space-y-2.5 border border-border bg-background p-4 text-left text-foreground duration-150 select-text slide-in-from-top-1">
+            <div className="label-caps flex items-center justify-between border-b border-border pb-2 text-[9.5px] text-muted-foreground">
               <span>{t("authoritativeText")}</span>
-              <span className="font-extrabold text-indigo-650 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-1.5 py-0.5 rounded">
+              <span className="border border-teal/40 px-1.5 py-0.5 font-mono text-teal">
                 [{node.citationIndex! + 1}]
               </span>
             </div>
             
             {isLoading ? (
               <div className="flex items-center gap-2 text-xs text-muted-foreground py-2 font-sans">
-                <span className="h-3.5 w-3.5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                <span className="size-3.5 animate-spin rounded-full border border-teal border-t-transparent" />
                 {t("loading")}
               </div>
             ) : (
-              <p className="text-xs leading-relaxed text-foreground font-sans">
+              <p className="font-document text-[14px] leading-relaxed text-foreground">
                 {textInfo?.text || t("expandParent")}
               </p>
             )}
 
-            <div className="text-[9.5px] text-muted-foreground pt-1.5 border-t font-mono leading-normal">
+            <div className="border-t border-border pt-2 font-mono text-[10px] leading-normal text-subtle-foreground">
               {getHumanBreadcrumb(nodeId, textInfo)}
             </div>
           </div>
@@ -346,33 +347,33 @@ export function CitationDrawer() {
               }
             }
           }}
-          className={`group flex items-center justify-between cursor-pointer px-2.5 py-2 rounded-lg transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${indentClass} ${
+          className={`group flex cursor-pointer items-center justify-between border-l-2 px-3 py-2.5 transition-colors duration-[180ms] ${indentClass} ${
             isActive
-              ? 'bg-indigo-500/10 text-indigo-650 dark:text-indigo-400 font-semibold'
-              : 'hover:bg-muted text-foreground hover:text-indigo-600 dark:hover:text-indigo-400'
+              ? 'border-l-brand bg-accent text-foreground'
+              : 'border-l-transparent text-foreground/85 hover:bg-muted hover:text-foreground'
           }`}
         >
           <div className="flex items-center gap-1.5 min-w-0">
-            {node.level === 0 && <Bookmark className="h-3.5 w-3.5 text-primary shrink-0" />}
+            {node.level === 0 && <Bookmark strokeWidth={1.25} className="size-3.5 shrink-0 text-brand-soft" />}
             <span className={`truncate ${
-              node.level === 0 
-                ? 'font-bold text-sm'
+              node.level === 0
+                ? 'font-serif text-[18px]'
                 : node.level === 1 && !node.citation
-                ? 'font-semibold text-xs text-muted-foreground'
-                : 'font-medium text-xs font-serif'
+                ? 'label-caps text-[10px] text-muted-foreground'
+                : 'font-serif text-[16px]'
             }`}>
               {node.label}
             </span>
           </div>
 
-          <span className="text-[10px] text-muted-foreground font-mono shrink-0 select-none">
-            {isExpanded ? '▼' : '►'}
+          <span className={`shrink-0 font-mono text-[14px] leading-none text-subtle-foreground transition-transform duration-200 select-none ${isExpanded ? 'rotate-45 text-brand-soft' : ''}`}>
+            +
           </span>
         </div>
 
         {/* Custom Premium Tooltip for Snapshot Date */}
         {hoveredTooltipNodeId === node.id && node.citation && (
-          <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-medium font-mono rounded shadow-xl pointer-events-none whitespace-nowrap border border-slate-800 dark:border-slate-200 animate-in fade-in zoom-in-95 duration-100">
+          <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 animate-in border border-border bg-popover px-2.5 py-1 font-mono text-[10px] whitespace-nowrap text-muted-foreground duration-100 fade-in zoom-in-95">
             as of {node.citation.snapshot_id || "2024-12-01"}
           </div>
         )}
@@ -388,61 +389,60 @@ export function CitationDrawer() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col bg-card shadow-[-4px_0_24px_-8px_rgba(0,0,0,0.08)] ring-1 ring-border/50 relative">
+    <div className="relative flex h-full w-full flex-col bg-card">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-muted/30 px-4 py-3 backdrop-blur-sm">
+      <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-border bg-card px-5 py-4">
         <div className="flex items-center gap-2">
-          <BookOpenText className="h-5 w-5 text-primary" />
-          <h2 className="text-sm font-semibold tracking-tight">{t("citations")} ({citations.length})</h2>
-          <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-full border ${densityInfo.color} select-none`}>
+          <h2 className="font-serif text-[22px] leading-none">
+            {t("citations")} <em className="text-peach italic">{citations.length}</em>
+          </h2>
+          <span className={`label-caps border px-2 py-0.5 text-[9px] select-none ${densityInfo.color}`}>
             {densityInfo.text}
           </span>
         </div>
         <button 
           onClick={toggleCitationDrawer}
-          className="rounded-md p-1.5 hover:bg-muted/80 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+          className="cursor-pointer p-1.5 text-subtle-foreground transition-colors duration-[180ms] hover:text-foreground"
           aria-label="Close drawer"
         >
-          <X className="h-4 w-4" />
+          <X strokeWidth={1.25} className="size-4" />
         </button>
       </div>
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
         {citations.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center space-y-4 text-center py-12">
-            <div className="rounded-full bg-primary/10 p-4">
-              <Info className="h-8 w-8 text-primary" />
-            </div>
+            <Spark className="size-4" />
             <div className="space-y-2 max-w-[250px]">
-              <h3 className="font-semibold tracking-tight text-foreground">
+              <h3 className="text-[24px] leading-tight text-foreground">
                 {t("noCitationsFound")}
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {t("addCitationMarkers")}
               </p>
               {useDraftStore.getState().document?.doc_type === "rti_application" && (
-                <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-2 font-medium bg-indigo-50 dark:bg-indigo-950/30 p-2 rounded-md border border-indigo-100 dark:border-indigo-900/50">
+                <p className="mt-3 border-l-2 border-brand-soft py-1 pl-3 text-left text-[12px] text-muted-foreground">
                   Hint: Try citing the <strong>RTI Act, 2005</strong>.
                 </p>
               )}
               {useDraftStore.getState().document?.doc_type === "cheque_bounce_notice" && (
-                <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-2 font-medium bg-indigo-50 dark:bg-indigo-950/30 p-2 rounded-md border border-indigo-100 dark:border-indigo-900/50">
+                <p className="mt-3 border-l-2 border-brand-soft py-1 pl-3 text-left text-[12px] text-muted-foreground">
                   Hint: Try citing <strong>Negotiable Instruments Act, Section 138</strong>.
                 </p>
               )}
             </div>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1">
             {treeNodes.map(rootNode => renderTreeNode(rootNode))}
           </div>
         )}
       </div>
 
       {/* Footer Info */}
-      <div className="p-3 border-t bg-muted/20 text-muted-foreground text-[10px] flex items-center gap-2">
-        <Info className="h-4 w-4 shrink-0 text-primary" />
+      <div className="flex items-center gap-2.5 border-t border-border px-5 py-3 text-[11px] text-subtle-foreground">
+        <Info strokeWidth={1.25} className="size-3.5 shrink-0 text-brand-soft" />
         <span>{t("clickPathsToExpand")}</span>
       </div>
     </div>

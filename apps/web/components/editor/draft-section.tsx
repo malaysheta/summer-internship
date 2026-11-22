@@ -37,51 +37,51 @@ export function DraftSection({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "relative flex flex-col bg-card border rounded-lg shadow-sm transition-all duration-200",
-        isDragging && "opacity-50 scale-[1.02] shadow-xl z-50 ring-2 ring-primary",
-        isActive && !isDragging && "ring-1 ring-primary/50"
+        "group relative flex flex-col border border-l-[3px] border-border border-l-transparent bg-background transition-colors duration-[180ms] focus-within:border-l-brand",
+        isDragging && "z-50 border-l-brand opacity-70 shadow-[0_20px_60px_rgba(0,0,0,0.15)]",
+        isActive && !isDragging && "border-l-brand"
       )}
     >
       {/* Section Header */}
-      <div className="flex items-center justify-between px-3 py-2 bg-muted/40 border-b rounded-t-lg group">
+      <div className="flex items-center justify-between border-b border-hairline-soft px-3 py-2">
         <div className="flex items-center gap-2">
           {/* Drag Handle */}
           <button
             type="button"
-            className="p-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground hover:bg-muted rounded"
+            className="cursor-grab p-1 text-subtle-foreground hover:text-foreground active:cursor-grabbing"
             {...attributes}
             {...listeners}
           >
-            <GripVertical className="h-4 w-4" />
+            <GripVertical strokeWidth={1.25} className="size-4" />
           </button>
           
-          <h3 className="font-medium text-sm text-foreground">
+          <h3 className="label-caps font-sans text-[10px] text-muted-foreground">
             {section.title}
-            {section.required && <span className="text-destructive ml-1">*</span>}
+            {section.required && <span className="ml-1 text-brand">*</span>}
           </h3>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center opacity-0 transition-opacity duration-[180ms] group-hover:opacity-100 group-focus-within:opacity-100">
           {!section.required && onRemove && (
             <button
               onClick={() => onRemove(section.id)}
-              className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+              className="p-1.5 text-subtle-foreground transition-colors duration-[180ms] hover:text-destructive"
               title="Remove section"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 strokeWidth={1.25} className="size-4" />
             </button>
           )}
         </div>
       </div>
 
       {/* Section Content */}
-      <div className="p-3">
+      <div className="px-4 py-3">
         <textarea
           value={section.content}
           onChange={(e) => onChange(section.id, e.target.value)}
           placeholder={`Enter content for ${section.title}...`}
-          className="w-full min-h-[100px] resize-y bg-transparent outline-none font-mono text-sm leading-relaxed text-foreground placeholder:text-muted-foreground focus:ring-0"
+          className="min-h-[100px] w-full resize-y bg-transparent font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-subtle-foreground focus-visible:outline-none"
           spellCheck={false}
         />
       </div>

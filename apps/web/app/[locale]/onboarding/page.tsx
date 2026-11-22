@@ -4,6 +4,10 @@ import { useState } from 'react'
 import { useRouter } from '@/i18n/routing'
 import type { SupportedLanguage } from '@trionic/shared'
 import { useTranslations } from 'next-intl'
+import { AuthShell, authInputClass } from '@/components/brand/auth-shell'
+import { ArrowIcon, BracketLabel } from '@/components/brand'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 const LANGUAGES: { value: SupportedLanguage }[] = [
   { value: 'en' },
@@ -54,67 +58,68 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-2">
-          {t('welcome')}
-        </h1>
-        <p className="text-gray-500 text-sm mb-6">
-          {t('subtitle')}
-        </p>
+    <AuthShell>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSubmit()
+        }}
+        className="space-y-10"
+      >
+        <header className="space-y-3">
+          <BracketLabel>{tCommon('brandName')}</BracketLabel>
+          <h1 className="text-[clamp(34px,3.4vw,48px)] leading-[1.05] tracking-[-0.02em]">{t('welcome')}</h1>
+          <p className="text-[14px] leading-relaxed text-muted-foreground">{t('subtitle')}</p>
+        </header>
 
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('displayName')}
-            </label>
-            <input
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black animate-none"
-              placeholder={t('displayNamePlaceholder')}
-            />
+        <label className="block space-y-1">
+          <span className="label-caps text-muted-foreground">{t('displayName')}</span>
+          <Input
+            type="text"
+            autoComplete="name"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            className={authInputClass}
+            placeholder={t('displayNamePlaceholder')}
+          />
+        </label>
+
+        <fieldset className="space-y-3">
+          <legend className="label-caps mb-3 text-muted-foreground">{t('preferredLanguage')}</legend>
+          {/* Radios, not buttons: e2e submits via the first button inside <main>. */}
+          <div className="grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-3">
+            {LANGUAGES.map((lang) => (
+              <label
+                key={lang.value}
+                className={`relative flex cursor-pointer items-center border-l-[3px] px-4 py-3.5 text-[15px] transition-colors duration-[180ms] select-none has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:outline-ring ${
+                  language === lang.value ? 'border-brand bg-accent text-foreground' : 'border-transparent bg-background text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="language"
+                  value={lang.value}
+                  checked={language === lang.value}
+                  onChange={() => setLanguage(lang.value)}
+                  className="sr-only"
+                />
+                {tLanguages(lang.value)}
+              </label>
+            ))}
           </div>
+        </fieldset>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t('preferredLanguage')}
-            </label>
-            <div className="space-y-2">
-              {LANGUAGES.map((lang) => (
-                <label key={lang.value} className="flex items-center gap-2 cursor-pointer select-none">
-                  <input
-                    type="radio"
-                    name="language"
-                    value={lang.value}
-                    checked={language === lang.value}
-                    onChange={() => setLanguage(lang.value)}
-                    className="accent-black"
-                  />
-                  <span className="text-sm">{tLanguages(lang.value)}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+        {error && (
+          <p role="alert" className="border-l-2 border-destructive pl-3 text-[13px] text-destructive">
+            {error}
+          </p>
+        )}
 
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
-          )}
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full bg-black text-white py-2 rounded-md text-sm font-medium hover:bg-gray-800 disabled:opacity-50 cursor-pointer"
-          >
-            {loading ? t('saving') : t('continue')}
-          </button>
-        </div>
-
-        <p className="text-xs text-center text-gray-400 mt-6">
-          {tCommon('disclaimer')}
-        </p>
-      </div>
-    </div>
+        <Button type="submit" size="lg" disabled={loading} className="w-full justify-between">
+          {loading ? t('saving') : t('continue').replace(/\s*→$/, '')}
+          <ArrowIcon />
+        </Button>
+      </form>
+    </AuthShell>
   )
 }

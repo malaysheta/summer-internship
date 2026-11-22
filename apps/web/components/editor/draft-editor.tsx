@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Loader2, CheckCircle2, Edit3, Eye, Plus } from "lucide-react";
+import { Edit3, Eye } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -96,9 +96,9 @@ function CitationBadge({ nodeId, index }: { nodeId: string; index: number }) {
         tileElement.scrollIntoView({ behavior: "smooth", block: "nearest" });
         
         // Temporary ring glow
-        tileElement.classList.add("ring-2", "ring-indigo-500/50", "bg-indigo-50/50", "dark:bg-indigo-950/20");
+        tileElement.classList.add("outline", "outline-1", "outline-brand", "bg-accent");
         setTimeout(() => {
-          tileElement.classList.remove("ring-2", "ring-indigo-500/50", "bg-indigo-50/50", "dark:bg-indigo-950/20");
+          tileElement.classList.remove("outline", "outline-1", "outline-brand", "bg-accent");
         }, 1500);
       }
     }, 150);
@@ -113,22 +113,22 @@ function CitationBadge({ nodeId, index }: { nodeId: string; index: number }) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        "relative inline-flex items-center justify-center text-center leading-none p-0 font-mono font-bold text-[11px] size-5 rounded-md cursor-pointer transition-all select-none align-middle border mx-0.5",
+        "relative mx-0.5 inline-flex size-[18px] cursor-pointer items-center justify-center border p-0 align-super font-mono text-[10px] leading-none transition-colors duration-[180ms] select-none",
         isActive
-          ? "bg-indigo-600 text-white border-indigo-650 ring-2 ring-indigo-400 shadow-md scale-105"
-          : "bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 border-indigo-250 dark:border-indigo-900 hover:bg-indigo-100 dark:hover:bg-indigo-900"
+          ? "border-teal bg-teal text-white"
+          : "border-teal/40 text-teal hover:border-teal hover:bg-teal hover:text-white"
       )}
     >
       {index + 1}
       {hovered && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 w-64 p-3 bg-slate-950 dark:bg-white text-white dark:text-slate-900 text-xs rounded-xl shadow-2xl font-sans leading-relaxed pointer-events-none z-50 border border-slate-800 dark:border-slate-200 text-left font-normal animate-in fade-in zoom-in-95 duration-100">
-          <span className="block font-bold text-xs border-b border-slate-800 dark:border-slate-200 pb-1 mb-1.5 font-serif text-white dark:text-slate-950">
+        <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2.5 w-72 -translate-x-1/2 animate-in border border-white/15 bg-black p-4 text-left font-sans text-xs leading-relaxed font-normal text-white shadow-[0_32px_64px_rgba(0,0,0,0.55)] duration-100 fade-in zoom-in-95">
+          <span className="mb-2 block border-b border-white/15 pb-2 font-serif text-[15px] text-white">
             {loading ? t("loading") : nodeText?.title}
           </span>
-          <span className="block text-[11px] text-slate-300 dark:text-slate-650 max-h-32 overflow-y-auto scrollbar-none">
+          <span className="block max-h-32 overflow-y-auto text-[12px] text-white/70">
             {loading ? t("fetchingNode") : nodeText?.text}
           </span>
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-transparent border-t-slate-950 dark:border-t-white" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-transparent border-t-black" />
         </span>
       )}
     </button>
@@ -278,108 +278,83 @@ export function DraftEditor({
   };
 
   return (
-    <div className={cn("flex flex-col h-full w-full bg-background border rounded-md shadow-sm overflow-hidden", className)}>
-      {/* Editor Header / Status Bar */}
-      <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/10 shrink-0">
-        <div className="flex items-center gap-2">
-          {/* Mode Switcher */}
-          <div className="flex bg-muted p-0.5 rounded-lg border">
+    <div className={cn("flex h-full w-full flex-col overflow-hidden", className)}>
+      {/* Toolbar */}
+      <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-2.5 md:px-8">
+        <div className="flex border border-border" role="tablist">
+          {(["preview", "edit"] as const).map((m) => (
             <button
-              onClick={() => setMode("preview")}
+              key={m}
+              role="tab"
+              aria-selected={mode === m}
+              onClick={() => setMode(m)}
               className={cn(
-                "flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-md transition-colors cursor-pointer",
-                mode === "preview"
-                  ? "bg-background shadow text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                "label-caps flex cursor-pointer items-center gap-2 px-3.5 py-2 text-[10px] transition-colors duration-[180ms]",
+                mode === m ? "bg-accent text-foreground shadow-[inset_0_-2px_0_var(--brand)]" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Eye className="h-3.5 w-3.5" />
-              {t("preview")}
+              {m === "preview" ? <Eye strokeWidth={1.25} className="size-3.5" /> : <Edit3 strokeWidth={1.25} className="size-3.5" />}
+              {t(m)}
             </button>
-            <button
-              onClick={() => setMode("edit")}
-              className={cn(
-                "flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-md transition-colors cursor-pointer",
-                mode === "edit"
-                  ? "bg-background shadow text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Edit3 className="h-3.5 w-3.5" />
-              {t("edit")}
-            </button>
-          </div>
+          ))}
         </div>
-        
-        {/* Status Indicators */}
-        <div className="flex items-center text-xs font-medium transition-opacity duration-300">
-          {isSaving ? (
-            <span className="flex items-center gap-1.5 text-blue-500">
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              {t("saving")}
-            </span>
-          ) : lastSavedAt ? (
-            <span className="flex items-center gap-1.5 text-green-600 dark:text-green-500">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              {t("savedAt", { time: lastSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) })}
-            </span>
-          ) : (
-            <span className="text-muted-foreground/50">{t("ready")}</span>
-          )}
-        </div>
+
+        <span className="label-caps text-[10px] text-subtle-foreground" aria-live="polite">
+          {isSaving
+            ? t("saving")
+            : lastSavedAt
+            ? t("savedAt", { time: lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) })
+            : t("ready")}
+        </span>
       </div>
 
-      {/* Editor Body */}
-      <div className="relative flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">
-        {mode === "edit" ? (
-          <div className="max-w-3xl mx-auto space-y-6 pb-20">
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={sections.map((s) => s.id)}
-                strategy={verticalListSortingStrategy}
+      {/* Desk: the document is a paper page on the dark canvas */}
+      <div className="relative flex-1 overflow-y-auto bg-card px-4 py-8 md:px-8 md:py-12">
+        <div className="paper mx-auto max-w-[820px] border border-border bg-background shadow-[0_30px_80px_rgba(0,0,0,0.55)]">
+          {mode === "edit" ? (
+            <div className="space-y-6 px-6 py-10 md:px-14 md:py-14">
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
               >
-                <div className="space-y-4">
-                  {sections.map((section) => (
-                    <DraftSection
-                      key={section.id}
-                      section={section}
-                      onChange={handleSectionChange}
-                      onRemove={handleRemoveSection}
-                      isActive={activeId === section.id}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
+                <SortableContext items={sections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+                  <div className="space-y-4">
+                    {sections.map((section) => (
+                      <DraftSection
+                        key={section.id}
+                        section={section}
+                        onChange={handleSectionChange}
+                        onRemove={handleRemoveSection}
+                        isActive={activeId === section.id}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
 
-            {/* Add Section Select */}
-            {availableSectionsToAdd.length > 0 && (
-              <div className="flex items-center gap-2 pt-4 border-t border-dashed">
-                <select
-                  className="px-3 py-1.5 text-sm border rounded-md bg-transparent text-foreground outline-none focus:ring-1 focus:ring-primary"
-                  onChange={handleAddSection}
-                  defaultValue=""
-                >
-                  <option value="" disabled>+ Add Section</option>
-                  {availableSectionsToAdd.map((sec) => (
-                    <option key={sec.id} value={sec.title}>{sec.title}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="bg-background select-text max-w-3xl mx-auto py-4 animate-in fade-in duration-200">
-            <div className="prose dark:prose-invert max-w-none">
+              {availableSectionsToAdd.length > 0 && (
+                <div className="border-t border-dashed border-border pt-5">
+                  <select
+                    className="label-caps h-9 cursor-pointer border border-border bg-transparent px-3 text-[10px] text-muted-foreground outline-none hover:border-foreground/40 hover:text-foreground"
+                    onChange={handleAddSection}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>+ Add Section</option>
+                    {availableSectionsToAdd.map((sec) => (
+                      <option key={sec.id} value={sec.title}>{sec.title}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="animate-in px-6 py-10 duration-200 select-text fade-in md:px-16 md:py-16">
               <LegalMarkdownView markdown={serializeSectionsToMarkdown(sections)} renderCite={renderCite} />
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

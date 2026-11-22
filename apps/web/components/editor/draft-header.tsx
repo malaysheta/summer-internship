@@ -1,10 +1,10 @@
 import { useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { AlertCircle, CheckCircle2, Loader2, Save, PanelRight, ArrowLeft, Languages, Download } from "lucide-react";
+import { Loader2, PanelRight, ArrowLeft, Languages, Download } from "lucide-react";
 import { SaveStatus } from "../../hooks/use-autosave";
 import { useDraftStore } from "../../hooks/use-draft-store";
 import { StatusBadge } from "@/app/[locale]/dashboard/_components/status-badge";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Button } from "../ui/button";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -73,31 +73,35 @@ export function DraftHeader({ saveStatus }: DraftHeaderProps) {
     }
   };
 
+  const save = {
+    idle: { dot: "bg-subtle-foreground", text: "No changes" },
+    unsaved: { dot: "bg-brand-soft animate-pulse", text: "Unsaved" },
+    saving: { dot: "bg-brand-soft animate-pulse", text: "Saving…" },
+    saved: { dot: "bg-success", text: "Saved" },
+    error: { dot: "bg-destructive", text: "Error" },
+  }[saveStatus];
+
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-background px-6 py-3 shrink-0">
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-10 flex shrink-0 items-center justify-between gap-4 border-b border-border bg-background/90 px-5 py-3 backdrop-blur-md md:px-8">
+      <div className="flex min-w-0 items-center gap-4">
         <Link
           href="/dashboard"
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mr-2 cursor-pointer"
+          className="label-caps flex shrink-0 items-center gap-2 text-muted-foreground transition-colors duration-[180ms] hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back</span>
+          <ArrowLeft strokeWidth={1.25} className="size-3.5" />
+          <span className="hidden sm:inline">Back</span>
         </Link>
+        <span className="h-6 w-px shrink-0 bg-border" />
 
-        <h1 className="text-base font-bold text-foreground truncate max-w-[200px] sm:max-w-[300px]">
+        <h1 className="min-w-0 truncate font-serif text-[22px] leading-none tracking-[-0.01em] sm:max-w-[360px]">
           {documentData?.title || "Legal Draft"}
         </h1>
 
-        {documentData?.status && (
-          <StatusBadge status={documentData.status} />
-        )}
+        {documentData?.status && <StatusBadge status={documentData.status} />}
 
         {documentData && (
-          <Select 
-            value={documentData.doc_type} 
-            onValueChange={(val) => updateDocType(val as DocumentType)}
-          >
-            <SelectTrigger className="w-[180px] h-8 text-xs font-medium">
+          <Select value={documentData.doc_type} onValueChange={(val) => updateDocType(val as DocumentType)}>
+            <SelectTrigger size="sm" className="hidden w-[190px] text-[13px] md:flex">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -109,96 +113,62 @@ export function DraftHeader({ saveStatus }: DraftHeaderProps) {
             </SelectContent>
           </Select>
         )}
-        
-        {/* Pinned AI Banner */}
-        <div className="hidden md:flex items-center gap-2 rounded-md bg-amber-50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/30 px-3 py-1 text-xs font-semibold text-amber-800 dark:text-amber-300">
-          <AlertCircle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-          <span>AI-generated draft — not legal advice</span>
-        </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        {/* Autosave Indicator */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground hidden sm:flex">
-          {saveStatus === "idle" && (
-            <>
-              <Save className="h-4 w-4" />
-              <span>No changes</span>
-            </>
-          )}
-          {saveStatus === "unsaved" && (
-            <>
-              <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-              <span>Unsaved</span>
-            </>
-          )}
-          {saveStatus === "saving" && (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-              <span className="text-blue-500">Saving...</span>
-            </>
-          )}
-          {saveStatus === "saved" && (
-            <>
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              <span className="text-green-500">Saved</span>
-            </>
-          )}
-          {saveStatus === "error" && (
-            <>
-              <AlertCircle className="h-4 w-4 text-destructive" />
-              <span className="text-destructive">Error</span>
-            </>
-          )}
-        </div>
+      <div className="flex shrink-0 items-center gap-3">
+        {/* Autosave indicator */}
+        <span className="label-caps hidden items-center gap-2 text-[10px] text-muted-foreground sm:flex" aria-live="polite">
+          <span className={`size-1.5 rounded-full ${save.dot}`} />
+          {save.text}
+        </span>
+        <span className="hidden h-6 w-px bg-border sm:block" />
 
-        {/* Divider */}
-        <div className="h-6 w-px bg-border hidden sm:block" />
+        <Button variant="ghost" size="sm" className="hidden sm:flex" disabled>
+          <Languages strokeWidth={1.25} />
+          Translate
+        </Button>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <Button size="sm" disabled={!content || isExporting || saveStatus === "saving"}>
+              {isExporting ? "Exporting…" : "Export"}
+              {isExporting ? <Loader2 className="animate-spin" /> : <Download strokeWidth={1.25} />}
+            </Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              align="end"
+              sideOffset={6}
+              className="z-50 min-w-[220px] border border-border bg-popover py-1 text-popover-foreground shadow-[0_32px_64px_rgba(0,0,0,0.55)]"
+            >
+              {([
+                ["pdf", "PDF document (.pdf)"],
+                ["docx", "Word document (.docx)"],
+                ["md", "Markdown (.md)"],
+              ] as const).map(([fmt, label]) => (
+                <DropdownMenu.Item
+                  key={fmt}
+                  onSelect={() => handleExport(fmt)}
+                  className="flex cursor-pointer items-center gap-3 border-l-2 border-transparent px-4 py-2.5 text-[13px] outline-none select-none data-[highlighted]:border-brand data-[highlighted]:bg-accent"
+                >
+                  <span className="label-caps w-9 text-[10px] text-brand-soft">{fmt}</span>
+                  {label}
+                </DropdownMenu.Item>
+              ))}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="hidden sm:flex" disabled>
-            <Languages className="mr-2 h-4 w-4" />
-            Translate
-          </Button>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <Button variant="default" size="sm" disabled={!content || isExporting || saveStatus === "saving"}>
-                {isExporting ? "Exporting..." : "Export"}
-                {isExporting ? <Loader2 className="ml-2 h-4 w-4 animate-spin" /> : <Download className="ml-2 h-4 w-4" />}
-              </Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content align="end" sideOffset={6} className="z-50 min-w-[190px] rounded-lg border bg-background p-1 shadow-lg">
-                {([
-                  ["pdf", "PDF document (.pdf)"],
-                  ["docx", "Word document (.docx)"],
-                  ["md", "Markdown (.md)"],
-                ] as const).map(([fmt, label]) => (
-                  <DropdownMenu.Item
-                    key={fmt}
-                    onSelect={() => handleExport(fmt)}
-                    className="flex cursor-pointer select-none items-center gap-2 rounded-md px-3 py-2 text-sm outline-none data-[highlighted]:bg-muted"
-                  >
-                    <Download className="h-3.5 w-3.5 text-muted-foreground" />
-                    {label}
-                  </DropdownMenu.Item>
-                ))}
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
-
-          <Button
-            variant={isCitationDrawerOpen ? "secondary" : "outline"}
-            size="sm"
-            onClick={toggleCitationDrawer}
-            className="hidden lg:flex"
-            aria-label="Toggle citation drawer"
-          >
-            <PanelRight className="mr-2 h-4 w-4" />
-            {isCitationDrawerOpen ? "Hide Citations" : "Citations"}
-          </Button>
-        </div>
+        <Button
+          variant={isCitationDrawerOpen ? "secondary" : "outline"}
+          size="sm"
+          onClick={toggleCitationDrawer}
+          className="hidden lg:flex"
+          aria-label="Toggle citation drawer"
+          aria-pressed={isCitationDrawerOpen}
+        >
+          <PanelRight strokeWidth={1.25} />
+          {isCitationDrawerOpen ? "Hide Citations" : "Citations"}
+        </Button>
       </div>
     </header>
   );

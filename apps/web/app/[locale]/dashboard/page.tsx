@@ -4,19 +4,20 @@ import { useEffect, useState, useCallback } from "react";
 import type { Document, DocumentType } from "@trionic/shared";
 import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@/i18n/routing";
-import { Plus, LogOut, ShieldCheck } from "lucide-react";
+import { AppHeader } from "@/components/brand/app-header";
+import { ArrowIcon, SectionHeading, splitAccent } from "@/components/brand";
 import { createClient } from "@/lib/supabase/client";
 import { FilterBar, type FilterState } from "./_components/filter-bar";
 import { DocumentTable } from "./_components/document-table";
 import { EmptyState } from "./_components/empty-state";
 import { useTranslations } from "next-intl";
-import { LanguageSwitcher } from "@/components/language-switcher";
 
 type FetchState = "idle" | "loading" | "error" | "done";
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
   const tCommon = useTranslations("common");
+  const tNav = useTranslations("navigation");
 
   const [documents, setDocuments]     = useState<Document[]>([]);
   const [fetchState, setFetchState]   = useState<FetchState>("idle");
@@ -25,21 +26,6 @@ export default function DashboardPage() {
 
   const router   = useRouter();
   const supabase = createClient();
-
-  // Admin entry point is UI-only; /admin itself re-checks the role server-side.
-  const [isAdmin, setIsAdmin] = useState(false);
-  useEffect(() => {
-    fetch("/api/users/me")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((me: { role?: string } | null) => setIsAdmin(me?.role === "admin"))
-      .catch(() => setIsAdmin(false));
-  }, []);
-
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
-  }
 
   const [filters, setFilters] = useState<FilterState>({
     search:   "",
@@ -125,38 +111,20 @@ export default function DashboardPage() {
 
   const emptyType = hasActiveFilters ? "no-results" : "empty";
 
+  const [titleLead, titleAccent] = splitAccent(t("title"));
+
   return (
-    <main className="flex flex-col gap-6 p-6 max-w-6xl mx-auto w-full">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-zinc-900">{t("title")}</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">
-            {t("subtitle")}
-          </p>
-        </div>
-        <div className="flex gap-2 items-center">
-          <LanguageSwitcher />
-          {isAdmin && (
-            <Button asChild variant="outline" className="gap-2 cursor-pointer">
-              <Link href="/admin">
-                <ShieldCheck className="h-4 w-4" />
-                Admin
-              </Link>
-            </Button>
-          )}
-          <Button asChild className="gap-2 cursor-pointer">
-            <Link href="/new">
-              <Plus className="h-4 w-4" />
-              {tCommon("newDraft")}
-            </Link>
-          </Button>
-          <Button variant="outline" className="gap-2 cursor-pointer" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4" />
-            {tCommon("signOut")}
-          </Button>
-        </div>
-      </div>
+    <>
+    <AppHeader />
+    <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-5 py-12 md:px-10 md:py-16">
+      <SectionHeading label={tNav("dashboard")} title={titleLead} accent={titleAccent} subtitle={t("subtitle")}>
+        <Button asChild size="lg">
+          <Link href="/new">
+            {tCommon("newDraft")}
+            <ArrowIcon />
+          </Link>
+        </Button>
+      </SectionHeading>
 
       {/* Filters */}
       <FilterBar filters={filters} onChange={setFilters} />
@@ -192,7 +160,7 @@ export default function DashboardPage() {
                 variant="outline"
                 onClick={loadMore}
                 disabled={loadingMore}
-                className="w-40"
+                className="w-48"
               >
                 {loadingMore ? "Loading..." : "Load more"}
               </Button>
@@ -201,5 +169,6 @@ export default function DashboardPage() {
         </>
       )}
     </main>
+    </>
   );
 }

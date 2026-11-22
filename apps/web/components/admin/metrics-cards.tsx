@@ -54,7 +54,7 @@ export function MetricsCards({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
         <StatTile label="Total drafts" value={totalDrafts.toLocaleString()} hint="Across all users" icon={FileText} />
         <StatTile
           label="LLM spend"
@@ -66,7 +66,7 @@ export function MetricsCards({
         <StatTile label="Languages" value={String(languages.length)} hint="In use" icon={Globe} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-px border border-border bg-border lg:grid-cols-2">
         <Breakdown
           title="Drafts by document type"
           rows={types.map(([k, v]) => [mapDbDocTypeToLabel(k), v])}
@@ -93,16 +93,16 @@ function StatTile({
   label: string;
   value: string;
   hint: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
 }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-xs">
+    <div className="bg-background p-6">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-zinc-500">{label}</span>
-        <Icon className="size-4 text-zinc-400" />
+        <span className="label-caps text-[10px] text-muted-foreground">{label}</span>
+        <Icon strokeWidth={1.25} className="size-4 text-brand-soft" />
       </div>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-zinc-900 tabular-nums">{value}</p>
-      <p className="mt-1 text-xs text-zinc-400">{hint}</p>
+      <p className="mt-5 font-serif text-[44px] leading-none tracking-[-0.02em] tabular-nums">{value}</p>
+      <p className="mt-2 text-[12px] text-subtle-foreground">{hint}</p>
     </div>
   );
 }
@@ -119,24 +119,24 @@ function Breakdown({
   empty: string;
 }) {
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white shadow-xs">
-      <h2 className="border-b border-zinc-100 px-5 py-3.5 text-sm font-medium text-zinc-900">{title}</h2>
+    <section className="bg-background">
+      <h2 className="border-b border-hairline-soft px-6 py-4 text-[22px] leading-tight">{title}</h2>
       {rows.length === 0 ? (
-        <p className="px-5 py-10 text-center text-sm text-zinc-400">{empty}</p>
+        <p className="px-6 py-10 text-center text-[13px] text-subtle-foreground">{empty}</p>
       ) : (
-        <ul className="space-y-3.5 px-5 py-4">
+        <ul className="space-y-4 px-6 py-5">
           {rows.map(([label, count]) => {
             const pct = total > 0 ? Math.round((count / total) * 100) : 0;
             return (
               <li key={label}>
-                <div className="flex items-baseline justify-between text-sm">
-                  <span className="text-zinc-700">{label}</span>
-                  <span className="tabular-nums text-zinc-500">
-                    {count.toLocaleString()} <span className="text-zinc-400">· {pct}%</span>
+                <div className="flex items-baseline justify-between text-[14px]">
+                  <span className="text-foreground/85">{label}</span>
+                  <span className="text-muted-foreground tabular-nums">
+                    {count.toLocaleString()} <span className="text-subtle-foreground">· {pct}%</span>
                   </span>
                 </div>
-                <div className="mt-1.5 h-1.5 rounded-full bg-zinc-100">
-                  <div className="h-full rounded-full bg-zinc-800" style={{ width: `${pct}%` }} />
+                <div className="mt-2 h-px bg-border">
+                  <div className="-mt-px h-[3px] bg-teal" style={{ width: `${pct}%` }} />
                 </div>
               </li>
             );

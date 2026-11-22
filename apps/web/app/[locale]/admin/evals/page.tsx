@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminPageHeader } from "@/components/admin/admin-layout";
 import { useEffect, useState } from "react";
 import type { EvalRunResult } from "@trionic/shared";
 import { BudgetTracker } from "@/components/admin/BudgetTracker";
@@ -74,32 +75,17 @@ export default function AdminEvalsPage() {
     .sort((left, right) => right.ran_at.localeCompare(left.ran_at) || left.model.localeCompare(right.model));
 
   return (
-    <div className="text-slate-950">
+    <div>
 
       <section className="mx-auto flex w-full max-w-none flex-col gap-6">
-        <header className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
-            Team F · Evals & Telemetry
-          </p>
-          <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-2">
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                Per-LLM Evaluation Dashboard
-              </h1>
-              <p className="max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
-                Daily calls, tokens and cost per model across all history, aggregated from agent traces.
-              </p>
-            </div>
-
-          </div>
-        </header>
+        <AdminPageHeader title="Model performance" description={"Daily calls, tokens and cost per model across all history, aggregated from agent traces."} />
 
         {loading ? (
-          <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500 shadow-sm">
+          <div className="border border-dashed border-border bg-background px-6 py-14 text-center text-sm text-muted-foreground">
             Loading eval runs…
           </div>
         ) : error ? (
-          <div className="rounded-xl border border-rose-200 bg-rose-50 px-6 py-5 text-sm text-rose-800 shadow-sm">
+          <div className="border border-destructive/50 bg-destructive/10 px-6 py-5 text-sm text-destructive">
             {error}
           </div>
         ) : (
@@ -110,30 +96,30 @@ export default function AdminEvalsPage() {
               alertThresholdPct={100}
             />
 
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="overflow-hidden border border-border bg-background">
             <div className="overflow-x-auto">
               <table className="min-w-[720px] w-full border-collapse text-left">
-                <thead className="border-b border-slate-100 bg-slate-50/60 text-xs text-slate-500">
+                <thead className="border-b border-border">
                   <tr>
-                    <th className="px-5 py-4 font-medium">Date</th>
-                    <th className="px-5 py-4 font-medium">Model</th>
-                    <th className="px-5 py-4 font-medium">Total Calls</th>
-                    <th className="px-5 py-4 font-medium">Tokens In</th>
-                    <th className="px-5 py-4 font-medium">Tokens Out</th>
-                    <th className="px-5 py-4 font-medium">Cost ($)</th>
+                    <th className="px-5 py-4 label-caps text-[10px] font-normal text-subtle-foreground">Date</th>
+                    <th className="px-5 py-4 label-caps text-[10px] font-normal text-subtle-foreground">Model</th>
+                    <th className="px-5 py-4 label-caps text-[10px] font-normal text-subtle-foreground">Total Calls</th>
+                    <th className="px-5 py-4 label-caps text-[10px] font-normal text-subtle-foreground">Tokens In</th>
+                    <th className="px-5 py-4 label-caps text-[10px] font-normal text-subtle-foreground">Tokens Out</th>
+                    <th className="px-5 py-4 label-caps text-[10px] font-normal text-subtle-foreground">Cost ($)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 text-sm text-slate-700">
+                <tbody className="divide-y divide-hairline-soft text-sm text-foreground/85">
                   {visibleRuns.length === 0 ? (
                     <tr>
-                      <td className="px-5 py-8 text-slate-500" colSpan={6}>
+                      <td className="px-5 py-8 text-muted-foreground" colSpan={6}>
                         No model usage yet. Rows appear once drafts are generated.
                       </td>
                     </tr>
                   ) : (
                     visibleRuns.map((run) => (
-                      <tr key={run.run_id} className="hover:bg-slate-50/80">
-                        <td className="px-5 py-4 font-medium text-slate-900">
+                      <tr key={run.run_id} className="hover:bg-muted">
+                        <td className="px-5 py-4 font-medium text-foreground">
                           {formatDate(run.ran_at)}
                         </td>
                         <td className="px-5 py-4">{run.model}</td>

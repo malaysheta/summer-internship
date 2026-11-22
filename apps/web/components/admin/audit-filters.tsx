@@ -16,7 +16,7 @@ const DOCUMENT_TYPES = ["petition", "notice", "agreement", "complaint", "other"]
 const EMPTY: AuditFiltersType = { user_id: "all", doc_type: "all", model: "all", startDate: "", endDate: "" };
 
 const CONTROL =
-  "h-9 w-full rounded-md border border-zinc-200 bg-white px-2.5 text-sm text-zinc-900 shadow-xs outline-none transition-colors hover:border-zinc-300 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200";
+  "h-10 w-full border border-input bg-transparent px-3 text-[13px] text-foreground outline-none transition-colors duration-[180ms] hover:border-foreground/40 focus:border-ring [color-scheme:dark] [&>option]:bg-popover";
 
 export function AuditFilters({ filters, onChange, uniqueUsers, uniqueModels }: AuditFiltersProps) {
   const set = (key: keyof AuditFiltersType, value: string) => onChange({ ...filters, [key]: value });
@@ -69,9 +69,9 @@ export function AuditFilters({ filters, onChange, uniqueUsers, uniqueModels }: A
         type="button"
         onClick={() => onChange(EMPTY)}
         disabled={!dirty}
-        className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md px-3 text-sm text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 disabled:pointer-events-none disabled:opacity-40"
+        className="label-caps inline-flex h-10 items-center justify-center gap-1.5 px-3 text-[10px] text-muted-foreground transition-colors duration-[180ms] hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
       >
-        <RotateCcw className="size-3.5" />
+        <RotateCcw strokeWidth={1.25} className="size-3.5" />
         Reset
       </button>
     </div>
@@ -81,7 +81,7 @@ export function AuditFilters({ filters, onChange, uniqueUsers, uniqueModels }: A
 function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="text-xs font-medium text-zinc-500">
+      <label htmlFor={id} className="label-caps text-[10px] text-subtle-foreground">
         {label}
       </label>
       {children}

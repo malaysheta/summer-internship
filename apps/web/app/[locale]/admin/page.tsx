@@ -21,20 +21,20 @@ export default function AdminDashboardPage() {
 
       {loading ? (
         <div className="space-y-6" aria-busy="true" aria-label="Loading metrics">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
             {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="h-[118px] animate-pulse rounded-xl border border-zinc-200 bg-white" />
+              <div key={i} className="h-[132px] animate-pulse bg-muted" />
             ))}
           </div>
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {[0, 1].map((i) => (
-              <div key={i} className="h-56 animate-pulse rounded-xl border border-zinc-200 bg-white" />
+              <div key={i} className="h-56 animate-pulse bg-muted" />
             ))}
           </div>
         </div>
       ) : error ? (
-        <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-          <AlertCircle className="size-4 shrink-0" />
+        <div className="flex items-center gap-3 border-l-[3px] border-destructive py-3 pl-4 text-[13px] text-destructive">
+          <AlertCircle strokeWidth={1.25} className="size-4 shrink-0" />
           Failed to load metrics: {error}
         </div>
       ) : metrics ? (
@@ -46,19 +46,19 @@ export default function AdminDashboardPage() {
         />
       ) : null}
 
-      <h2 className="mt-10 mb-3 text-sm font-medium text-zinc-900">Jump to</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <p className="bracket-label mt-14 mb-4">Jump to</p>
+      <div className="grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-3">
         {SHORTCUTS.map((s) => (
           <Link
             key={s.href}
             href={s.href}
-            className="group rounded-xl border border-zinc-200 bg-white p-5 shadow-xs transition-colors hover:border-zinc-300"
+            className="group bg-background p-6 transition-colors duration-[180ms] hover:bg-muted"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-zinc-900">{s.title}</span>
-              <ArrowUpRight className="size-4 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <span className="font-serif text-[22px] leading-tight group-hover:text-peach">{s.title}</span>
+              <ArrowUpRight strokeWidth={1.25} className="size-4 text-brand-soft transition-transform duration-300 ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </div>
-            <p className="mt-1 text-sm text-zinc-500">{s.body}</p>
+            <p className="mt-2 text-[13px] text-muted-foreground">{s.body}</p>
           </Link>
         ))}
       </div>
