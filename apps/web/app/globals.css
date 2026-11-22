@@ -15,6 +15,8 @@
   --font-serif: var(--font-instrument), var(--font-serif-devanagari), var(--font-serif-gujarati), var(--font-serif-tamil), ui-serif, Georgia, serif;
   --font-heading: var(--font-serif);
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Legal document body: matches the PDF/DOCX export (Georgia/Times + Noto Indic). */
+  --font-document: Georgia, "Times New Roman", var(--font-serif-devanagari), var(--font-serif-gujarati), var(--font-serif-tamil), serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
