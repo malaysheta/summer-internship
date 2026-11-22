@@ -4,7 +4,9 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useRouter } from '@/i18n/routing'
 import type { AgentStreamEvent, SupportedLanguage } from '@trionic/shared'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, CheckCircle2, AlertCircle, XCircle } from 'lucide-react'
+import { Check, X } from 'lucide-react'
+import { BracketLabel, Spark } from '@/components/brand'
+import { Button } from '@/components/ui/button'
 import { useTranslations } from 'next-intl'
 
 interface StreamingIndicatorProps {
@@ -201,80 +203,71 @@ export function StreamingIndicator({
     onCancel()
   }
 
-  return (
-    <div className="max-w-md w-full mx-auto bg-white rounded-3xl border border-zinc-200 p-8 shadow-xl relative overflow-hidden transition-all">
-      {/* Background soft glow indicator */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 animate-pulse" />
+  const doneCount = steps.filter((step) => step.status === 'done').length
 
-      <div className="flex flex-col items-center text-center mb-8 mt-2">
-        {!isError ? (
-          <div className="size-12 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center mb-4 shadow-inner">
-            <Loader2 className="size-6 text-zinc-900 animate-spin" />
-          </div>
-        ) : (
-          <div className="size-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mb-4">
-            <AlertCircle className="size-6 text-red-600" />
-          </div>
-        )}
-        <h2 className="text-xl font-bold text-zinc-900">
+  return (
+    <div className="relative w-full max-w-xl border border-border bg-card">
+      {/* Progress: share of finished steps */}
+      <div className="h-0.5 w-full bg-hairline-soft">
+        <div
+          className={`h-full transition-[width] duration-700 ease-editorial ${isError ? 'bg-destructive' : 'bg-brand'}`}
+          style={{ width: `${(doneCount / steps.length) * 100}%` }}
+        />
+      </div>
+
+      <div className="space-y-3 border-b border-border px-8 pt-10 pb-8">
+        <div className="flex items-center gap-3">
+          <Spark className={isError ? 'text-destructive' : 'animate-[spin_6s_linear_infinite]'} />
+          <BracketLabel>{t('title')}</BracketLabel>
+        </div>
+        <h2 className="text-[clamp(28px,3vw,38px)] leading-[1.1] tracking-[-0.01em]">
           {isError ? t('steps.generationInterrupted') : t('generating')}
         </h2>
-        <p className={`text-sm mt-1 font-medium ${isError ? 'text-red-500' : 'text-zinc-500'}`}>
-          {statusMessage}
-        </p>
+        <p className={`text-[13px] ${isError ? 'text-destructive' : 'text-muted-foreground'}`}>{statusMessage}</p>
       </div>
 
-      {/* Steps List */}
-      <div className="space-y-4 mb-8">
-        {steps.map((step) => {
-          return (
-            <div key={step.id} className="flex items-center gap-4 py-1.5 px-3 rounded-xl hover:bg-zinc-50 transition-colors">
-              <div className="flex items-center justify-center size-6 shrink-0">
-                {step.status === 'pending' && (
-                  <div className="size-4 rounded-full border-2 border-zinc-300 bg-white" />
-                )}
-                {step.status === 'running' && (
-                  <Loader2 className="size-5 text-blue-600 animate-spin" />
-                )}
-                {step.status === 'done' && (
-                  <CheckCircle2 className="size-5 text-green-600 fill-green-50" />
-                )}
-                {step.status === 'error' && (
-                  <XCircle className="size-5 text-red-600 fill-red-50" />
-                )}
-              </div>
-              <span
-                className={`text-sm font-medium transition-colors ${
-                  step.status === 'done'
-                    ? 'text-zinc-500 line-through decoration-zinc-300'
-                    : step.status === 'running'
-                    ? 'text-zinc-900 font-semibold'
-                    : step.status === 'error'
-                    ? 'text-red-600'
-                    : 'text-zinc-400'
-                }`}
-              >
-                {t(`steps.${step.agent}`)}
-              </span>
-            </div>
-          )
-        })}
-      </div>
+      <ol>
+        {steps.map((step, i) => (
+          <li
+            key={step.id}
+            className={`grid grid-cols-[56px_1fr_28px] items-center border-b border-l-[3px] border-b-hairline-soft px-8 py-4 transition-colors duration-[180ms] ${
+              step.status === 'running' ? 'border-l-brand bg-accent' : step.status === 'error' ? 'border-l-destructive' : 'border-l-transparent'
+            }`}
+          >
+            <span className="label-caps text-[10px] text-subtle-foreground">{String(i + 1).padStart(2, '0')}</span>
+            <span
+              className={`font-serif text-[19px] leading-tight transition-colors duration-[180ms] ${
+                step.status === 'running'
+                  ? 'text-foreground'
+                  : step.status === 'done'
+                  ? 'text-muted-foreground'
+                  : step.status === 'error'
+                  ? 'text-destructive'
+                  : 'text-subtle-foreground'
+              }`}
+            >
+              {t(`steps.${step.agent}`)}
+            </span>
+            <span className="flex justify-end">
+              {step.status === 'running' && <span className="size-2 animate-pulse rounded-full bg-brand" />}
+              {step.status === 'done' && <Check strokeWidth={1.25} className="size-4 text-success" />}
+              {step.status === 'error' && <X strokeWidth={1.25} className="size-4 text-destructive" />}
+              {step.status === 'pending' && <span className="h-px w-3 bg-subtle-foreground/60" />}
+            </span>
+          </li>
+        ))}
+      </ol>
 
       {isError && errorMessage && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl text-xs text-red-700 font-medium whitespace-pre-wrap leading-relaxed">
+        <p className="mx-8 mt-6 border-l-2 border-destructive pl-3 text-[13px] leading-relaxed whitespace-pre-wrap text-destructive">
           {errorMessage}
-        </div>
+        </p>
       )}
 
-      {/* Cancel Action */}
-      <div className="flex justify-center border-t border-zinc-100 pt-6">
-        <button
-          onClick={handleCancel}
-          className="px-6 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 rounded-2xl text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-zinc-300"
-        >
+      <div className="flex justify-end px-8 py-6">
+        <Button variant={isError ? 'outline' : 'ghost'} onClick={handleCancel}>
           {isError ? t('steps.goBack') : t('steps.cancelGeneration')}
-        </button>
+        </Button>
       </div>
     </div>
   )
