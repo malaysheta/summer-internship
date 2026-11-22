@@ -37,13 +37,9 @@ const tamil = localFont({
   display: "swap",
 });
 
-const fontMap: Record<string, string> = {
-  en: geistSans.variable,
-  hi: devanagari.variable,
-  mr: devanagari.variable, // Marathi shares Devanagari font structures
-  gu: gujarati.variable,
-  ta: tamil.variable,
-};
+// Every variable on <html>: --font-sans references all four, and one undefined
+// var() invalidates the whole font-family (the page fell back to serif).
+const fontVariables = [geistSans, devanagari, gujarati, tamil].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = {
   title: "Trionic Adalat",
@@ -66,7 +62,6 @@ export default async function LocaleLayout({
 
   // Fetch translation messages
   const messages = await getMessages();
-  const fontVariable = fontMap[locale] || geistSans.variable;
   const isRtl = locale === "ur";
   const dir = isRtl ? "rtl" : "ltr";
 
@@ -74,7 +69,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${fontVariable} h-full antialiased`}
+      className={`${fontVariables} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans relative">

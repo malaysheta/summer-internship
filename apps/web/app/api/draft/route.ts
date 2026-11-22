@@ -195,11 +195,19 @@ export async function POST(req: Request) {
           await supabase
             .from("documents")
             .update({ status: "failed" })
-            .eq("id", draftReq.document_id);
+            .eq("id", draftReq.document_id)
+            // Abort can fire after the draft already saved; never undo "final".
+            .neq("status", "final");
         } catch (err) {
           console.error("Error setting document status to failed on abort:", err);
         }
       });
+
+      // Heartbeat: citator/reviewer/translator can run a long time with no
+      // events, and the idle stream got cut on Vercel ("network error").
+      const heartbeat = setInterval(() => {
+        try { controller.enqueue(encoder.encode(": ping\n\n")); } catch { /* stream closed */ }
+      }, 15_000);
 
       try {
         console.log('[API/DRAFT] Stream started, entering for await loop');
@@ -338,6 +346,8 @@ export async function POST(req: Request) {
         }
           
         controller.close();
+      } finally {
+        clearInterval(heartbeat);
       }
     },
     async cancel() {
@@ -347,7 +357,8 @@ export async function POST(req: Request) {
         await supabase
           .from("documents")
           .update({ status: "failed" })
-          .eq("id", draftReq.document_id);
+          .eq("id", draftReq.document_id)
+          .neq("status", "final");
       } catch (err) {
         console.error("Error setting document status to failed on cancel:", err);
       }

@@ -138,11 +138,18 @@ export async function POST(
           await supabase
             .from("documents")
             .update({ status: "failed" })
-            .eq("id", document_id);
+            .eq("id", document_id)
+            // Abort can fire after the draft already saved; never undo "final".
+            .neq("status", "final");
         } catch (err) {
           console.error("Error setting document status to failed on abort:", err);
         }
       });
+
+      // Heartbeat: keeps the stream alive through long agent steps with no events.
+      const heartbeat = setInterval(() => {
+        try { controller.enqueue(encoder.encode(": ping\n\n")); } catch { /* stream closed */ }
+      }, 15_000);
 
       try {
         for await (const event of generator) {
@@ -264,6 +271,8 @@ export async function POST(
         }
 
         controller.close();
+      } finally {
+        clearInterval(heartbeat);
       }
     },
     async cancel() {
@@ -272,7 +281,8 @@ export async function POST(
         await supabase
           .from("documents")
           .update({ status: "failed" })
-          .eq("id", document_id);
+          .eq("id", document_id)
+          .neq("status", "final");
       } catch (err) {
         console.error("Error setting document status to failed on cancel:", err);
       }

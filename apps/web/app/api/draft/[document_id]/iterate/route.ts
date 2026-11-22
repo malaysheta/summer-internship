@@ -170,6 +170,11 @@ export async function POST(
         generator.return?.(undefined).catch(() => {});
       });
 
+      // Heartbeat: keeps the stream alive through long agent steps with no events.
+      const heartbeat = setInterval(() => {
+        try { controller.enqueue(encoder.encode(": ping\n\n")); } catch { /* stream closed */ }
+      }, 15_000);
+
       try {
         for await (const event of generator) {
           if (req.signal.aborted) {
@@ -297,6 +302,8 @@ export async function POST(
         }
 
         controller.close();
+      } finally {
+        clearInterval(heartbeat);
       }
     },
     cancel() {
