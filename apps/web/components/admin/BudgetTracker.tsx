@@ -46,28 +46,28 @@ export function BudgetTracker({
   }
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
+    <div className="border border-border bg-background px-6 py-6 sm:px-8">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-slate-950">
+          <h2 className="text-[24px] leading-tight">
             Daily Budget Tracker
           </h2>
-          <p className="text-sm text-slate-600 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Cumulative cost across all models today. Daily cap is $5.00 per model.
           </p>
         </div>
         <div
-          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium border
-            ${statusColor === "rose" ? "bg-rose-50 text-rose-800 border-rose-200" : ""}
-            ${statusColor === "amber" ? "bg-amber-50 text-amber-800 border-amber-200" : ""}
-            ${statusColor === "emerald" ? "bg-emerald-50 text-emerald-800 border-emerald-200" : ""}
+          className={`inline-flex items-center gap-2 px-3 py-1 text-sm font-medium border
+            ${statusColor === "rose" ? "bg-destructive/10 text-destructive border-destructive/50" : ""}
+            ${statusColor === "amber" ? "bg-warning/10 text-warning border-warning/50" : ""}
+            ${statusColor === "emerald" ? "bg-success/10 text-success border-success/50" : ""}
           `}
         >
           <span
-            className={`inline-block w-2 h-2 rounded-full
-              ${statusColor === "rose" ? "bg-rose-600" : ""}
-              ${statusColor === "amber" ? "bg-amber-600" : ""}
-              ${statusColor === "emerald" ? "bg-emerald-600" : ""}
+            className={`inline-block w-2 h-2
+              ${statusColor === "rose" ? "bg-destructive" : ""}
+              ${statusColor === "amber" ? "bg-warning" : ""}
+              ${statusColor === "emerald" ? "bg-success" : ""}
             `}
           />
           {statusText}
@@ -77,33 +77,33 @@ export function BudgetTracker({
       <div className="space-y-4">
         {/* Cost display */}
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-slate-600">Current Cost</span>
-          <span className="text-3xl font-bold text-slate-950">
+          <span className="text-sm text-muted-foreground">Current Cost</span>
+          <span className="font-serif text-[44px] leading-none tracking-[-0.02em] text-foreground">
             {CURRENCY_FORMATTER.format(totalCostToday)}
           </span>
         </div>
 
         {/* Daily limit display */}
-        <div className="flex items-center justify-between text-sm text-slate-600">
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>Daily Limit (Per Model)</span>
           <span className="font-medium">{CURRENCY_FORMATTER.format(dailyBudgetUsd)}</span>
         </div>
 
         {/* Progress bar */}
         <div className="space-y-2">
-          <div className="h-3 w-full rounded-full bg-slate-100 overflow-hidden">
+          <div className="h-3 w-full bg-muted overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all
-                ${hasExceededBudget ? "bg-rose-500" : ""}
-                ${!hasExceededBudget && hasExceededAlert ? "bg-amber-500" : ""}
-                ${!hasExceededAlert ? "bg-emerald-500" : ""}
+              className={`h-full transition-all
+                ${hasExceededBudget ? "bg-destructive" : ""}
+                ${!hasExceededBudget && hasExceededAlert ? "bg-warning" : ""}
+                ${!hasExceededAlert ? "bg-teal" : ""}
               `}
               style={{
                 width: `${Math.min(percentUsed, 100)}%`,
               }}
             />
           </div>
-          <div className="flex justify-between text-xs text-slate-500">
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>$0</span>
             <span className="font-medium">{percentUsed.toFixed(1)}%</span>
             <span>{CURRENCY_FORMATTER.format(dailyBudgetUsd)}</span>
@@ -112,14 +112,14 @@ export function BudgetTracker({
 
         {/* Alert message */}
         {hasExceededBudget && (
-          <div className="rounded-lg bg-rose-50 border border-rose-200 px-3 py-2 text-xs text-rose-800">
+          <div className="bg-destructive/10 border border-destructive/50 px-3 py-2 text-xs text-destructive">
             ⚠️ Daily budget of {CURRENCY_FORMATTER.format(dailyBudgetUsd)} has been exceeded by{" "}
             {CURRENCY_FORMATTER.format(totalCostToday - dailyBudgetUsd)}.
           </div>
         )}
 
         {!hasExceededBudget && hasExceededAlert && (
-          <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-800">
+          <div className="bg-warning/10 border border-warning/50 px-3 py-2 text-xs text-warning">
             ⚠️ Daily budget usage is at {percentUsed.toFixed(1)}% — approaching the{" "}
             {CURRENCY_FORMATTER.format(dailyBudgetUsd)} limit.
           </div>
@@ -128,8 +128,8 @@ export function BudgetTracker({
 
       {/* Model breakdown for today */}
       {todayRuns.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-slate-100">
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">
+        <div className="mt-4 pt-4 border-t border-hairline-soft">
+          <h3 className="label-caps mb-3 font-sans text-[10px] text-subtle-foreground">
             Today's Model Breakdown
           </h3>
           <div className="space-y-2">
@@ -139,20 +139,20 @@ export function BudgetTracker({
               const hasExceededModelAlert = modelCost >= (dailyBudgetUsd * alertThresholdPct) / 100;
               return (
                 <div key={run.run_id} className="flex items-center justify-between text-sm">
-                  <span className="text-slate-600 flex items-center gap-2">
+                  <span className="text-muted-foreground flex items-center gap-2">
                     {run.model}
                     {hasExceededModelBudget && (
-                      <span className="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                      <span className="label-caps border border-destructive/50 px-2 py-0.5 text-[9px] text-destructive">
                         ⚠️ Over Budget
                       </span>
                     )}
                     {!hasExceededModelBudget && hasExceededModelAlert && (
-                      <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                      <span className="label-caps border border-warning/50 px-2 py-0.5 text-[9px] text-warning">
                         ⚠️ Nearing Cap
                       </span>
                     )}
                   </span>
-                  <span className={`font-medium ${hasExceededModelBudget ? "text-rose-600 font-bold" : "text-slate-900"}`}>
+                  <span className={`font-medium ${hasExceededModelBudget ? "text-destructive font-bold" : "text-foreground"}`}>
                     {CURRENCY_FORMATTER.format(modelCost)}
                   </span>
                 </div>

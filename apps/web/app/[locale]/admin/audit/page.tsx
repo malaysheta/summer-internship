@@ -18,7 +18,7 @@ export default function AdminAuditPage() {
         actions={<ExportButton startDate={filters.startDate} endDate={filters.endDate} />}
       />
 
-      <section className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xs">
+      <section className="border border-border">
         <AuditFilters
           filters={filters}
           onChange={setFilters}
@@ -26,20 +26,20 @@ export default function AdminAuditPage() {
           uniqueModels={uniqueModels}
         />
 
-        <div className="flex items-center justify-between border-y border-zinc-100 bg-zinc-50/60 px-4 py-2.5 text-xs text-zinc-500">
+        <div className="label-caps flex items-center justify-between border-y border-border px-4 py-3 text-[10px] text-subtle-foreground">
           <span>
             {loading ? "Loading…" : `${filteredTraces.length.toLocaleString()} ${filteredTraces.length === 1 ? "trace" : "traces"}`}
           </span>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center gap-2 py-20 text-sm text-zinc-500">
+          <div className="flex items-center justify-center gap-2 py-20 text-sm text-muted-foreground">
             <Loader2 className="size-4 animate-spin" />
             Loading audit logs…
           </div>
         ) : error ? (
-          <div className="m-4 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            <AlertCircle className="size-4 shrink-0" />
+          <div className="m-4 flex items-center gap-3 border-l-[3px] border-destructive py-3 pl-4 text-[13px] text-destructive">
+            <AlertCircle strokeWidth={1.25} className="size-4 shrink-0" />
             Failed to load audit logs: {error}
           </div>
         ) : (

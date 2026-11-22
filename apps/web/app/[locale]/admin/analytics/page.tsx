@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminPageHeader } from "@/components/admin/admin-layout";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { DocumentType, SupportedLanguage } from "@trionic/shared";
@@ -320,29 +321,17 @@ export default function AnalyticsDashboard() {
       : "0.0";
 
   return (
-    <div className="text-slate-950">
+    <div>
 
-      {/* Header */}
-      <section className="mx-auto mb-6 w-full max-w-none">
-        <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
-            Team F · Evals & Telemetry
-          </p>
-          <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-2">
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                Cohort Usage Analytics
-              </h1>
-              <p className="text-sm leading-6 text-slate-600">
-                Document usage metrics across the cohort — admin only.
-              </p>
-            </div>
-
-            {/* Date range filter */}
-            <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-              Date range
+      <AdminPageHeader
+        title="Cohort usage analytics"
+        description="Document usage metrics across the cohort — admin only."
+        actions={
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            <label className="flex items-center gap-3">
+              <span className="label-caps text-[10px] text-subtle-foreground">Date range</span>
               <select
-                className="min-w-48 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                className="h-10 min-w-44 border border-input bg-transparent px-3 text-[13px] text-foreground outline-none [color-scheme:dark] hover:border-foreground/40 focus:border-ring [&>option]:bg-popover"
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value as DateRange)}
               >
@@ -351,22 +340,19 @@ export default function AnalyticsDashboard() {
                 <option value="all">All time</option>
               </select>
             </label>
+            {usingMock && (
+              <span className="label-caps border border-warning/50 px-2 py-0.5 text-[9px] text-warning">Mock data — DB is empty</span>
+            )}
           </div>
-
-          {usingMock && (
-            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-yellow-50 px-3 py-1 text-xs font-medium text-yellow-800 border border-yellow-200">
-              ⚠ Showing mock data — DB is empty
-            </div>
-          )}
-        </div>
-      </section>
+        }
+      />
 
       {loading ? (
-        <div className="mx-auto w-full max-w-none rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-500">
+        <div className="mx-auto w-full max-w-none border border-dashed border-border bg-background px-6 py-14 text-center text-sm text-muted-foreground">
           Loading analytics…
         </div>
       ) : error ? (
-        <div className="mx-auto w-full max-w-none rounded-xl border border-rose-200 bg-rose-50 px-6 py-5 text-sm text-rose-800">
+        <div className="mx-auto w-full max-w-none border border-destructive/50 bg-destructive/10 px-6 py-5 text-sm text-destructive">
           {error}
         </div>
       ) : (
@@ -376,28 +362,28 @@ export default function AnalyticsDashboard() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {/* Cell 1 — Doc-type popularity with % */}
-            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
+            <div className="border border-border bg-background px-6 py-6">
+              <h2 className="mb-5 text-[24px] leading-tight">
                 Document Type Popularity
               </h2>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left text-xs text-slate-400">
-                    <th className="pb-2 font-medium">Type</th>
-                    <th className="pb-2 text-right font-medium">Count</th>
-                    <th className="pb-2 text-right font-medium">%</th>
+                  <tr className="border-b border-hairline-soft text-left text-xs text-subtle-foreground">
+                    <th className="pb-2 label-caps text-[10px] font-normal text-subtle-foreground">Type</th>
+                    <th className="pb-2 text-right label-caps text-[10px] font-normal text-subtle-foreground">Count</th>
+                    <th className="pb-2 text-right label-caps text-[10px] font-normal text-subtle-foreground">%</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-hairline-soft">
                   {docTypes.map(({ type, count, pct }) => (
                     <tr key={type}>
-                      <td className="py-2 text-slate-700">
+                      <td className="py-2 text-foreground/85">
                         {DOC_TYPE_LABELS[type as DocumentType] ?? type}
                       </td>
-                      <td className="py-2 text-right font-mono font-medium text-slate-900">
+                      <td className="py-2 text-right font-mono font-medium text-foreground">
                         {count}
                       </td>
-                      <td className="py-2 text-right font-mono text-slate-500">
+                      <td className="py-2 text-right font-mono text-muted-foreground">
                         {pct}%
                       </td>
                     </tr>
@@ -407,26 +393,26 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Cell 2 — Language distribution */}
-            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
+            <div className="border border-border bg-background px-6 py-6">
+              <h2 className="mb-5 text-[24px] leading-tight">
                 Language Distribution
               </h2>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left text-xs text-slate-400">
-                    <th className="pb-2 font-medium">Language</th>
-                    <th className="pb-2 text-right font-medium">Count</th>
-                    <th className="pb-2 text-right font-medium">%</th>
+                  <tr className="border-b border-hairline-soft text-left text-xs text-subtle-foreground">
+                    <th className="pb-2 label-caps text-[10px] font-normal text-subtle-foreground">Language</th>
+                    <th className="pb-2 text-right label-caps text-[10px] font-normal text-subtle-foreground">Count</th>
+                    <th className="pb-2 text-right label-caps text-[10px] font-normal text-subtle-foreground">%</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-hairline-soft">
                   {languages.map(({ language, label, count, pct }) => (
                     <tr key={language}>
-                      <td className="py-2 text-slate-700">{label}</td>
-                      <td className="py-2 text-right font-mono font-medium text-slate-900">
+                      <td className="py-2 text-foreground/85">{label}</td>
+                      <td className="py-2 text-right font-mono font-medium text-foreground">
                         {count}
                       </td>
-                      <td className="py-2 text-right font-mono text-slate-500">
+                      <td className="py-2 text-right font-mono text-muted-foreground">
                         {pct}%
                       </td>
                     </tr>
@@ -440,34 +426,34 @@ export default function AnalyticsDashboard() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {/* Conversion Funnel */}
-            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
+            <div className="border border-border bg-background px-6 py-6">
+              <h2 className="mb-5 text-[24px] leading-tight">
                 Conversion Funnel
               </h2>
               <div className="space-y-3">
                 {funnel.map(({ stage, count, pct }, index) => (
                   <div key={stage}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-slate-700">{stage}</span>
-                      <span className="text-sm font-mono font-medium text-slate-900">
-                        {count} <span className="text-slate-400">({pct}%)</span>
+                      <span className="text-sm text-foreground/85">{stage}</span>
+                      <span className="text-sm font-mono font-medium text-foreground">
+                        {count} <span className="text-subtle-foreground">({pct}%)</span>
                       </span>
                     </div>
-                    <div className="h-2 rounded-full bg-slate-100">
+                    <div className="h-2 bg-muted">
                       <div
-                        className="h-2 rounded-full bg-emerald-500"
+                        className="h-2 bg-teal"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
                     {index < funnel.length - 1 && (
-                      <p className="text-xs text-slate-400 mt-1 text-right">
+                      <p className="text-xs text-subtle-foreground mt-1 text-right">
                         ↓ drop-off: {(Number(funnel[index].pct) - Number(funnel[index + 1].pct)).toFixed(1)}%
                       </p>
                     )}
                   </div>
                 ))}
                 {usingMock && (
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-subtle-foreground mt-2">
                     * Shared stage estimated — no shared status in DB yet
                   </p>
                 )}
@@ -475,19 +461,19 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Language per doc-type */}
-            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
+            <div className="border border-border bg-background px-6 py-6">
+              <h2 className="mb-5 text-[24px] leading-tight">
                 Language per Doc Type (top 3)
               </h2>
               <div className="space-y-4">
                 {langPerDocType.map(({ docType, languages: langs }) => (
                   <div key={docType}>
-                    <p className="text-xs font-semibold text-slate-600 mb-1 uppercase">
+                    <p className="label-caps mb-1 text-[10px] text-subtle-foreground">
                       {DOC_TYPE_LABELS[docType as DocumentType] ?? docType}
                     </p>
                     <div className="flex gap-2 flex-wrap">
                       {langs.map(({ lang, count, pct }) => (
-                        <span key={lang} className="text-xs bg-slate-100 rounded-full px-2 py-1 text-slate-700">
+                        <span key={lang} className="text-xs bg-muted px-2 py-1 text-foreground/85">
                           {LANGUAGE_LABELS[lang] ?? lang}: {pct}%
                         </span>
                       ))}
@@ -502,22 +488,22 @@ export default function AnalyticsDashboard() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {/* Cell 3 — Exports per day */}
-            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
+            <div className="border border-border bg-background px-6 py-6">
+              <h2 className="mb-5 text-[24px] leading-tight">
                 Exports Per Day (last 7 days)
               </h2>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left text-xs text-slate-400">
-                    <th className="pb-2 font-medium">Date</th>
-                    <th className="pb-2 text-right font-medium">Exports</th>
+                  <tr className="border-b border-hairline-soft text-left text-xs text-subtle-foreground">
+                    <th className="pb-2 label-caps text-[10px] font-normal text-subtle-foreground">Date</th>
+                    <th className="pb-2 text-right label-caps text-[10px] font-normal text-subtle-foreground">Exports</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-hairline-soft">
                   {exportsPerDay.map(({ date, count }) => (
                     <tr key={date}>
-                      <td className="py-2 text-slate-700">{date}</td>
-                      <td className="py-2 text-right font-mono font-medium text-slate-900">
+                      <td className="py-2 text-foreground/85">{date}</td>
+                      <td className="py-2 text-right font-mono font-medium text-foreground">
                         {count}
                       </td>
                     </tr>
@@ -527,22 +513,22 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Cell 6 — Daily draft creation count */}
-            <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-500">
+            <div className="border border-border bg-background px-6 py-6">
+              <h2 className="mb-5 text-[24px] leading-tight">
                 Daily Draft Creation Count (last 7 days)
               </h2>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left text-xs text-slate-400">
-                    <th className="pb-2 font-medium">Date</th>
-                    <th className="pb-2 text-right font-medium">Drafts Created</th>
+                  <tr className="border-b border-hairline-soft text-left text-xs text-subtle-foreground">
+                    <th className="pb-2 label-caps text-[10px] font-normal text-subtle-foreground">Date</th>
+                    <th className="pb-2 text-right label-caps text-[10px] font-normal text-subtle-foreground">Drafts Created</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-hairline-soft">
                   {dailyDrafts.map(({ date, count }) => (
                     <tr key={date}>
-                      <td className="py-2 text-slate-700">{date}</td>
-                      <td className="py-2 text-right font-mono font-medium text-slate-900">
+                      <td className="py-2 text-foreground/85">{date}</td>
+                      <td className="py-2 text-right font-mono font-medium text-foreground">
                         {count}
                       </td>
                     </tr>
@@ -553,29 +539,29 @@ export default function AnalyticsDashboard() {
           </div>
 
           {/* Cell 5 — Per-act citation frequency */}
-          <div className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
+          <div className="border border-border bg-background px-6 py-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-500">
+              <h2 className="text-[24px] leading-tight">
                 Per-Act Citation Frequency
               </h2>
               {usingMock && (
-                <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">
+                <span className="text-xs text-subtle-foreground bg-muted px-2 py-1">
                   Mock — awaiting citations data
                 </span>
               )}
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-100 text-left text-xs text-slate-400">
-                  <th className="pb-2 font-medium">Act</th>
-                  <th className="pb-2 text-right font-medium">Citations</th>
+                <tr className="border-b border-hairline-soft text-left text-xs text-subtle-foreground">
+                  <th className="pb-2 label-caps text-[10px] font-normal text-subtle-foreground">Act</th>
+                  <th className="pb-2 text-right label-caps text-[10px] font-normal text-subtle-foreground">Citations</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-hairline-soft">
                 {citations.map(({ act, count }) => (
                   <tr key={act}>
-                    <td className="py-2 font-mono text-slate-700">{act}</td>
-                    <td className="py-2 text-right font-mono font-medium text-slate-900">
+                    <td className="py-2 font-mono text-foreground/85">{act}</td>
+                    <td className="py-2 text-right font-mono font-medium text-foreground">
                       {count}
                     </td>
                   </tr>

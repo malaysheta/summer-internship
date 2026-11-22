@@ -6,14 +6,14 @@ import {
   BarChart3,
   LayoutDashboard,
   Settings,
-  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SectionHeading, Wordmark, splitAccent } from "@/components/brand";
 
 type NavItem = {
   name: string;
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
 };
 
 const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
@@ -40,25 +40,22 @@ export function AdminShell({ email, children }: { email: string; children: React
   const current = activeHref(usePathname());
 
   return (
-    <div className="flex min-h-screen bg-zinc-50/60 text-zinc-900">
-      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-zinc-200 bg-white md:flex">
-        <div className="flex h-14 items-center gap-2.5 border-b border-zinc-200 px-5">
-          <div className="flex size-7 items-center justify-center rounded-md bg-zinc-900 text-white">
-            <ShieldCheck className="size-4" />
-          </div>
-          <div className="leading-tight">
-            <p className="text-sm font-semibold">Trionic</p>
-            <p className="text-[11px] text-zinc-500">Admin console</p>
-          </div>
+    <div className="flex min-h-screen">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col overflow-hidden border-r border-border bg-popover md:flex">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_30%_at_0%_0%,rgba(179,97,65,0.16),transparent_70%),radial-gradient(70%_30%_at_100%_100%,rgba(5,95,89,0.3),transparent_70%)]"
+        />
+        <div className="relative flex h-[88px] flex-col justify-center gap-1.5 border-b border-border px-6">
+          <Wordmark href="/admin" />
+          <p className="bracket-label text-[10px]">Admin console</p>
         </div>
 
-        <nav aria-label="Admin" className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
+        <nav aria-label="Admin" className="relative flex-1 space-y-8 overflow-y-auto py-6">
           {NAV_SECTIONS.map((section) => (
             <div key={section.label}>
-              <p className="mb-1.5 px-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
-                {section.label}
-              </p>
-              <ul className="space-y-0.5">
+              <p className="bracket-label mb-2 px-6 text-[10px]">{section.label}</p>
+              <ul>
                 {section.items.map((item) => (
                   <li key={item.href}>
                     <NavLink item={item} active={item.href === current} />
@@ -69,10 +66,10 @@ export function AdminShell({ email, children }: { email: string; children: React
           ))}
         </nav>
 
-        <div className="space-y-0.5 border-t border-zinc-200 px-3 py-3">
+        <div className="relative border-t border-border py-3">
           <NavLink item={{ name: "Settings", href: "/settings", icon: Settings }} active={false} />
           <NavLink item={{ name: "Back to app", href: "/dashboard", icon: ArrowLeft }} active={false} />
-          <p className="truncate px-2 pt-2 text-xs text-zinc-500" title={email}>
+          <p className="truncate px-6 pt-3 text-[11px] text-subtle-foreground" title={email}>
             {email}
           </p>
         </div>
@@ -80,16 +77,13 @@ export function AdminShell({ email, children }: { email: string; children: React
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Mobile: horizontal tab strip replaces the sidebar */}
-        <nav
-          aria-label="Admin"
-          className="flex gap-1 overflow-x-auto border-b border-zinc-200 bg-white px-4 py-2 md:hidden"
-        >
+        <nav aria-label="Admin" className="flex gap-6 overflow-x-auto border-b border-border px-5 md:hidden">
           {[...ALL_ITEMS, { name: "Back to app", href: "/dashboard", icon: ArrowLeft }].map((item) => (
             <NavLink key={item.href} item={item} active={item.href === current} compact />
           ))}
         </nav>
 
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-10">{children}</main>
+        <main className="mx-auto w-full max-w-[1280px] flex-1 px-5 py-10 md:px-10 md:py-14">{children}</main>
       </div>
     </div>
   );
@@ -97,24 +91,34 @@ export function AdminShell({ email, children }: { email: string; children: React
 
 function NavLink({ item, active, compact }: { item: NavItem; active: boolean; compact?: boolean }) {
   const Icon = item.icon;
+  if (compact) {
+    return (
+      <Link
+        href={item.href}
+        aria-current={active ? "page" : undefined}
+        className={cn(
+          "label-caps shrink-0 border-b-2 py-3 whitespace-nowrap",
+          active ? "border-brand text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+        )}
+      >
+        {item.name}
+      </Link>
+    );
+  }
   return (
     <Link
       href={item.href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex items-center gap-2.5 rounded-md px-2 text-sm whitespace-nowrap transition-colors outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
-        compact ? "h-8" : "h-9",
-        active
-          ? "bg-zinc-100 font-medium text-zinc-900"
-          : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900",
+        "flex h-10 items-center gap-3 border-l-[3px] px-6 text-[14px] whitespace-nowrap transition-colors duration-[180ms] outline-none focus-visible:bg-muted",
+        active ? "border-brand bg-accent text-foreground" : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
-      <Icon className={cn("size-4", active ? "text-zinc-900" : "text-zinc-400")} />
+      <Icon strokeWidth={1.25} className={cn("size-4", active ? "text-brand-soft" : "text-subtle-foreground")} />
       {item.name}
     </Link>
   );
 }
-
 export function AdminPageHeader({
   title,
   description,
@@ -124,13 +128,10 @@ export function AdminPageHeader({
   description?: string;
   actions?: React.ReactNode;
 }) {
+  const [lead, accent] = splitAccent(title);
   return (
-    <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{title}</h1>
-        {description && <p className="mt-1 text-sm text-zinc-500">{description}</p>}
-      </div>
-      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
-    </header>
+    <SectionHeading label="Admin" title={lead} accent={accent} subtitle={description} className="mb-10 border-b border-border pb-8">
+      {actions}
+    </SectionHeading>
   );
 }
