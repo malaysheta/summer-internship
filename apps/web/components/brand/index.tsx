@@ -87,3 +87,9 @@ export function Wordmark({ className, href = "/" }: { className?: string; href?:
     </Link>
   );
 }
+
+/** Splits a translated title into [lead, last word] so the last word can take the accent. */
+export function splitAccent(text: string): [string, string] {
+  const i = text.trimEnd().lastIndexOf(" ");
+  return i === -1 ? ["", text] : [text.slice(0, i), text.slice(i + 1)];
+}

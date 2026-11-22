@@ -83,18 +83,18 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
+    <div className="flex flex-col gap-3 border-y border-border py-4 sm:flex-row sm:flex-wrap sm:items-center">
 
       {/* Search */}
       <div className="relative flex-1 min-w-[200px]">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+        <Search strokeWidth={1.25} className="absolute top-1/2 left-0 size-4 -translate-y-1/2 text-subtle-foreground" />
         <Input
           placeholder={t("searchPlaceholder")}
           value={filters.search}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onChange({ ...filters, search: e.target.value })
           }
-          className="pl-9"
+          className="border-0 pl-7 hover:border-0 focus-visible:border-0"
         />
       </div>
 
@@ -105,7 +105,7 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
           onChange({ ...filters, status: v as DocumentStatus | "all" })
         }
       >
-        <SelectTrigger className="w-[140px]">
+        <SelectTrigger className="w-[160px]">
           <SelectValue placeholder={t("statusPlaceholder")} />
         </SelectTrigger>
         <SelectContent>
@@ -125,7 +125,7 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
           onChange({ ...filters, doc_type: v as DocumentType | "all" })
         }
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[200px]">
           <SelectValue placeholder={t("typePlaceholder")} />
         </SelectTrigger>
         <SelectContent>
@@ -138,8 +138,8 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
 
       {/* Clear filters */}
       {hasActiveFilters && (
-        <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 text-zinc-500">
-          <X className="h-3 w-3" />
+        <Button variant="ghost" size="sm" onClick={clearFilters}>
+          <X strokeWidth={1.25} />
           {t("clear")}
         </Button>
       )}
