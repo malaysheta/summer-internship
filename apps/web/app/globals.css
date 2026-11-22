@@ -192,6 +192,15 @@
   }
 }
 
+/* Indic scripts: no italic tradition (browsers fake a slant) and letter-spacing
+   breaks the shirorekha / conjunct joins. Accents stay upright, tracking resets. */
+html:is([lang="hi"], [lang="mr"], [lang="gu"], [lang="ta"]) em {
+  font-style: normal;
+}
+html:is([lang="hi"], [lang="mr"], [lang="gu"], [lang="ta"]) :is(.label-caps, .bracket-label, [class*="tracking-"]) {
+  letter-spacing: 0 !important;
+}
+
 /* Scroll reveal: elements start hidden only once JS has marked them (useReveal). */
 [data-reveal] {
   transition:
