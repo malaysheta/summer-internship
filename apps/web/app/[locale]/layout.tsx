@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Noto_Sans_Devanagari, Noto_Sans_Gujarati, Noto_Sans_Tamil } from "next/font/google";
+import localFont from "next/font/local";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
@@ -8,29 +8,32 @@ import { Toaster } from "@/components/ui/toaster";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import "@/app/globals.css";
 
-const geistSans = Geist({
+// Self-hosted (variable woff2 from Google Fonts) so builds never depend on
+// fonts.googleapis.com — a bad response from it failed a Vercel build.
+const geistSans = localFont({
+  src: "../fonts/Geist-Variable.woff2",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  weight: "100 900",
 });
 
-const devanagari = Noto_Sans_Devanagari({
+const devanagari = localFont({
+  src: "../fonts/NotoSansDevanagari-Variable.woff2",
   variable: "--font-devanagari",
-  subsets: ["devanagari"],
-  weight: ["300", "400", "500", "700"],
+  weight: "300 700",
   display: "swap",
 });
 
-const gujarati = Noto_Sans_Gujarati({
+const gujarati = localFont({
+  src: "../fonts/NotoSansGujarati-Variable.woff2",
   variable: "--font-gujarati",
-  subsets: ["gujarati"],
-  weight: ["300", "400", "500", "700"],
+  weight: "300 700",
   display: "swap",
 });
 
-const tamil = Noto_Sans_Tamil({
+const tamil = localFont({
+  src: "../fonts/NotoSansTamil-Variable.woff2",
   variable: "--font-tamil",
-  subsets: ["tamil"],
-  weight: ["300", "400", "500", "700"],
+  weight: "300 700",
   display: "swap",
 });
 

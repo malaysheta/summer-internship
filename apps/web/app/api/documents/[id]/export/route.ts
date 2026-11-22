@@ -196,10 +196,11 @@ async function launchBrowser() {
   if (process.env.VERCEL) {
     const chromium = (await import("@sparticuz/chromium")).default;
     const puppeteerCore = (await import("puppeteer-core")).default;
+    // Sparticuz ships a headless_shell build: "shell" mode, per its README.
     return puppeteerCore.launch({
-      args: chromium.args,
+      args: await puppeteerCore.defaultArgs({ args: chromium.args, headless: "shell" }),
       executablePath: await chromium.executablePath(),
-      headless: true,
+      headless: "shell",
     });
   }
   const puppeteer = (await import("puppeteer")).default;
