@@ -3,11 +3,8 @@
 import { Link, usePathname } from "@/i18n/routing";
 import {
   ArrowLeft,
-  BadgeCheck,
   BarChart3,
-  Gauge,
   LayoutDashboard,
-  ScrollText,
   Settings,
   ShieldCheck,
 } from "lucide-react";
@@ -25,21 +22,13 @@ const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
     items: [
       { name: "Overview", href: "/admin", icon: LayoutDashboard },
       { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-      { name: "Audit logs", href: "/admin/audit", icon: ScrollText },
-    ],
-  },
-  {
-    label: "Evals",
-    items: [
-      { name: "Model performance", href: "/admin/evals", icon: Gauge },
-      { name: "Citation validity", href: "/admin/evals/citation-validity", icon: BadgeCheck },
     ],
   },
 ];
 
 const ALL_ITEMS = NAV_SECTIONS.flatMap((s) => s.items);
 
-// Longest matching href wins, so /admin/evals/citation-validity doesn't also light up /admin/evals.
+// Longest matching href wins, so a nested route lights up only its own item.
 function activeHref(pathname: string) {
   return ALL_ITEMS.map((i) => i.href)
     .filter((href) => pathname === href || pathname.startsWith(`${href}/`))
