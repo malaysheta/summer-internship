@@ -4,13 +4,16 @@ import { useState } from 'react'
 import { useRouter } from '@/i18n/routing'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale, useTranslations } from 'next-intl'
+import { AuthShell, authInputClass } from '@/components/brand/auth-shell'
+import { ArrowIcon, BracketLabel } from '@/components/brand'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export default function SignInPage() {
   const router = useRouter()
   const supabase = createClient()
   const t = useTranslations('auth')
   const locale = useLocale()
-  const tCommon = useTranslations('common')
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -71,63 +74,67 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">
-          {isSignUp ? t('createAccountTitle') : t('signInTitle')}
-        </h1>
+    <AuthShell>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          handleSubmit()
+        }}
+        className="space-y-10"
+      >
+        <header className="space-y-3">
+          <BracketLabel>{isSignUp ? t('signUp') : t('signInButton')}</BracketLabel>
+          <h1 className="text-[clamp(34px,3.4vw,48px)] leading-[1.05] tracking-[-0.02em]">
+            {isSignUp ? t('createAccountTitle') : t('signInTitle')}
+          </h1>
+        </header>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('emailLabel')}
-            </label>
-            <input
+        <div className="space-y-7">
+          <label className="block space-y-1">
+            <span className="label-caps text-muted-foreground">{t('emailLabel')}</span>
+            <Input
               type="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black animate-none"
+              className={authInputClass}
               placeholder="you@example.com"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('passwordLabel')}
-            </label>
-            <input
+          </label>
+          <label className="block space-y-1">
+            <span className="label-caps text-muted-foreground">{t('passwordLabel')}</span>
+            <Input
               type="password"
+              autoComplete={isSignUp ? 'new-password' : 'current-password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black animate-none"
+              className={authInputClass}
               placeholder="••••••••"
             />
-          </div>
-
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
-          )}
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full bg-black text-white py-2 rounded-md text-sm font-medium hover:bg-gray-800 disabled:opacity-50 cursor-pointer"
-          >
-            {loading ? t('pleaseWait') : isSignUp ? t('signUpButton') : t('signInButton')}
-          </button>
-
-          <button
-            onClick={() => { setIsSignUp(!isSignUp); setError(null) }}
-            className="w-full text-sm text-gray-600 hover:underline cursor-pointer"
-          >
-            {isSignUp ? t('alreadyHaveAccount') : t('createAccount')}
-          </button>
+          </label>
         </div>
 
-        <p className="text-xs text-center text-gray-400 mt-6">
-          {tCommon('disclaimer')}
-        </p>
-      </div>
-    </div>
+        {error && (
+          <p role="alert" className="border-l-2 border-destructive pl-3 text-[13px] text-destructive">
+            {error}
+          </p>
+        )}
+
+        <div className="space-y-4">
+          <Button type="submit" size="lg" disabled={loading} className="w-full justify-between">
+            {loading ? t('pleaseWait') : isSignUp ? t('signUpButton') : t('signInButton')}
+            <ArrowIcon />
+          </Button>
+          <Button
+            type="button"
+            variant="link"
+            onClick={() => { setIsSignUp(!isSignUp); setError(null) }}
+            className="w-full justify-center"
+          >
+            {isSignUp ? t('alreadyHaveAccount') : t('createAccount')}
+          </Button>
+        </div>
+      </form>
+    </AuthShell>
   )
 }
