@@ -32,11 +32,11 @@ export function LanguageSwitcher() {
         role="button"
         aria-haspopup="listbox"
         aria-label="Select Language"
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border bg-card hover:bg-accent text-sm transition-all focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer text-foreground select-none"
+        className="flex h-9 cursor-pointer items-center gap-2 border border-border bg-transparent px-3 text-[13px] text-muted-foreground transition-colors duration-[180ms] select-none hover:border-foreground/40 hover:text-foreground"
       >
-        <Globe className="h-4 w-4 text-muted-foreground" />
+        <Globe strokeWidth={1.25} className="size-3.5" />
         <span className="font-sans leading-none">{currentLanguage.nativeLabel}</span>
-        <ChevronDown className="h-3 w-3 text-muted-foreground" />
+        <ChevronDown strokeWidth={1.25} className="size-3" />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
@@ -44,7 +44,7 @@ export function LanguageSwitcher() {
           role="listbox"
           align="end"
           sideOffset={5}
-          className="z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-80"
+          className="z-50 min-w-[10rem] animate-in overflow-hidden border border-border bg-popover py-1 text-popover-foreground shadow-[0_32px_64px_rgba(0,0,0,0.55)] fade-in-80"
         >
           {LANGUAGES.map((lang) => (
             <DropdownMenu.Item
@@ -52,11 +52,11 @@ export function LanguageSwitcher() {
               role="option"
               aria-selected={lang.code === locale}
               onClick={() => handleLanguageChange(lang.code)}
-              className="relative flex w-full select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 cursor-pointer font-sans"
+              className="relative flex w-full cursor-pointer items-center border-l-2 border-transparent py-2 pr-3 pl-8 text-sm outline-none select-none transition-colors duration-[180ms] focus:border-brand focus:bg-accent data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             >
               {lang.code === locale && (
                 <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                  <Check className="h-4 w-4 text-primary" />
+                  <Check strokeWidth={1.5} className="size-3.5 text-brand-soft" />
                 </span>
               )}
               {lang.nativeLabel}

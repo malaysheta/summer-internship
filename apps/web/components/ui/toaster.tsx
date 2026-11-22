@@ -12,7 +12,7 @@ export function Toaster() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 w-full max-w-sm pointer-events-none px-4 sm:px-0">
+    <div className="pointer-events-none fixed right-4 bottom-4 z-50 flex w-full max-w-sm flex-col gap-2 px-4 sm:px-0">
       {toasts.map((t) => {
         const isSuccess = t.variant === "success";
         const isDestructive = t.variant === "destructive";
@@ -21,38 +21,32 @@ export function Toaster() {
           <div
             key={t.id}
             className={cn(
-              "pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-bottom-5",
-              isSuccess
-                ? "bg-emerald-950/90 border-emerald-500/30 text-emerald-100"
-                : isDestructive
-                ? "bg-rose-950/90 border-rose-500/30 text-rose-100"
-                : "bg-slate-900/90 border-slate-800 text-slate-100"
+              "pointer-events-auto flex animate-in items-start gap-3 border border-l-[3px] border-border bg-popover p-4 text-popover-foreground shadow-[0_32px_64px_rgba(0,0,0,0.55)] duration-300 fade-in slide-in-from-bottom-5",
+              isSuccess ? "border-l-success" : isDestructive ? "border-l-destructive" : "border-l-brand"
             )}
             role="alert"
           >
-            <div className="shrink-0 mt-0.5">
+            <div className="mt-0.5 shrink-0">
               {isSuccess ? (
-                <CheckCircle2 className="size-5 text-emerald-400" />
+                <CheckCircle2 strokeWidth={1.25} className="size-5 text-success" />
               ) : isDestructive ? (
-                <AlertTriangle className="size-5 text-rose-400" />
+                <AlertTriangle strokeWidth={1.25} className="size-5 text-destructive" />
               ) : (
-                <Info className="size-5 text-sky-400" />
+                <Info strokeWidth={1.25} className="size-5 text-brand-soft" />
               )}
             </div>
 
-            <div className="flex-1 min-w-0">
-              {t.title && (
-                <h4 className="text-sm font-semibold tracking-tight">{t.title}</h4>
-              )}
-              <p className="text-xs leading-relaxed text-opacity-90">{t.description}</p>
+            <div className="min-w-0 flex-1">
+              {t.title && <h4 className="font-serif text-lg leading-tight">{t.title}</h4>}
+              <p className="mt-0.5 text-[13px] leading-relaxed text-muted-foreground">{t.description}</p>
             </div>
 
             <button
               onClick={() => dismissToast(t.id)}
-              className="shrink-0 rounded-lg p-1 text-inherit opacity-70 hover:opacity-100 hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
+              className="shrink-0 p-1 text-subtle-foreground transition-colors duration-[180ms] hover:text-foreground"
               aria-label="Close notification"
             >
-              <X className="size-4" />
+              <X strokeWidth={1.25} className="size-4" />
             </button>
           </div>
         );

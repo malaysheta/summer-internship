@@ -144,7 +144,8 @@
     "newDraft": "नवीन मसुदा",
     "settings": "सेटिंग्ज",
     "auditLog": "ऑडिट लॉग",
-    "signIn": "साइन इन करा"
+    "signIn": "साइन इन करा",
+    "admin": "प्रशासन"
   },
   "actions": {
     "continue": "चालू ठेवा",

@@ -9,7 +9,8 @@
     "newDraft": "नया मसौदा",
     "settings": "सेटिंग्स",
     "auditLog": "ऑडिट लॉग",
-    "signIn": "साइन इन"
+    "signIn": "साइन इन",
+    "admin": "प्रशासन"
   },
   "actions": {
     "continue": "जारी रखें",

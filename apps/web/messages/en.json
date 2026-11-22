@@ -9,7 +9,8 @@
     "newDraft": "New Draft",
     "settings": "Settings",
     "auditLog": "Audit Log",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "admin": "Admin"
   },
   "actions": {
     "continue": "Continue",

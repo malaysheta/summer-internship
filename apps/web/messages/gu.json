@@ -146,7 +146,8 @@
     "newDraft": "નવો ડ્રાફ્ટ",
     "settings": "સેટિંગ્સ",
     "auditLog": "ઑડિટ લોગ",
-    "signIn": "સાઇન ઇન કરો"
+    "signIn": "સાઇન ઇન કરો",
+    "admin": "વહીવટ"
   },
   "actions": {
     "continue": "ચાલુ રાખો",
