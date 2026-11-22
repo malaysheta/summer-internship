@@ -116,6 +116,7 @@ export async function runCitator(input: CitatorInput): Promise<CitatorResult> {
       status: "rejected",
       session_id,
     });
+    trace.rejected_nodes = [];
     await persistTrace(trace, {
       user_id: session_id || "00000000-0000-0000-0000-000000000000",
       document_id: draft.id,
@@ -148,6 +149,7 @@ export async function runCitator(input: CitatorInput): Promise<CitatorResult> {
   // ── Rule 1: validate each marker against PageIndex ─────────────────────────
   const rejectedSpansFull: CitatorVerdict["rejected_spans"] = [];
   const resolvedCitations: Citation[] = [];
+  const rejectedNodeIds: string[] = [];
 
   for (const citation of citations) {
     try {
@@ -167,6 +169,7 @@ export async function runCitator(input: CitatorInput): Promise<CitatorResult> {
     } catch (error) {
       if (error instanceof NodeNotFoundError) {
         // This is a rejection — the node does not exist in PageIndex (404)
+        rejectedNodeIds.push(citation.node_id);
         rejectedSpansFull.push({
           span: citation.span,
           reason: "invalid_node",
@@ -196,6 +199,7 @@ export async function runCitator(input: CitatorInput): Promise<CitatorResult> {
     status: traceStatus,
     session_id,
   });
+  trace.rejected_nodes = rejectedNodeIds;
   await persistTrace(trace, {
     user_id: session_id || "00000000-0000-0000-0000-000000000000",
     document_id: draft.id,

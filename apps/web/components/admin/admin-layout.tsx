@@ -6,7 +6,6 @@ import {
   BadgeCheck,
   BarChart3,
   Gauge,
-  GitCompareArrows,
   LayoutDashboard,
   ScrollText,
   Settings,
@@ -34,14 +33,13 @@ const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
     items: [
       { name: "Model performance", href: "/admin/evals", icon: Gauge },
       { name: "Citation validity", href: "/admin/evals/citation-validity", icon: BadgeCheck },
-      { name: "Model comparison", href: "/admin/evals/comparison", icon: GitCompareArrows },
     ],
   },
 ];
 
 const ALL_ITEMS = NAV_SECTIONS.flatMap((s) => s.items);
 
-// Longest matching href wins, so /admin/evals/comparison doesn't also light up /admin/evals.
+// Longest matching href wins, so /admin/evals/citation-validity doesn't also light up /admin/evals.
 function activeHref(pathname: string) {
   return ALL_ITEMS.map((i) => i.href)
     .filter((href) => pathname === href || pathname.startsWith(`${href}/`))

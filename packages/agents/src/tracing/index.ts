@@ -100,6 +100,7 @@ export async function persistTrace(
         metadata: {
           agent_status: trace.status,
           cited_nodes: trace.cited_nodes,
+          rejected_nodes: trace.rejected_nodes,
           session_id:  trace.session_id,
           timestamp:   trace.timestamp,
           parent_trace_id:  trace.parent_trace_id,

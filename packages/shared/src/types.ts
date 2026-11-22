@@ -59,6 +59,9 @@ export type AgentTrace = {
   /** PageIndex node IDs cited in this agent's output.
    *  Empty array [] for agents that do not emit citations (e.g. planner, classifier). */
   cited_nodes: PageIndexNodeId[];
+  /** Optional: cited node IDs that failed validation (Citator only). With
+   *  cited_nodes this gives the citation-validity ratio for the admin dashboard. */
+  rejected_nodes?: PageIndexNodeId[];
   /** Terminal status of this agent step. */
   status: "ok" | "rejected" | "error";
   /** ISO-8601 timestamp of when this trace was emitted. */

@@ -4,8 +4,8 @@ import {
   buildEvalRuns,
   handleAdminEvals,
   isAdminUser,
-  percentile,
   handleAdminEvalRun,
+  buildCitationRows,
 } from "../../../apps/web/app/api/admin/evals/lib";
 
 type TraceRow = {
@@ -73,11 +73,11 @@ function createSupabaseMock({
         return {
           select() {
             return {
-              gte() {
+              order() {
                 return {
-                  async order() {
+                  async range(from: number, to: number) {
                     return {
-                      data: traces,
+                      data: traces.slice(from, to + 1),
                       error: queryError ? { message: queryError } : null,
                     };
                   },
@@ -113,7 +113,6 @@ async function readJson(response: Response): Promise<Record<string, unknown>> {
 }
 
 test("admin eval endpoint returns EvalRunResult shape", async () => {
-  const now = new Date("2026-05-25T12:00:00.000Z");
   const response = await handleAdminEvals(
     createSupabaseMock({
       user: { id: "test-user-admin", user_metadata: { role: "admin" } },
@@ -128,7 +127,6 @@ test("admin eval endpoint returns EvalRunResult shape", async () => {
         },
       ],
     }),
-    now,
   );
 
   assert.equal(response.status, 200);
@@ -145,7 +143,6 @@ test("only admin users can access the endpoint", async () => {
       user: { id: "test-user-member", user_metadata: { role: "member" } },
       traces: [],
     }),
-    new Date("2026-05-25T12:00:00.000Z"),
   );
 
   assert.equal(response.status, 403);
@@ -153,8 +150,7 @@ test("only admin users can access the endpoint", async () => {
   assert.equal(payload.error, "forbidden");
 });
 
-test("returns data only from the last 14 days", () => {
-  const now = new Date("2026-05-25T12:00:00.000Z");
+test("includes all history, not just a recent window", () => {
   const runs = buildEvalRuns(
     [
       {
@@ -174,15 +170,12 @@ test("returns data only from the last 14 days", () => {
         timestamp: "2026-05-20T08:00:00.000Z",
       },
     ],
-    now,
   );
 
-  assert.equal(runs.length, 1);
-  assert.equal(runs[0].run_id, "run-2026-05-20-gpt-4");
+  assert.deepEqual(runs.map((r) => r.run_id), ["run-2026-05-20-gpt-4", "run-2026-05-10-gpt-4"]);
 });
 
 test("metrics are aggregated correctly", async () => {
-  const now = new Date("2026-05-25T12:00:00.000Z");
   const response = await handleAdminEvals(
     createSupabaseMock({
       user: { id: "test-user-admin", user_metadata: { role: "admin" } },
@@ -213,7 +206,6 @@ test("metrics are aggregated correctly", async () => {
         },
       ],
     }),
-    now,
   );
 
   const payload = (await response.json()) as { runs: Array<{ metrics: Array<{ name: string; value: number }> }> };
@@ -223,8 +215,7 @@ test("metrics are aggregated correctly", async () => {
   assert.equal(run.metrics.find((metric) => metric.name === "total_tokens_in")?.value, 350);
   assert.equal(run.metrics.find((metric) => metric.name === "total_tokens_out")?.value, 60);
   assert.equal(run.metrics.find((metric) => metric.name === "total_cost_usd")?.value, 1.1);
-  assert.equal(run.metrics.find((metric) => metric.name === "p50_latency_ms")?.value, 200);
-  assert.equal(run.metrics.find((metric) => metric.name === "p95_latency_ms")?.value, 470);
+  assert.equal(run.metrics.find((metric) => metric.name === "p50_latency_ms"), undefined);
 });
 
 test("empty results are handled gracefully", async () => {
@@ -233,7 +224,6 @@ test("empty results are handled gracefully", async () => {
       user: { id: "test-user-admin", user_metadata: { role: "admin" } },
       traces: [],
     }),
-    new Date("2026-05-25T12:00:00.000Z"),
   );
 
   assert.equal(response.status, 200);
@@ -241,8 +231,7 @@ test("empty results are handled gracefully", async () => {
   assert.deepEqual(payload.runs, []);
 });
 
-test("percentile and admin role helpers work as expected", () => {
-  assert.equal(percentile([10, 20, 30, 40], 0.5), 25);
+test("admin role helpers work as expected", () => {
   assert.equal(isAdminUser({ user_metadata: { role: "admin" } }), true);
   assert.equal(isAdminUser({ app_metadata: { role: "admin" } }), true);
   assert.equal(isAdminUser({ user_metadata: { role: "member" } }), false);
@@ -279,4 +268,37 @@ test("admin eval run endpoint rejects invalid payloads", async () => {
   );
 
   assert.equal(response.status, 400);
+});
+
+test("pages through more than one PostgREST page of traces", async () => {
+  const traces = Array.from({ length: 2500 }, (_, i) => ({
+    model: "gpt-4",
+    tokens_in: 1,
+    tokens_out: 1,
+    cost_usd: 0,
+    latency_ms: 0,
+    timestamp: "2026-05-25T08:00:00.000Z",
+  }));
+  const response = await handleAdminEvals(
+    createSupabaseMock({ user: { id: "a", user_metadata: { role: "admin" } }, traces }),
+  );
+  const payload = (await response.json()) as { runs: Array<{ metrics: Array<{ name: string; value: number }> }> };
+  assert.equal(payload.runs[0].metrics.find((m) => m.name === "total_calls")?.value, 2500);
+});
+
+test("citation rows: validity from cited/rejected nodes, old rejected traces stay unknown", () => {
+  const base = { created_at: "2026-11-22T10:00:00.000Z", document_id: "d1", documents: { title: "RTI", doc_type: "rti_application", language: "gu" } };
+  const [mixed, oldPassed, oldRejected, noCites, errored] = buildCitationRows([
+    { ...base, id: "1", status: "error", metadata: { agent_status: "rejected", cited_nodes: ["a", "b", "c"], rejected_nodes: ["x"] } },
+    { ...base, id: "2", status: "ok", metadata: { agent_status: "ok", cited_nodes: ["a", "b"] } },
+    { ...base, id: "3", status: "error", metadata: { agent_status: "rejected", cited_nodes: ["a"] } },
+    { ...base, id: "4", status: "error", metadata: { agent_status: "rejected", cited_nodes: [], rejected_nodes: [] } },
+    { ...base, id: "5", status: "error", metadata: { agent_status: "error", cited_nodes: [] } },
+  ]);
+  assert.deepEqual([mixed.status, mixed.valid, mixed.invalid, mixed.total, mixed.validity_pct], ["rejected", 3, 1, 4, 75]);
+  assert.deepEqual([oldPassed.status, oldPassed.invalid, oldPassed.validity_pct], ["passed", 0, 100]);
+  assert.deepEqual([oldRejected.invalid, oldRejected.total, oldRejected.validity_pct], [null, null, null]);
+  assert.deepEqual([noCites.total, noCites.validity_pct], [0, null]);
+  assert.equal(errored.status, "error");
+  assert.equal(mixed.document_title, "RTI");
 });

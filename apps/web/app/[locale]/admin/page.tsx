@@ -9,7 +9,7 @@ import { AlertCircle, ArrowUpRight } from "lucide-react";
 const SHORTCUTS = [
   { href: "/admin/analytics", title: "Analytics", body: "Usage trends, conversion and top users." },
   { href: "/admin/audit", title: "Audit logs", body: "Every LLM call with cost, latency and status." },
-  { href: "/admin/evals", title: "Model performance", body: "Daily cost and latency per model." },
+  { href: "/admin/evals", title: "Model performance", body: "Daily calls, tokens and cost per model." },
 ];
 
 export default function AdminDashboardPage() {

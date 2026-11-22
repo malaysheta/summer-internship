@@ -17,11 +17,11 @@ export interface AdminSupabaseClient {
   };
   from(table: "agent_traces"): {
     select: (columns: string) => {
-      gte: (column: string, value: string) => {
-        order: (
-          column: string,
-          options: { ascending: boolean },
-        ) => Promise<TraceQueryResult>;
+      order: (
+        column: string,
+        options: { ascending: boolean },
+      ) => {
+        range: (from: number, to: number) => Promise<TraceQueryResult>;
       };
     };
   };
@@ -54,7 +54,6 @@ export type TraceRow = {
   tokens_in?: number | null;
   tokens_out?: number | null;
   cost_usd?: number | null;
-  latency_ms?: number | null;
   timestamp?: string | null;
 };
 
@@ -63,8 +62,8 @@ export type TraceQueryResult = {
   error: { message?: string } | null;
 };
 
-export const WINDOW_DAYS = 14;
-export const WINDOW_MS = WINDOW_DAYS * 24 * 60 * 60 * 1000;
+// PostgREST caps a response at 1000 rows by default; page through the rest.
+export const TRACE_PAGE_SIZE = 1000;
 
 /**
  * @deprecated JWT-claim-based admin check. The `user_metadata.role` field is
@@ -213,28 +212,7 @@ export type EvalBucket = {
   tokensIn: number;
   tokensOut: number;
   costUsd: number;
-  latencies: number[];
 };
-export function percentile(values: number[], quantile: number): number {
-  if (values.length === 0) {
-    return 0;
-  }
-
-  const sortedValues = [...values].sort((left, right) => left - right);
-  const position = (sortedValues.length - 1) * quantile;
-  const lowerIndex = Math.floor(position);
-  const upperIndex = Math.ceil(position);
-
-  if (lowerIndex === upperIndex) {
-    return sortedValues[lowerIndex];
-  }
-
-  const interpolation = position - lowerIndex;
-  return (
-    sortedValues[lowerIndex] +
-    (sortedValues[upperIndex] - sortedValues[lowerIndex]) * interpolation
-  );
-}
 
 export function getMetricValue(
   run: EvalRunResult,
@@ -243,11 +221,7 @@ export function getMetricValue(
   return run.metrics.find((metric) => metric.name === metricName)?.value ?? 0;
 }
 
-export function buildEvalRuns(
-  rows: TraceRow[],
-  now = new Date(),
-): EvalRunResult[] {
-  const windowStart = new Date(now.getTime() - WINDOW_MS);
+export function buildEvalRuns(rows: TraceRow[]): EvalRunResult[] {
   const buckets = new Map<string, EvalBucket>();
 
   for (const row of rows) {
@@ -256,7 +230,7 @@ export function buildEvalRuns(
     }
 
     const timestamp = new Date(row.timestamp);
-    if (Number.isNaN(timestamp.getTime()) || timestamp < windowStart) {
+    if (Number.isNaN(timestamp.getTime())) {
       continue;
     }
 
@@ -269,14 +243,12 @@ export function buildEvalRuns(
       tokensIn: 0,
       tokensOut: 0,
       costUsd: 0,
-      latencies: [],
     };
 
     bucket.calls += 1;
     bucket.tokensIn += Number(row.tokens_in ?? 0);
     bucket.tokensOut += Number(row.tokens_out ?? 0);
     bucket.costUsd += Number(row.cost_usd ?? 0);
-    bucket.latencies.push(Number(row.latency_ms ?? 0));
     buckets.set(bucketKey, bucket);
   }
 
@@ -291,16 +263,6 @@ export function buildEvalRuns(
         { name: "total_tokens_in", value: bucket.tokensIn, unit: "tokens" },
         { name: "total_tokens_out", value: bucket.tokensOut, unit: "tokens" },
         { name: "total_cost_usd", value: bucket.costUsd, unit: "usd" },
-        {
-          name: "p50_latency_ms",
-          value: percentile(bucket.latencies, 0.5),
-          unit: "ms",
-        },
-        {
-          name: "p95_latency_ms",
-          value: percentile(bucket.latencies, 0.95),
-          unit: "ms",
-        },
       ];
 
       return {
@@ -368,10 +330,7 @@ export function warnIfBudgetExceeded(runs: EvalRunResult[]): void {
 export function internalEvalsErrorResponse() {
   return errorResponse(500, "internal_error", "Failed to load eval dashboard", null);
 }
-export async function handleAdminEvals(
-  supabase: AdminSupabaseClient,
-  now = new Date(),
-) {
+export async function handleAdminEvals(supabase: AdminSupabaseClient) {
   const {
     data: { user },
     error: authError,
@@ -389,12 +348,23 @@ export async function handleAdminEvals(
   // (per packages/db/supabase/migrations/0001_init.sql:265-280).
   // We use Supabase select-aliasing so downstream code can keep its internal
   // model/tokens_in/tokens_out/timestamp names without a wider refactor.
-  const cutoff = new Date(now.getTime() - WINDOW_MS);
-  const { data: traces, error: queryError } = await supabase
-    .from("agent_traces")
-    .select("model:model_name,tokens_in:prompt_tokens,tokens_out:completion_tokens,cost_usd,latency_ms,timestamp:created_at")
-    .gte("created_at", cutoff.toISOString())
-    .order("created_at", { ascending: false });
+  // All history, paged. ponytail: aggregates in memory — move to a SQL view
+  // (group by date, model) if agent_traces grows past ~100k rows.
+  const traces: TraceRow[] = [];
+  let queryError: TraceQueryResult["error"] = null;
+  for (let from = 0; ; from += TRACE_PAGE_SIZE) {
+    const page = await supabase
+      .from("agent_traces")
+      .select("model:model_name,tokens_in:prompt_tokens,tokens_out:completion_tokens,cost_usd,timestamp:created_at")
+      .order("created_at", { ascending: false })
+      .range(from, from + TRACE_PAGE_SIZE - 1);
+    if (page.error) {
+      queryError = page.error;
+      break;
+    }
+    traces.push(...(page.data ?? []));
+    if ((page.data?.length ?? 0) < TRACE_PAGE_SIZE) break;
+  }
 
   if (queryError) {
     // Surface query errors to the caller
@@ -409,7 +379,7 @@ export async function handleAdminEvals(
     );
   }
 
-  if (!traces || traces.length === 0) {
+  if (traces.length === 0) {
     return NextResponse.json({ runs: [] });
   }
 
@@ -426,7 +396,7 @@ export async function handleAdminEvals(
 
   // Compute per-date-per-model spends so we can attach daily budget info to runs
   const modelSpendsByBucket: { [key: string]: number } = {};
-  (traces as TraceRow[]).forEach((trace) => {
+  traces.forEach((trace) => {
     const ts = trace.timestamp ? new Date(trace.timestamp) : null;
     if (!ts || Number.isNaN(ts.getTime()) || !trace.model) return;
     const date = ts.toISOString().slice(0, 10);
@@ -453,7 +423,7 @@ export async function handleAdminEvals(
     }
   });
 
-  const aggregatedRuns = buildEvalRuns(traces as TraceRow[], now);
+  const aggregatedRuns = buildEvalRuns(traces);
   warnIfBudgetExceeded(aggregatedRuns);
 
   type BudgetAlert = {
@@ -495,3 +465,61 @@ export async function handleAdminEvals(
   return NextResponse.json({ runs: runsWithBudget });
 }
 
+
+// ─── Citation validity (from production Citator traces) ─────────────────────
+
+export type CitatorTraceRow = {
+  id: string;
+  created_at: string;
+  status: string;
+  document_id: string | null;
+  metadata: {
+    agent_status?: string;
+    cited_nodes?: string[];
+    rejected_nodes?: string[];
+  } | null;
+  documents: { title: string | null; doc_type: string | null; language: string | null } | null;
+};
+
+export type CitationValidityRow = {
+  id: string;
+  date: string;
+  document_id: string | null;
+  document_title: string | null;
+  doc_type: string | null;
+  language: string | null;
+  valid: number;
+  /** null when unknown: rejected traces written before rejected_nodes was recorded. */
+  invalid: number | null;
+  total: number | null;
+  validity_pct: number | null;
+  status: "passed" | "rejected" | "error";
+};
+
+export function buildCitationRows(rows: CitatorTraceRow[]): CitationValidityRow[] {
+  return rows.map((row) => {
+    const meta = row.metadata ?? {};
+    const status =
+      meta.agent_status === "rejected" ? "rejected"
+      : meta.agent_status === "error" || (!meta.agent_status && row.status !== "ok") ? "error"
+      : "passed";
+    const valid = meta.cited_nodes?.length ?? 0;
+    // The Citator only passes a draft with zero invalid citations, so a passed
+    // trace's invalid count is known even when rejected_nodes wasn't recorded.
+    const invalid = meta.rejected_nodes?.length ?? (status === "passed" ? 0 : null);
+    const total = invalid === null ? null : valid + invalid;
+    return {
+      id: row.id,
+      date: row.created_at,
+      document_id: row.document_id,
+      document_title: row.documents?.title ?? null,
+      doc_type: row.documents?.doc_type ?? null,
+      language: row.documents?.language ?? null,
+      valid,
+      invalid,
+      total,
+      validity_pct: total ? (valid / total) * 100 : null,
+      status,
+    };
+  });
+}

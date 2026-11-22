@@ -56,44 +56,52 @@ export function useAuditTrails() {
     try {
       const supabase = createClient();
 
-      // Fetch all agent traces with joined users and documents
-      const { data, error: queryError } = await supabase
-        .from("agent_traces")
-        .select(`
-          id,
-          created_at,
-          agent_name,
-          llm_provider,
-          model_name,
-          prompt_tokens,
-          completion_tokens,
-          cost_usd,
-          latency_ms,
-          status,
-          error_msg,
-          metadata,
-          user_id,
-          users (
+      // Fetch all agent traces with joined users and documents. PostgREST caps
+      // a response at 1000 rows, so page through until a short page.
+      const PAGE = 1000;
+      const data: any[] = [];
+      for (let from = 0; ; from += PAGE) {
+        const { data: page, error: queryError } = await supabase
+          .from("agent_traces")
+          .select(`
             id,
-            email,
-            display_name
-          ),
-          document_id,
-          documents (
-            id,
-            title,
-            doc_type,
-            language
-          )
-        `)
-        .order("created_at", { ascending: false });
+            created_at,
+            agent_name,
+            llm_provider,
+            model_name,
+            prompt_tokens,
+            completion_tokens,
+            cost_usd,
+            latency_ms,
+            status,
+            error_msg,
+            metadata,
+            user_id,
+            users (
+              id,
+              email,
+              display_name
+            ),
+            document_id,
+            documents (
+              id,
+              title,
+              doc_type,
+              language
+            )
+          `)
+          .order("created_at", { ascending: false })
+          .range(from, from + PAGE - 1);
 
-      if (queryError) {
-        throw new Error(queryError.message);
+        if (queryError) {
+          throw new Error(queryError.message);
+        }
+        data.push(...(page ?? []));
+        if ((page?.length ?? 0) < PAGE) break;
       }
 
       // Format response cleanly
-      const formatted: AuditTrace[] = (data || []).map((t: any) => ({
+      const formatted: AuditTrace[] = data.map((t: any) => ({
         id: t.id,
         created_at: t.created_at,
         agent_name: t.agent_name,

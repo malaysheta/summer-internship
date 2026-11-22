@@ -1,53 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Link } from "@/i18n/routing";
+import type { CitationValidityRow } from "@/app/api/admin/evals/lib";
 
-type CitationEvalRun = {
-  id: string;
-  run_name: string;
-  eval_type: string;
-  config: {
-    dataset_id: string;
-    models: string[];
-  };
-  results: {
-    citation_validity_rate: number;
-    total_citations: number;
-    valid_citations: number;
-    invalid_citations: string[];
-  } | null;
-  score: number | null;
-  status: string;
-  started_at: string;
-  finished_at: string | null;
-};
-
-const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "2-digit",
-  year: "numeric",
-  timeZone: "UTC",
+const DATE_FORMATTER = new Intl.DateTimeFormat("en-IN", {
+  dateStyle: "medium",
+  timeStyle: "short",
 });
 
-function formatDate(isoDate: string): string {
-  return DATE_FORMATTER.format(new Date(isoDate));
-}
-
-function getStatusColor(status: string): string {
-  switch (status) {
-    case "passed":
-      return "text-emerald-600 bg-emerald-50";
-    case "failed":
-      return "text-rose-600 bg-rose-50";
-    case "running":
-      return "text-amber-600 bg-amber-50";
-    default:
-      return "text-slate-600 bg-slate-50";
-  }
-}
+const STATUS_STYLES: Record<CitationValidityRow["status"], string> = {
+  passed: "text-emerald-600 bg-emerald-50",
+  rejected: "text-rose-600 bg-rose-50",
+  error: "text-amber-600 bg-amber-50",
+};
 
 export default function CitationValidityPage() {
-  const [runs, setRuns] = useState<CitationEvalRun[]>([]);
+  const [runs, setRuns] = useState<CitationValidityRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,40 +25,16 @@ export default function CitationValidityPage() {
 
     async function loadRuns() {
       try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch("/api/admin/evals", { cache: "no-store" });
+        const response = await fetch("/api/admin/evals/citations", { cache: "no-store" });
         const payload = await response.json().catch(() => null);
-
         if (!response.ok) {
-          throw new Error(
-            payload?.message ??
-              payload?.error ??
-              `Request failed (${response.status})`,
-          );
+          throw new Error(payload?.message ?? payload?.error ?? `Request failed (${response.status})`);
         }
-
-        if (!cancelled) {
-          const citationRuns = (payload?.runs ?? []).filter(
-            (run: CitationEvalRun) =>
-              run.eval_type === "citation_accuracy" ||
-              run.config?.dataset_id?.includes("rti"),
-          );
-          setRuns(citationRuns);
-        }
+        if (!cancelled) setRuns(payload?.runs ?? []);
       } catch (err) {
-        if (!cancelled) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : "Failed to load citation validity runs",
-          );
-        }
+        if (!cancelled) setError(err instanceof Error ? err.message : "Failed to load citation validity runs");
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
     }
 
@@ -101,7 +46,6 @@ export default function CitationValidityPage() {
 
   return (
     <div className="text-slate-950">
-
       <section className="mx-auto flex w-full max-w-none flex-col gap-6">
         <header className="rounded-xl border border-slate-200 bg-white px-6 py-6 shadow-sm sm:px-8">
           <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
@@ -112,8 +56,8 @@ export default function CitationValidityPage() {
               Citation Validity Dashboard
             </h1>
             <p className="max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
-              Citation correctness eval results — tracks how accurately the AI
-              cites real RTI Act sections vs hallucinated ones.
+              Every draft&apos;s citation check, newest first: how many cited sections exist in
+              PageIndex versus how many were invalid.
             </p>
           </div>
         </header>
@@ -133,11 +77,9 @@ export default function CitationValidityPage() {
                 <thead className="border-b border-slate-100 bg-slate-50/60 text-xs text-slate-500">
                   <tr>
                     <th className="px-5 py-4 font-medium">Date</th>
-                    <th className="px-5 py-4 font-medium">Dataset</th>
-                    <th className="px-5 py-4 font-medium">Model</th>
-                    <th className="px-5 py-4 font-medium">
-                      Citation Validity (%)
-                    </th>
+                    <th className="px-5 py-4 font-medium">Document</th>
+                    <th className="px-5 py-4 font-medium">Language</th>
+                    <th className="px-5 py-4 font-medium">Citation Validity (%)</th>
                     <th className="px-5 py-4 font-medium">Valid / Total</th>
                     <th className="px-5 py-4 font-medium">Invalid Citations</th>
                     <th className="px-5 py-4 font-medium">Status</th>
@@ -147,43 +89,34 @@ export default function CitationValidityPage() {
                   {runs.length === 0 ? (
                     <tr>
                       <td className="px-5 py-8 text-slate-500" colSpan={7}>
-                        No citation validity runs found. Run the eval harness to
-                        populate results.
+                        No citation checks yet. Rows appear as drafts are generated.
                       </td>
                     </tr>
                   ) : (
                     runs.map((run) => (
                       <tr key={run.id} className="hover:bg-slate-50/80">
                         <td className="px-5 py-4 font-medium text-slate-900">
-                          {formatDate(run.started_at)}
+                          {DATE_FORMATTER.format(new Date(run.date))}
                         </td>
-                        <td className="px-5 py-4">
-                          {run.config?.dataset_id ?? "—"}
+                        <td className="max-w-xs truncate px-5 py-4">
+                          {run.document_id ? (
+                            <Link href={`/draft/${run.document_id}`} className="hover:underline">
+                              {run.document_title ?? "Untitled"}
+                            </Link>
+                          ) : (
+                            "—"
+                          )}
                         </td>
-                        <td className="px-5 py-4">
-                          {run.config?.models?.[0] ?? "—"}
-                        </td>
+                        <td className="px-5 py-4 uppercase">{run.language ?? "—"}</td>
                         <td className="px-5 py-4 font-semibold">
-                          {run.results?.citation_validity_rate != null
-                            ? `${run.results.citation_validity_rate.toFixed(1)}%`
-                            : run.score != null
-                              ? `${(run.score * 100).toFixed(1)}%`
-                              : "—"}
+                          {run.validity_pct != null ? `${run.validity_pct.toFixed(1)}%` : "—"}
                         </td>
                         <td className="px-5 py-4">
-                          {run.results
-                            ? `${run.results.valid_citations} / ${run.results.total_citations}`
-                            : "—"}
+                          {run.total != null ? `${run.valid} / ${run.total}` : `${run.valid} / —`}
                         </td>
-                        <td className="px-5 py-4 text-rose-600">
-                          {run.results?.invalid_citations?.length
-                            ? run.results.invalid_citations.join(", ")
-                            : "None"}
-                        </td>
+                        <td className="px-5 py-4 text-rose-600">{run.invalid ?? "—"}</td>
                         <td className="px-5 py-4">
-                          <span
-                            className={`rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(run.status)}`}
-                          >
+                          <span className={`rounded-full px-2 py-1 text-xs font-medium ${STATUS_STYLES[run.status]}`}>
                             {run.status}
                           </span>
                         </td>
