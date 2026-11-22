@@ -89,8 +89,8 @@ export function PreferencesSection({ initialUser, onUpdateUser }: PreferencesSec
               return (
                 <label
                   key={lang.value}
-                  className={`flex cursor-pointer flex-col gap-1 border-l-[3px] bg-background px-4 py-3.5 transition-colors duration-[180ms] has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:-outline-offset-1 has-[:focus-visible]:outline-ring ${
-                    selected ? "border-brand bg-accent" : "border-transparent hover:bg-muted"
+                  className={`flex cursor-pointer flex-col gap-1 border-l-[3px] px-4 py-3.5 transition-colors duration-[180ms] has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:-outline-offset-1 has-[:focus-visible]:outline-ring ${
+                    selected ? "border-brand bg-accent" : "border-transparent bg-background hover:bg-muted"
                   }`}
                 >
                   <input

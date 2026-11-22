@@ -141,8 +141,8 @@ export default function NewDraftPage() {
                 return (
                   <label
                     key={type.value}
-                    className={`flex cursor-pointer flex-col gap-1.5 border-l-[3px] bg-background px-5 py-4 transition-colors duration-[180ms] has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:-outline-offset-1 has-[:focus-visible]:outline-ring ${
-                      isSelected ? 'border-brand bg-accent' : 'border-transparent hover:bg-muted'
+                    className={`flex cursor-pointer flex-col gap-1.5 border-l-[3px] px-5 py-4 transition-colors duration-[180ms] has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:-outline-offset-1 has-[:focus-visible]:outline-ring ${
+                      isSelected ? 'border-brand bg-accent' : 'border-transparent bg-background hover:bg-muted'
                     }`}
                   >
                     <input
@@ -186,7 +186,10 @@ export default function NewDraftPage() {
 
           {/* 03 — Language */}
           <section className="grid gap-6 border-b border-border py-10 lg:grid-cols-[300px_1fr] lg:gap-12">
-            <span className="label-caps text-brand-soft">03</span>
+            <div className="space-y-2">
+              <span className="label-caps text-brand-soft">03</span>
+              <h2 className="text-[26px] leading-tight">{t('languageQuestion')}</h2>
+            </div>
             <LanguagePicker value={language} onChange={setLanguage} />
           </section>
 
@@ -205,7 +208,7 @@ export default function NewDraftPage() {
               className="w-full justify-between md:w-[320px]"
               id="btn-generate-draft"
             >
-              {loading ? t('loading') : t('submitButton')}
+              {loading ? t('loading') : t('submitButton').replace(/\s*→$/, '')}
               <ArrowIcon />
             </Button>
           </div>

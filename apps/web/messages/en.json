@@ -236,7 +236,8 @@
     "networkError": "Network connection error. Please check your internet connection.",
     "validationError": "Validation failed.",
     "sessionExpired": "Your session has expired. Please sign in again.",
-    "unknown": "An unknown error occurred."
+    "unknown": "An unknown error occurred.",
+    "retry": "Try again"
   },
   "legalGlossary": {
     "plaintiff": "Plaintiff",

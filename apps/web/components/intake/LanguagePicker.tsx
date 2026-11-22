@@ -16,14 +16,11 @@ interface LanguagePickerProps {
   onChange: (value: SupportedLanguage) => void
 }
 
-import { useTranslations } from 'next-intl'
 
 export function LanguagePicker({ value, onChange }: LanguagePickerProps) {
-  const t = useTranslations('intake')
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-[26px] leading-tight">{t('languageQuestion')}</h2>
+    <div>
       <div className="grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-5">
         {LANGUAGES.map((lang) => {
           const isSelected = value === lang.value
@@ -32,8 +29,8 @@ export function LanguagePicker({ value, onChange }: LanguagePickerProps) {
               key={lang.value}
               type="button"
               onClick={() => onChange(lang.value)}
-              className={`flex flex-col items-start gap-1 border-l-[3px] bg-background px-4 py-4 text-left transition-colors duration-[180ms] focus-visible:-outline-offset-1 ${
-                isSelected ? 'border-brand bg-accent text-foreground' : 'border-transparent text-muted-foreground hover:bg-muted hover:text-foreground'
+              className={`flex flex-col items-start gap-1 border-l-[3px] px-4 py-4 text-left transition-colors duration-[180ms] focus-visible:-outline-offset-1 ${
+                isSelected ? 'border-brand bg-accent text-foreground' : 'border-transparent bg-background text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
               id={`lang-picker-${lang.value}`}
               aria-pressed={isSelected}

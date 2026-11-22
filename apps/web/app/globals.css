@@ -2,10 +2,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* ponytail: kept only until the remaining `dark:` classes are stripped; Tailwind v4
-   would otherwise map them to prefers-color-scheme and flip half-migrated screens. */
-@custom-variant dark (&:is(.dark *));
-
 /* ─── Trionic × devx editorial system ─────────────────────────────────────────
    Dark shell by default (:root). Wrap long-form reading/editing areas in
    `.paper` and every token-based class switches to the light palette inside. */

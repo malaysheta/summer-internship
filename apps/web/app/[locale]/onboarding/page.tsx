@@ -91,8 +91,8 @@ export default function OnboardingPage() {
             {LANGUAGES.map((lang) => (
               <label
                 key={lang.value}
-                className={`relative flex cursor-pointer items-center border-l-[3px] bg-background px-4 py-3.5 text-[15px] transition-colors duration-[180ms] select-none has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:outline-ring ${
-                  language === lang.value ? 'border-brand bg-accent text-foreground' : 'border-transparent text-muted-foreground hover:bg-muted hover:text-foreground'
+                className={`relative flex cursor-pointer items-center border-l-[3px] px-4 py-3.5 text-[15px] transition-colors duration-[180ms] select-none has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:outline-ring ${
+                  language === lang.value ? 'border-brand bg-accent text-foreground' : 'border-transparent bg-background text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
                 <input
